@@ -1,0 +1,17 @@
+{
+    "test_adder": [
+        "adder.sv"
+    ],
+    "test_mux2": [
+        "mux2.sv"
+    ],
+    "test_alu": [
+        "alu.sv"
+    ],
+    "test_alu_with_flag": [
+        "alu_with_flag.sv"
+    ],
+    "test_instruction_memory": [
+        "instruction_memory.sv"
+    ]
+}
