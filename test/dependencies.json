@@ -13,5 +13,8 @@
     ],
     "test_instruction_memory": [
         "instruction_memory.sv"
+    ],
+    "test_data_memory": [
+        "data_memory.sv"
     ]
 }
