@@ -16,5 +16,8 @@
     ],
     "test_data_memory": [
         "data_memory.sv"
+    ],
+    "test_register_file": [
+        "register_file.sv"
     ]
 }
