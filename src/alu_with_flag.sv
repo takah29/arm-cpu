@@ -1,4 +1,4 @@
-module AluWithFlag #(parameter N = 8)
+module AluWithFlag #(parameter N = 32)
     (
     input logic [N -1:0] a, b,
     input logic [1:0] alu_ctl,
