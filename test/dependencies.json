@@ -19,5 +19,8 @@
     ],
     "test_register_file": [
         "register_file.sv"
+    ],
+    "test_extend": [
+        "extend.sv"
     ]
 }
