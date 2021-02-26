@@ -3,6 +3,7 @@ module DataPath(
     input logic pc_src, imm_src, reg_write,
     input logic [31:0] instr, read_data,
     input logic [1:0] alu_ctl,
+    output logic [3:0] alu_flags,
     output logic [31:0] pc, write_data, alu_result
     );
 
@@ -29,10 +30,10 @@ module DataPath(
     .b(src_b),
     .alu_ctl(alu_ctl),
     .result(alu_result),
-    .n(),
-    .z(),
-    .c(),
-    .v()
+    .n(alu_flags[3]),
+    .z(alu_flags[2]),
+    .c(alu_flags[1]),
+    .v(alu_flags[0])
     );
 
 endmodule
