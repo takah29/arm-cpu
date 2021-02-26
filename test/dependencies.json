@@ -30,7 +30,11 @@
         "data_path.sv",
         "register_file.sv",
         "extend.sv",
-        "alu_with_flag.sv"
+        "alu_with_flag.sv",
+        "pc_module.sv",
+        "mux2.sv",
+        "flopr.sv",
+        "adder.sv"
     ],
     "test_pc_module": [
         "pc_module.sv",

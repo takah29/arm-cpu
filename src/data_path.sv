@@ -1,13 +1,14 @@
 module DataPath(
     input logic clk, reset,
-    input logic reg_write,
+    input logic pc_src, reg_write,
     input logic [31:0] instr, read_data,
     input logic [1:0] alu_ctl,
     output logic [31:0] pc, write_data, alu_result
     );
 
-    logic [31:0] src_a, src_b;
+    logic [31:0] src_a, src_b, pc_plus8;
 
+    PcModule pc_module(.clk(clk), .pc_src(pc_src), .jump(read_data), .pc(pc), .pc_plus8(pc_plus8));
 
     RegisterFile register_file(
     .clk(clk),
@@ -16,7 +17,7 @@ module DataPath(
     .read_reg_addr2(instr[15:12]),
     .write_reg_addr3(instr[15:12]),
     .write_data3(read_data),
-    .r15(),
+    .r15(pc_plus8),
     .read_data1(src_a),
     .read_data2(write_data)
     );
