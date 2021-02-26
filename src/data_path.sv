@@ -1,6 +1,6 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write,
+    input logic pc_src, imm_src, reg_write,
     input logic [31:0] instr, read_data,
     input logic [1:0] alu_ctl,
     output logic [31:0] pc, write_data, alu_result
@@ -22,7 +22,7 @@ module DataPath(
     .read_data2(write_data)
     );
 
-    Extend extend(.instr_imm(instr[11:0]), .ext_imm(src_b));
+    Extend extend(.instr_imm(instr[11:0]), .imm_src(imm_src), .ext_imm(src_b));
 
     AluWithFlag #(32) alu(
     .a(src_a),
