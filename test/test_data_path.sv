@@ -28,11 +28,11 @@ module DataPathTestbench();
         alu_ctl = 0;
 
         // case: r1に15を設定、r11にアドレス32を設定、r1の値をアドレスr11に書き込む
-        // ldr r1, [r0] （read_dataで設定するのでinstrのr11のところは何でもいい）
+        // ldr r1, [r0] （read_dataで設定するのでinstrのr0のところは何でもいい）
         instr = 32'b11100101100100000001000000000000; read_data = 15; reg_write = 1;
         @(posedge clk)
         #STB;
-        // ldr r11, [r0] （read_dataで設定するのでinstrのr11のところは何でもいい）
+        // ldr r11, [r0] （read_dataで設定するのでinstrのr0のところは何でもいい）
         instr = 32'b11100101100100001011000000000000; read_data = 32; reg_write = 1;
         @(posedge clk)
         #STB;
