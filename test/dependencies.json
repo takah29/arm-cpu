@@ -31,5 +31,11 @@
         "register_file.sv",
         "extend.sv",
         "alu_with_flag.sv"
+    ],
+    "test_pc_module": [
+        "pc_module.sv",
+        "mux2.sv",
+        "flopr.sv",
+        "adder.sv"
     ]
 }
