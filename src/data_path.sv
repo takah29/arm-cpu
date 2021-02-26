@@ -1,15 +1,15 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, imm_src, reg_write,
+    input logic pc_src, imm_src, reg_write, mem_to_reg,
     input logic [31:0] instr, read_data,
     input logic [1:0] alu_ctl,
     output logic [3:0] alu_flags,
     output logic [31:0] pc, write_data, alu_result
     );
 
-    logic [31:0] src_a, src_b, pc_plus8;
+    logic [31:0] src_a, src_b, pc_plus8, result;
 
-    PcModule pc_module(.clk(clk), .pc_src(pc_src), .jump(read_data), .pc(pc), .pc_plus8(pc_plus8));
+    PcModule pc_module(.clk(clk), .pc_src(pc_src), .jump(result), .pc(pc), .pc_plus8(pc_plus8));
 
     RegisterFile register_file(
     .clk(clk),
@@ -35,5 +35,7 @@ module DataPath(
     .c(alu_flags[1]),
     .v(alu_flags[0])
     );
+
+    Mux2 #(32) result_mux(.d0(alu_result), .d1(read_data), .s(mem_to_reg), .y(result));
 
 endmodule

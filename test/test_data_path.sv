@@ -3,13 +3,13 @@ module DataPathTestbench();
     parameter STB = 100;
 
     logic clk, reset;
-    logic pc_src, imm_src, reg_write;
+    logic pc_src, imm_src, reg_write, mem_to_reg;
     logic [31:0] instr, read_data;
     logic [1:0] alu_ctl;
     logic [31:0] pc, write_data, alu_result;
     logic [31:0] pc_exp, write_data_exp, alu_result_exp;
 
-    DataPath dut(.clk, .reset, .pc_src, .imm_src, .reg_write, .instr, .read_data, .alu_ctl, .pc, .write_data, .alu_result);
+    DataPath dut(.clk, .reset, .pc_src, .imm_src, .reg_write, .mem_to_reg, .instr, .read_data, .alu_ctl, .pc, .write_data, .alu_result);
 
     task assert_out;
         assert (write_data === write_data_exp) else $error("write_data = %h, %h expected", write_data, write_data_exp);
@@ -27,6 +27,7 @@ module DataPathTestbench();
         reset = 0;
         alu_ctl = 0;
         imm_src = 1;
+        mem_to_reg = 1;
 
         // case1: r1に15を設定、r11にアドレス32を設定、r1の値をアドレスr11に書き込む
         // ldr r1, [r0] （read_dataで設定するのでinstrのr0のところは何でもいい）
