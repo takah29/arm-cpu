@@ -1,4 +1,4 @@
-module flopr_testbench;
+module FloprTestbench;
     parameter N = 4;
     parameter DELAY = 10;
 
@@ -10,7 +10,7 @@ module flopr_testbench;
     logic [31:0] vectornum, errors;
     logic [8:0] testvectors[0:5];
 
-    flopr #(N) dut(clk, reset, d, q);
+    Flopr #(N) dut(clk, reset, d, q);
 
     initial begin
         errors = 0;
