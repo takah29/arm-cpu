@@ -8,6 +8,9 @@
     "test_flopr": [
         "flopr.sv"
     ],
+    "test_flopenr": [
+        "flopenr.sv"
+    ],
     "test_alu": [
         "alu.sv"
     ],
