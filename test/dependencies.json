@@ -59,5 +59,13 @@
     "test_cond_logic": [
         "cond_logic.sv",
         "flopenr.sv"
+    ],
+    "test_controller": [
+        "controller.sv",
+        "decoder.sv",
+        "main_decoder.sv",
+        "alu_decoder.sv",
+        "cond_logic.sv",
+        "flopenr.sv"
     ]
 }
