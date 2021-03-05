@@ -47,6 +47,10 @@
     ],
     "test_main_decoder": [
         "main_decoder.sv"
+    ],
+    "test_decoder": [
+        "decoder.sv",
+        "main_decoder.sv",
+        "alu_decoder.sv"
     ]
-
 }
