@@ -41,5 +41,8 @@
         "mux2.sv",
         "flopr.sv",
         "adder.sv"
+    ],
+    "test_alu_decoder": [
+        "alu_decoder.sv"
     ]
 }
