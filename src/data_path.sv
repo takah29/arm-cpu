@@ -1,8 +1,8 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, imm_src, reg_write, mem_to_reg, alu_src,
+    input logic pc_src, reg_write, mem_to_reg, alu_src,
     input logic [31:0] instr, read_data,
-    input logic [1:0] alu_ctl, reg_src,
+    input logic [1:0] imm_src, alu_ctl, reg_src,
     output logic [3:0] alu_flags,
     output logic [31:0] pc, write_data, alu_result
     );
@@ -29,7 +29,7 @@ module DataPath(
     Mux2 #(4) reg_addr2_mux(.d0(instr[3:0]), .d1(instr[15:12]), .s(reg_src[0]), .y(reg_addr2));
 
     // 直値拡張
-    Extend extend(.instr_imm(instr[11:0]), .imm_src(imm_src), .ext_imm(ext_imm));
+    Extend extend(.instr_imm(instr[23:0]), .imm_src(imm_src), .ext_imm(ext_imm));
 
     // ALU
     AluWithFlag #(32) alu(

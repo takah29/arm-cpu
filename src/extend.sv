@@ -1,19 +1,22 @@
 module Extend
     (
-    input logic [11:0] instr_imm,
-    input logic imm_src,
+    input logic [23:0] instr_imm,
+    input logic [1:0] imm_src,
     output logic [31:0] ext_imm
     );
 
     function [31:0] ext;
-        input [11:0] instr_imm;
-        input imm_src;
+        input [23:0] instr_imm;
+        input [1:0] imm_src;
         begin
             case (imm_src)
                 // データ処理命令用8ビット直値
-                1'b0: ext = {24'b0, instr_imm[7:0]};
+                2'b00: ext = {24'b0, instr_imm[7:0]};
                 // メモリ命令用12ビット直値
-                1'b1: ext = {20'b0, instr_imm};
+                2'b01: ext = {20'b0, instr_imm[11:0]};
+                // B命令用24ビット直値
+                2'b10: ext = {{6{instr_imm[23]}}, instr_imm, 2'b00};
+                default: ext = 32'bx;
             endcase
         end
     endfunction

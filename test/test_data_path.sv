@@ -3,9 +3,9 @@ module DataPathTestbench();
     parameter STB = 100;
 
     logic clk, reset;
-    logic pc_src, imm_src, reg_write, mem_to_reg, alu_src;
+    logic pc_src, reg_write, mem_to_reg, alu_src;
     logic [31:0] instr, read_data;
-    logic [1:0] alu_ctl, reg_src;
+    logic [1:0] imm_src, alu_ctl, reg_src;
     logic [31:0] pc, write_data, alu_result;
     logic [31:0] pc_exp, write_data_exp, alu_result_exp;
 
@@ -28,7 +28,7 @@ module DataPathTestbench();
 
         // メモリ命令
         alu_ctl = '0;
-        imm_src = '1;
+        imm_src = 2'b01;
         mem_to_reg = '1;
         reg_src = 2'b01;
         alu_src = '1;
