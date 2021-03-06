@@ -28,6 +28,7 @@ module Controller
 
     CondLogic cond_logic(
     .clk,
+    .reset,
     .pcs,
     .reg_w,
     .mem_w,
