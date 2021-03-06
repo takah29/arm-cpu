@@ -11,7 +11,7 @@ module DataPath(
     logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
-    PcModule pc_module(.clk(clk), .pc_src(pc_src), .jump(result), .pc(pc), .pc_plus8(pc_plus8));
+    PcModule pc_module(.clk, .reset, .pc_src, .jump(result), .pc, .pc_plus8);
 
     // レジスタファイル
     RegisterFile register_file(
@@ -29,13 +29,13 @@ module DataPath(
     Mux2 #(4) reg_addr2_mux(.d0(instr[3:0]), .d1(instr[15:12]), .s(reg_src[0]), .y(reg_addr2));
 
     // 直値拡張
-    Extend extend(.instr_imm(instr[23:0]), .imm_src(imm_src), .ext_imm(ext_imm));
+    Extend extend(.instr_imm(instr[23:0]), .imm_src, .ext_imm);
 
     // ALU
     AluWithFlag #(32) alu(
     .a(src_a),
     .b(src_b),
-    .alu_ctl(alu_ctl),
+    .alu_ctl,
     .result(alu_result),
     .n(alu_flags[3]),
     .z(alu_flags[2]),
