@@ -20,7 +20,7 @@ module DataPath(
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(reg_addr2),
     .write_reg_addr3(instr[15:12]),
-    .write_data3(read_data),
+    .write_data3(result),
     .r15(pc_plus8),
     .read_data1(src_a),
     .read_data2(write_data)
