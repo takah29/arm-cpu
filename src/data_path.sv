@@ -25,8 +25,8 @@ module DataPath(
     .read_data1(src_a),
     .read_data2(write_data)
     );
-    Mux2 #(4) reg_addr1_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[1]), .y(reg_addr1));
-    Mux2 #(4) reg_addr2_mux(.d0(instr[3:0]), .d1(instr[15:12]), .s(reg_src[0]), .y(reg_addr2));
+    Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[0]), .y(reg_addr1));
+    Mux2 #(4) reg_addr1_mux(.d0(instr[3:0]), .d1(instr[15:12]), .s(reg_src[1]), .y(reg_addr2));
 
     // 直値拡張
     Extend extend(.instr_imm(instr[23:0]), .imm_src, .ext_imm);

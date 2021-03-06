@@ -30,7 +30,7 @@ module DataPathTestbench();
         alu_ctl = '0;
         imm_src = 2'b01;
         mem_to_reg = '1;
-        reg_src = 2'b01;
+        reg_src = 2'b10;
         alu_src = '1;
 
         // case1: r1に15を設定、r11にアドレス32を設定、r1の値をアドレスr11に書き込む
