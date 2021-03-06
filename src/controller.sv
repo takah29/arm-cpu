@@ -8,7 +8,7 @@ module Controller
     output logic [1:0] imm_src, reg_src, alu_ctl
     );
 
-    logic pcs, reg_w, mem_w;
+    logic pcs, reg_w, mem_w, no_write;
     logic [1:0] flag_w;
 
     Decoder decoder(
@@ -20,6 +20,7 @@ module Controller
     .mem_w,
     .mem_to_reg,
     .alu_src,
+    .no_write,
     .flag_w,
     .imm_src,
     .reg_src,
@@ -32,6 +33,7 @@ module Controller
     .pcs,
     .reg_w,
     .mem_w,
+    .no_write,
     .flag_w,
     .cond,
     .alu_flags,

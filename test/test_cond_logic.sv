@@ -3,7 +3,7 @@ module CondLogicTestbench;
     parameter DELAY = 100;
 
     logic clk, reset;
-    logic pcs, reg_w, mem_w;
+    logic pcs, reg_w, mem_w, no_write;
     logic [1:0] flag_w;
     logic [3:0] cond, alu_flags;
     logic pc_src, reg_write, mem_write;
@@ -15,6 +15,7 @@ module CondLogicTestbench;
     .pcs,
     .reg_w,
     .mem_w,
+    .no_write,
     .flag_w,
     .cond,
     .alu_flags,
@@ -89,10 +90,10 @@ module CondLogicTestbench;
         assert_pc_src;
 
         // case: reg_write test
-        cond = 4'b1110; reg_w = 1'b0; reg_write_exp = 1'b0;
+        cond = 4'b1110; reg_w = 1'b0; no_write = 1'b0; reg_write_exp = 1'b0;
         @(posedge clk); #DELAY
         assert_reg_write;
-        cond = 4'b1110; reg_w = 1'b1; reg_write_exp = 1'b1;
+        cond = 4'b1110; reg_w = 1'b1; no_write = 1'b0; reg_write_exp = 1'b1;
         @(posedge clk); #DELAY
         assert_reg_write;
 

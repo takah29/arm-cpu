@@ -129,6 +129,13 @@ module ArmCpuTestbench;
         assert_alu_result(32'h1ff);
         assert_register_value(5, 32'h1ff);
 
+        // CMP R1, R3
+        instr = 32'b1110_00_010101_0001_0000_000000000011;
+        @(posedge clk); #DELAY;
+        assert_pc(32);
+        assert_alu_result(32'h0);
+        assert (dut.data_path.alu.z === 1'b1);
+
         $display("test completed");
         $finish;
     end
