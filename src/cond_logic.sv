@@ -1,6 +1,6 @@
 module CondLogic
     (
-    input logic clk,
+    input logic clk, reset,
     input logic pcs, reg_w, mem_w,
     input logic [1:0] flag_w,
     input logic [3:0] cond, alu_flags,
@@ -13,8 +13,8 @@ module CondLogic
 
     assign flag_write = flag_w & {2{cond_ex}};
 
-    Flopenr #(2) alu_flags_flopenr1(.clk, .reset(), .en(flag_write[1]), .d(alu_flags[3:2]), .q(flags[3:2]));
-    Flopenr #(2) alu_flags_flopenr0(.clk, .reset(), .en(flag_write[0]), .d(alu_flags[1:0]), .q(flags[1:0]));
+    Flopenr #(2) alu_flags_flopenr1(.clk, .reset, .en(flag_write[1]), .d(alu_flags[3:2]), .q(flags[3:2]));
+    Flopenr #(2) alu_flags_flopenr0(.clk, .reset, .en(flag_write[0]), .d(alu_flags[1:0]), .q(flags[1:0]));
 
     assign {n, z, c, v} = flags;
 
