@@ -29,6 +29,9 @@
     "test_extend": [
         "extend.sv"
     ],
+    "test_shifter": [
+        "shifter.sv"
+    ],
     "test_data_path": [
         "data_path.sv",
         "register_file.sv",
