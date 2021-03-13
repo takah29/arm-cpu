@@ -65,6 +65,7 @@ module ArmCpuTestbench;
     endtask
 
     task reset_;
+        @(negedge clk);
         reset = 1;
         #DELAY;
         reset = 0;
@@ -103,78 +104,101 @@ module ArmCpuTestbench;
         #HALF_CYCLE;
     end
 
+    // シミュレーション設定
+    // initial begin
+    //   // 波形データ出力
+    //   $dumpfile("wave.vcd");
+    //   // 全てのポートを波形データに出力
+    //   $dumpvars(0, dut);
+    // end
+
     initial begin
         // case: LDR
         // LDR R13, [R0] (データメモリがないのでR14はつかわれない)
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_01_000001_0000_1101_000000000000; read_data = 32'hffffffff;
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hffffffff);
 
         // LDR R14, [R0]
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_01_000001_0000_1110_000000000000; read_data = 32'hff;
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'hff);
 
         // case: STR
         // STR R6, [R10]
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_01_000000_1010_0110_000000000000;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(32'hff);
         assert_write_data(7);
         assert_mem_write(1);
 
         // case: DP Reg
         // ADD R13, R4, R5
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_00_001000_0100_1101_00000000_0101;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(8);
+        @(posedge clk); #DELAY;
         assert_register_value(13, 8);
 
-       // ADD R13, R4, R1, LSL #2
-        reset_; set_regs;
+        // ADD R13, R4, R1, LSL #2
+        reset_; set_regs; #DELAY
         instr = 32'b1110_00_001000_0100_1101_00010_00_0_0001;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(7);
+        @(posedge clk); #DELAY;
         assert_register_value(13, 7);
 
         // SUB R13, R6, R5
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_00_000100_0110_1101_00000000_0101;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(2);
+        @(posedge clk); #DELAY;
         assert_register_value(13, 2);
 
         // AND R14, R7, R8
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_00_000000_0111_1110_00000000_1000;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(32'h00000000);
+        @(posedge clk); #DELAY;
         assert_register_value(14, 32'h00000000);
 
         // ORR R14, R7, R8
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_00_011000_0111_1110_00000000_1000;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(32'hffffffff);
+        @(posedge clk); #DELAY;
         assert_register_value(14, 32'hffffffff);
 
         // CMP R5, R5
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0101_0000_00000000_0101;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(32'h0);
         assert (dut.data_path.alu.z === 1'b1);
 
         // CMP R6, R5
-        reset_; set_regs;
+        reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0110_0000_00000000_0101;
-        @(posedge clk); #DELAY;
+        #DELAY;
         assert_alu_result(2);
         assert (dut.data_path.alu.z === 1'b0);
+
+        // case: Branch
+        // B Label
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_10_10_000000000000000000001111;
+        #DELAY;
+        assert_alu_result(32'h44);
+        assert_pc(0);
+        @(posedge clk); #DELAY;
+        assert_pc(32'h44);
 
 
 
