@@ -24,9 +24,33 @@ module ArmCpuTestbench;
 
     task show_regs;
         for (int i = 0; i < 15; i++) begin
-            $display("R%1d = %h", i, dut.data_path.register_file.register_file[i]);
+            $display("R%1d = %h", i, dut.data_path.register_file.reg_file[i]);
         end
         $display("R15 = %h", dut.data_path.register_file.r15);
+    endtask
+
+    // テスト用初期レジスタ値設定
+    task set_regs;
+        // 計算用
+        dut.data_path.register_file.reg_file[0] = 0;
+        dut.data_path.register_file.reg_file[1] = 1;
+        dut.data_path.register_file.reg_file[2] = 10;
+        dut.data_path.register_file.reg_file[3] = 1000;
+        dut.data_path.register_file.reg_file[4] = 3;
+        dut.data_path.register_file.reg_file[5] = 5;
+        dut.data_path.register_file.reg_file[6] = 7;
+        dut.data_path.register_file.reg_file[7] = 32'h80000000;
+        dut.data_path.register_file.reg_file[8] = 32'h7fffffff;
+        dut.data_path.register_file.reg_file[9] = 32'hffffffff;
+
+        // アドレス用
+        dut.data_path.register_file.reg_file[10] = 32'h000000ff;
+        dut.data_path.register_file.reg_file[11] = 32'h0000ffff;
+        dut.data_path.register_file.reg_file[12] = 32'h00ffffff;
+
+        // 演算結果保存用
+        dut.data_path.register_file.reg_file[13] = 32'h0f0f0f0f;
+        dut.data_path.register_file.reg_file[14] = 32'h0f0f0f0f;
     endtask
 
     task show_flags;
@@ -40,11 +64,19 @@ module ArmCpuTestbench;
         $display("reg_src = %b", dut.controller.reg_src);
     endtask
 
+    task reset_;
+        reset = 1;
+        #DELAY;
+        reset = 0;
+        #DELAY;
+        assert_pc(0);
+    endtask
+
     task assert_register_value(input logic [3:0] reg_num, input logic [31:0] exp_value);
         assert (
-        dut.data_path.register_file.register_file[reg_num] === exp_value
+        dut.data_path.register_file.reg_file[reg_num] === exp_value
         ) else $error(
-        "R%1d = %h, %h", reg_num, dut.data_path.register_file.register_file[reg_num], exp_value
+        "R%1d = %h, %h expected", reg_num, dut.data_path.register_file.reg_file[reg_num], exp_value
         );
     endtask
 
@@ -72,69 +104,72 @@ module ArmCpuTestbench;
     end
 
     initial begin
-        // 初期化
-        reset = 1;
-        #DELAY;
-        reset = 0;
-        #DELAY;
-        assert_pc(0);
-
         // case: LDR
-        // LDR R0, [R14] (データメモリがないのでR14はつかわれない)
-        instr = 32'b1110_01_000001_1110_0000_000000000000; read_data = 32'hffffffff;
+        // LDR R13, [R0] (データメモリがないのでR14はつかわれない)
+        reset_; set_regs;
+        instr = 32'b1110_01_000001_0000_1101_000000000000; read_data = 32'hffffffff;
         @(posedge clk); #DELAY;
-        assert_pc(4);
-        assert_register_value(0, 32'hffffffff);
+        assert_register_value(13, 32'hffffffff);
 
-        // LDR R1, [R14]
-        instr = 32'b1110_01_000001_1110_0001_000000000000; read_data = 32'hff;
+        // LDR R14, [R0]
+        reset_; set_regs;
+        instr = 32'b1110_01_000001_0000_1110_000000000000; read_data = 32'hff;
         @(posedge clk); #DELAY;
-        assert_pc(8);
-        assert_register_value(1, 32'hff);
+        assert_register_value(14, 32'hff);
 
         // case: STR
-        // STR R0, [R1]
-        instr = 32'b1110_01_000000_0001_0000_000000000000;
+        // STR R6, [R10]
+        reset_; set_regs;
+        instr = 32'b1110_01_000000_1010_0110_000000000000;
         @(posedge clk); #DELAY;
-        assert_pc(12);
         assert_alu_result(32'hff);
-        assert_write_data(32'hffffffff);
+        assert_write_data(7);
         assert_mem_write(1);
 
-        // ADD R2, R1, R1
-        instr = 32'b1110_00_001000_0001_0010_000000000001;
+        // case: DP Reg
+        // ADD R13, R4, R5
+        reset_; set_regs;
+        instr = 32'b1110_00_001000_0100_1101_00000000_0101;
         @(posedge clk); #DELAY;
-        assert_pc(16);
-        assert_alu_result(32'h1fe);
-        assert_register_value(2, 32'h1fe);
+        assert_alu_result(8);
+        assert_register_value(13, 8);
 
-        // SUB R3, R2, R1
-        instr = 32'b1110_00_000100_0010_0011_000000000001;
+        // SUB R13, R6, R5
+        reset_; set_regs;
+        instr = 32'b1110_00_000100_0110_1101_00000000_0101;
         @(posedge clk); #DELAY;
-        assert_pc(20);
-        assert_alu_result(32'hff);
-        assert_register_value(3, 32'hff);
+        assert_alu_result(2);
+        assert_register_value(13, 2);
 
-        // AND R4, R3, R2
-        instr = 32'b1110_00_000000_0011_0100_000000000010;
+        // AND R14, R7, R8
+        reset_; set_regs;
+        instr = 32'b1110_00_000000_0111_1110_00000000_1000;
         @(posedge clk); #DELAY;
-        assert_pc(24);
-        assert_alu_result(32'hfe);
-        assert_register_value(4, 32'hfe);
+        assert_alu_result(32'h00000000);
+        assert_register_value(14, 32'h00000000);
 
-        // ORR R5, R3, R2
-        instr = 32'b1110_00_011000_0011_0101_000000000010;
+        // ORR R14, R7, R8
+        reset_; set_regs;
+        instr = 32'b1110_00_011000_0111_1110_00000000_1000;
         @(posedge clk); #DELAY;
-        assert_pc(28);
-        assert_alu_result(32'h1ff);
-        assert_register_value(5, 32'h1ff);
+        assert_alu_result(32'hffffffff);
+        assert_register_value(14, 32'hffffffff);
 
-        // CMP R1, R3
-        instr = 32'b1110_00_010101_0001_0000_000000000011;
+        // CMP R5, R5
+        reset_; set_regs;
+        instr = 32'b1110_00_010101_0101_0000_00000000_0101;
         @(posedge clk); #DELAY;
-        assert_pc(32);
         assert_alu_result(32'h0);
         assert (dut.data_path.alu.z === 1'b1);
+
+        // CMP R6, R5
+        reset_; set_regs;
+        instr = 32'b1110_00_010101_0110_0000_00000000_0101;
+        @(posedge clk); #DELAY;
+        assert_alu_result(2);
+        assert (dut.data_path.alu.z === 1'b0);
+
+
 
         $display("test completed");
         $finish;
