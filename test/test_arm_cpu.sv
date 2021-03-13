@@ -134,6 +134,13 @@ module ArmCpuTestbench;
         assert_alu_result(8);
         assert_register_value(13, 8);
 
+       // ADD R13, R4, R1, LSL #2
+        reset_; set_regs;
+        instr = 32'b1110_00_001000_0100_1101_00010_00_0_0001;
+        @(posedge clk); #DELAY;
+        assert_alu_result(7);
+        assert_register_value(13, 7);
+
         // SUB R13, R6, R5
         reset_; set_regs;
         instr = 32'b1110_00_000100_0110_1101_00000000_0101;
