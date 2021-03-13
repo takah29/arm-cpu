@@ -38,13 +38,13 @@ module DataPathTestbench();
         instr = 32'b11100101100100000001000000000000; read_data = 15; reg_write = 1;
         @(posedge clk);
         #STB;
-        assert (dut.register_file.register_file[1] === read_data);
+        assert (dut.register_file.reg_file[1] === read_data);
 
         // ldr r11, [r0] （read_dataで設定するのでinstrのr0のところは何でもいい）
         instr = 32'b11100101100100001011000000000000; read_data = 32; reg_write = 1;
         @(posedge clk);
         #STB;
-        assert (dut.register_file.register_file[11] === read_data);
+        assert (dut.register_file.reg_file[11] === read_data);
 
         // str r1. [r11]
         instr = 32'b11100101100010110001000000000000; read_data = 0; reg_write = 0;

@@ -7,7 +7,7 @@ module DataPath(
     output logic [31:0] pc, write_data, alu_result
     );
 
-    logic [31:0] src_a, src_b, pc_plus8, result, ext_imm;
+    logic [31:0] src_a, src_b, pc_plus8, result, ext_imm, shifted;
     logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
@@ -15,7 +15,8 @@ module DataPath(
 
     // レジスタファイル
     RegisterFile register_file(
-    .clk(clk),
+    .clk,
+    .reset,
     .write_enable3(reg_write),
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(reg_addr2),
@@ -31,6 +32,10 @@ module DataPath(
     // 直値拡張
     Extend extend(.instr_imm(instr[23:0]), .imm_src, .ext_imm);
 
+    // シフタ
+    Shifter shifter(.sh(instr[6:5]), .shamt5(instr[11:7]), .x(write_data), .y(shifted));
+
+
     // ALU
     AluWithFlag #(32) alu(
     .a(src_a),
@@ -42,7 +47,7 @@ module DataPath(
     .c(alu_flags[1]),
     .v(alu_flags[0])
     );
-    Mux2 #(32) alu_src_b_mux(.d0(write_data), .d1(ext_imm), .s(alu_src), .y(src_b));
+    Mux2 #(32) alu_src_b_mux(.d0(shifted), .d1(ext_imm), .s(alu_src), .y(src_b));
 
     Mux2 #(32) result_mux(.d0(alu_result), .d1(read_data), .s(mem_to_reg), .y(result));
 
