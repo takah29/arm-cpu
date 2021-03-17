@@ -29,6 +29,26 @@ module ArmCpuTestbench;
         $display("R15 = %h", dut.data_path.register_file.r15);
     endtask
 
+    task show_flags;
+        $display("pc_src = %b", dut.controller.pc_src);
+        $display("mem_to_reg = %b", dut.controller.mem_to_reg);
+        $display("mem_write = %b", dut.controller.mem_write);
+        $display("alu_ctl = %b", dut.controller.alu_ctl);
+        $display("alu_src = %b", dut.controller.alu_src);
+        $display("imm_src = %b", dut.controller.imm_src);
+        $display("reg_write = %b", dut.controller.reg_write);
+        $display("reg_src = %b", dut.controller.reg_src);
+    endtask
+
+    task reset_;
+        @(negedge clk);
+        reset = 1;
+        #DELAY;
+        reset = 0;
+        #DELAY;
+        assert_pc(0);
+    endtask
+
     // テスト用初期レジスタ値設定
     task set_regs;
         // 計算用
@@ -51,26 +71,6 @@ module ArmCpuTestbench;
         // 演算結果保存用
         dut.data_path.register_file.reg_file[13] = 32'h0f0f0f0f;
         dut.data_path.register_file.reg_file[14] = 32'h0f0f0f0f;
-    endtask
-
-    task show_flags;
-        $display("pc_src = %b", dut.controller.pc_src);
-        $display("mem_to_reg = %b", dut.controller.mem_to_reg);
-        $display("mem_write = %b", dut.controller.mem_write);
-        $display("alu_ctl = %b", dut.controller.alu_ctl);
-        $display("alu_src = %b", dut.controller.alu_src);
-        $display("imm_src = %b", dut.controller.imm_src);
-        $display("reg_write = %b", dut.controller.reg_write);
-        $display("reg_src = %b", dut.controller.reg_src);
-    endtask
-
-    task reset_;
-        @(negedge clk);
-        reset = 1;
-        #DELAY;
-        reset = 0;
-        #DELAY;
-        assert_pc(0);
     endtask
 
     task assert_register_value(input logic [3:0] reg_num, input logic [31:0] exp_value);
@@ -104,7 +104,7 @@ module ArmCpuTestbench;
         #HALF_CYCLE;
     end
 
-    // シミュレーション設定
+    // シミュレーション結果出力
     // initial begin
     //   // 波形データ出力
     //   $dumpfile("wave.vcd");
@@ -114,7 +114,7 @@ module ArmCpuTestbench;
 
     initial begin
         // case: LDR
-        // LDR R13, [R0] (データメモリがないのでR14はつかわれない)
+        // LDR R13, [R0] (データメモリがないのでR0はつかわれない)
         reset_; set_regs; #DELAY
         instr = 32'b1110_01_000001_0000_1101_000000000000; read_data = 32'hffffffff;
         @(posedge clk); #DELAY;
