@@ -190,6 +190,14 @@ module ArmCpuTestbench;
         assert_alu_result(2);
         assert (dut.data_path.alu.z === 1'b0);
 
+
+        // TST R7, R8
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010001_0111_0000_00000000_1000;
+        #DELAY;
+        assert_alu_result(0);
+        assert (dut.data_path.alu.z === 1'b1);
+
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY

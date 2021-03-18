@@ -14,6 +14,7 @@ module AluDecoder
                 4'b0000: {alu_ctl, no_write} = 3'b100; // AND
                 4'b1100: {alu_ctl, no_write} = 3'b110; // OR
                 4'b1010: {alu_ctl, no_write} = 3'b011; // CMP
+                4'b1000: {alu_ctl, no_write} = 3'b101; // TST
                 default: {alu_ctl, no_write} = 3'bx; // not defined
             endcase
 
