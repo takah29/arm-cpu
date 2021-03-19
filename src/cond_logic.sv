@@ -16,6 +16,7 @@ module CondLogic
     Flopenr #(2) alu_flags_flopenr1(.clk, .reset, .en(flag_write[1]), .d(alu_flags[3:2]), .q(flags[3:2]));
     Flopenr #(2) alu_flags_flopenr0(.clk, .reset, .en(flag_write[0]), .d(alu_flags[1:0]), .q(flags[1:0]));
 
+    logic n, z, c, v;
     assign {n, z, c, v} = flags;
 
     always_comb begin
