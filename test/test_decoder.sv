@@ -4,9 +4,9 @@ module DecoderTestbench;
     logic [1:0] op;
     logic [5:0] funct;
     logic [3:0] rd;
-    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write;
+    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write, shift;
     logic [1:0] flag_w, imm_src, reg_src, alu_ctl;
-    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, no_write_exp;
+    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, no_write_exp, shift_exp;
     logic [1:0] flag_w_exp, imm_src_exp, reg_src_exp, alu_ctl_exp;
 
     Decoder dut(
@@ -19,6 +19,7 @@ module DecoderTestbench;
     .mem_to_reg,
     .alu_src,
     .no_write,
+    .shift,
     .flag_w,
     .imm_src,
     .reg_src,
@@ -47,6 +48,10 @@ module DecoderTestbench;
 
     task assert_no_write;
         assert (no_write === no_write_exp) else $error("no_write = %b, %b expected", no_write, no_write_exp);
+    endtask
+
+    task assert_shift;
+        assert (shift === shift_exp) else $error("shift = %b, %b expected", shift, shift_exp);
     endtask
 
     task assert_flag_w;
@@ -135,6 +140,12 @@ module DecoderTestbench;
         assert_no_write;
         op = 2'b00; funct = 6'b010101; rd = 0; no_write_exp = 1'b1; #DELAY;
         assert_no_write;
+
+        // case: shift test
+        op = 2'b00; funct = 6'b001000; rd = 0; shift_exp = 1'b0; #DELAY;
+        assert_shift;
+        op = 2'b00; funct = 6'b011011; rd = 0; shift_exp = 1'b1; #DELAY;
+        assert_shift;
 
         $display("test completed");
         $finish;
