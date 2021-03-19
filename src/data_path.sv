@@ -1,13 +1,13 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write, mem_to_reg, alu_src,
+    input logic pc_src, reg_write, mem_to_reg, alu_src, shift,
     input logic [31:0] instr, read_data,
     input logic [1:0] imm_src, alu_ctl, reg_src,
     output logic [3:0] alu_flags,
-    output logic [31:0] pc, write_data, alu_result
+    output logic [31:0] pc, write_data, data_memory_addr
     );
 
-    logic [31:0] src_a, src_b, pc_plus8, result, ext_imm, shifted;
+    logic [31:0] src_a, src_b, pc_plus8, result, ext_imm, shifted, alu_result;
     logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
@@ -49,6 +49,7 @@ module DataPath(
     );
     Mux2 #(32) alu_src_b_mux(.d0(shifted), .d1(ext_imm), .s(alu_src), .y(src_b));
 
-    Mux2 #(32) result_mux(.d0(alu_result), .d1(read_data), .s(mem_to_reg), .y(result));
+    Mux2 #(32) alu_result_src_b_mux(.d0(alu_result), .d1(src_b), .s(shift), .y(data_memory_addr));
+    Mux2 #(32) result_mux(.d0(data_memory_addr), .d1(read_data), .s(mem_to_reg), .y(result));
 
 endmodule

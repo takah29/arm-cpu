@@ -3,17 +3,17 @@ module DataPathTestbench();
     parameter STB = 100;
 
     logic clk, reset;
-    logic pc_src, reg_write, mem_to_reg, alu_src;
+    logic pc_src, reg_write, mem_to_reg, alu_src, shift;
     logic [31:0] instr, read_data;
     logic [1:0] imm_src, alu_ctl, reg_src;
-    logic [31:0] pc, write_data, alu_result;
-    logic [31:0] pc_exp, write_data_exp, alu_result_exp;
+    logic [31:0] pc, write_data, data_memory_addr;
+    logic [31:0] pc_exp, write_data_exp, data_memory_addr_exp;
 
-    DataPath dut(.clk, .reset, .pc_src, .imm_src, .reg_write, .mem_to_reg, .alu_src, .instr, .read_data, .alu_ctl, .reg_src, .pc, .write_data, .alu_result);
+    DataPath dut(.clk, .reset, .pc_src, .imm_src, .reg_write, .mem_to_reg, .alu_src, .shift, .instr, .read_data, .alu_ctl, .reg_src, .pc, .write_data, .data_memory_addr);
 
     task assert_out;
         assert (write_data === write_data_exp) else $error("write_data = %h, %h expected", write_data, write_data_exp);
-        assert (alu_result === alu_result_exp) else $error("alu_result = %h, %h expected", alu_result, alu_result_exp);
+        assert (data_memory_addr === data_memory_addr_exp) else $error("data_memory_addr = %h, %h expected", data_memory_addr, data_memory_addr_exp);
     endtask
 
     always begin
@@ -32,6 +32,7 @@ module DataPathTestbench();
         mem_to_reg = '1;
         reg_src = 2'b10;
         alu_src = '1;
+        shift = 1'b0;
 
         // case1: r1に15を設定、r11にアドレス32を設定、r1の値をアドレスr11に書き込む
         // ldr r1, [r0] （read_dataで設定するのでinstrのr0のところは何でもいい）
@@ -50,7 +51,7 @@ module DataPathTestbench();
         instr = 32'b11100101100010110001000000000000; read_data = 0; reg_write = 0;
         @(posedge clk);
         #STB;
-        write_data_exp = 15; alu_result_exp = 32;
+        write_data_exp = 15; data_memory_addr_exp = 32;
         assert_out;
 
         // case2: プログラムカウンタに128を設定して、r15に 128 + 8 = 136 が設定されることを確認
