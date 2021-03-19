@@ -2,11 +2,11 @@ module PcModuleTestbench();
     parameter HALF_CYCLE = 500;
     parameter STB = 100;
 
-    logic clk, pc_src;
+    logic clk, reset, pc_src;
     logic [31:0] jump, pc, pc_plus8;
     logic [31:0] pc_expected, pc_plus8_expected;
 
-    PcModule dut(.clk, .pc_src, .jump, .pc, .pc_plus8);
+    PcModule dut(.clk, .reset, .pc_src, .jump, .pc, .pc_plus8);
 
     task assert_;
         assert (pc === pc_expected) else $error("pc = %h, %h expected", pc, pc_expected);

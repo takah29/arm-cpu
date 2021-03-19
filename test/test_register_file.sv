@@ -2,12 +2,12 @@ module RegisterFileTestbench();
     parameter HALF_CYCLE = 500;
     parameter STB = 100;
 
-    logic clk, write_enable3;
+    logic clk, reset, write_enable3;
     logic [3:0] read_reg_addr1, read_reg_addr2, write_reg_addr3;
     logic [31:0] write_data3, r15;
     logic [31:0] read_data1, read_data2, rd1_expected, rd2_expected;
 
-    RegisterFile dut(.clk, .write_enable3, .read_reg_addr1, .read_reg_addr2,
+    RegisterFile dut(.clk, .reset, .write_enable3, .read_reg_addr1, .read_reg_addr2,
     .write_reg_addr3, .write_data3, .r15, .read_data1, .read_data2);
 
     task assert_;
