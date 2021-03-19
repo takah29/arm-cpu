@@ -62,6 +62,11 @@ module AluDecoderTestbench;
         alu_ctl_expected = 2'b01; flag_w_expected = 2'b11; no_write_expected = 1'b1; #DELAY;
         assert_;
 
+        // case7: TST
+        s = '1; cmd = 4'b1000;
+        alu_ctl_expected = 2'b10; flag_w_expected = 2'b10; no_write_expected = 1'b1; #DELAY;
+        assert_;
+
         $display("test completed");
         $finish;
     end
