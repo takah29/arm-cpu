@@ -4,9 +4,9 @@ module DecoderTestbench;
     logic [1:0] op;
     logic [5:0] funct;
     logic [3:0] rd;
-    logic pcs, reg_w, mem_w, mem_to_reg, alu_src;
+    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write;
     logic [1:0] flag_w, imm_src, reg_src, alu_ctl;
-    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp;
+    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, no_write_exp;
     logic [1:0] flag_w_exp, imm_src_exp, reg_src_exp, alu_ctl_exp;
 
     Decoder dut(
@@ -18,6 +18,7 @@ module DecoderTestbench;
     .mem_w,
     .mem_to_reg,
     .alu_src,
+    .no_write,
     .flag_w,
     .imm_src,
     .reg_src,
@@ -42,6 +43,10 @@ module DecoderTestbench;
 
     task assert_alu_src;
         assert (alu_src === alu_src_exp) else $error("alu_src = %b, %b expected", alu_src, alu_src_exp);
+    endtask
+
+    task assert_no_write;
+        assert (no_write === no_write_exp) else $error("no_write = %b, %b expected", no_write, no_write_exp);
     endtask
 
     task assert_flag_w;
@@ -124,6 +129,12 @@ module DecoderTestbench;
         assert_alu_ctl;
         op = 2'b00; funct = 6'b011000; rd = 0; alu_ctl_exp = 2'b11; #DELAY;
         assert_alu_ctl;
+
+        // case: no_write test
+        op = 2'b00; funct = 6'b001000; rd = 0; no_write_exp = 1'b0; #DELAY;
+        assert_no_write;
+        op = 2'b00; funct = 6'b010101; rd = 0; no_write_exp = 1'b1; #DELAY;
+        assert_no_write;
 
         $display("test completed");
         $finish;
