@@ -11,7 +11,7 @@ def run_test(testbench_filename, dependency_list, root_dir):
         [str(root_dir / "src" / module_filename) for module_filename in dependency_list]
     )
     cmd = (
-        "iverilog -g2012 -o main " f"{str(root_dir / 'test' / testbench_filename)} {dependency_str}"
+        "iverilog -g2012 -Wall -o main " f"{str(root_dir / 'test' / testbench_filename)} {dependency_str}"
     )
     result = subprocess.run(cmd, shell=True)
 
