@@ -7,11 +7,11 @@ module ControllerTestbench;
     logic [3:0] cond, alu_flags, rd;
     logic [5:0] funct;
     logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, shift;
-    logic [1:0] imm_src, alu_ctl;
-    logic [2:0] reg_src;
+    logic [1:0] imm_src;
+    logic [2:0] reg_src, alu_ctl;
     logic pc_src_exp, reg_write_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, shift_exp;
-    logic [1:0] imm_src_exp, alu_ctl_exp;
-    logic [2:0] reg_src_exp;
+    logic [1:0] imm_src_exp;
+    logic [2:0] reg_src_exp, alu_ctl_exp;
 
     Controller dut(
     .clk,
@@ -145,16 +145,20 @@ module ControllerTestbench;
         assert_reg_src;
 
         // alu_ctl test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001000; alu_ctl_exp = 2'b00;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001000; alu_ctl_exp = 3'b000;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000100; alu_ctl_exp = 2'b01;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000100; alu_ctl_exp = 3'b001;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; alu_ctl_exp = 2'b10;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; alu_ctl_exp = 3'b010;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b011000; alu_ctl_exp = 2'b11;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b011000; alu_ctl_exp = 3'b011;
+        @(posedge clk); #DELAY;
+        assert_alu_ctl;
+        // ADC
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001010; alu_ctl_exp = 3'b100;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
 
