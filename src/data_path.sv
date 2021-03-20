@@ -1,9 +1,9 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write, mem_to_reg, alu_src, shift,
+    input logic pc_src, reg_write, mem_to_reg, alu_src, shift, carry,
     input logic [31:0] instr, read_data,
-    input logic [1:0] imm_src, alu_ctl,
-    input logic [2:0] reg_src,
+    input logic [1:0] imm_src,
+    input logic [2:0] reg_src, alu_ctl,
     output logic [3:0] alu_flags,
     output logic [31:0] pc, write_data, data_memory_addr
     );
@@ -46,6 +46,7 @@ module DataPath(
     .a(src_a),
     .b(src_b),
     .alu_ctl,
+    .carry,
     .result(alu_result),
     .n(alu_flags[3]),
     .z(alu_flags[2]),
