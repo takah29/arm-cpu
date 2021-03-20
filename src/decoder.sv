@@ -4,8 +4,8 @@ module Decoder
     input logic [5:0] funct,
     input logic [3:0] rd,
     output logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write, shift,
-    output logic [1:0] flag_w, imm_src, alu_ctl,
-    output logic [2:0] reg_src
+    output logic [1:0] flag_w, imm_src,
+    output logic [2:0] reg_src, alu_ctl
     );
 
     logic branch, alu_op;

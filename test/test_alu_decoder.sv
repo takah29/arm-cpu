@@ -4,9 +4,11 @@ module AluDecoderTestbench;
     logic alu_op, s;
     logic [3:0] cmd;
     logic no_write, shift;
-    logic [1:0] alu_ctl, flag_w;
+    logic [1:0] flag_w;
+    logic [2:0] alu_ctl;
     logic no_write_expected, shift_expected;
-    logic [1:0] alu_ctl_expected, flag_w_expected;
+    logic [1:0] flag_w_expected;
+    logic [2:0] alu_ctl_expected;
 
     AluDecoder dut(.alu_op, .s, .cmd, .no_write, .shift, .alu_ctl, .flag_w);
 
@@ -20,60 +22,73 @@ module AluDecoderTestbench;
     initial begin
         // case1: not defined
         alu_op = '0; s = '1; cmd = 4'b0100;
-        alu_ctl_expected = 2'b00; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b000; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
         //alu_op = 1
         alu_op = 1'b1;
 
-        // case2: ADD
+        // case ADD
         s = '0; cmd = 4'b0100;
-        alu_ctl_expected = 2'b00; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b000; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
         s = '1;
-        alu_ctl_expected = 2'b00; flag_w_expected = 2'b11; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b000; flag_w_expected = 2'b11; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case3: SUB
+        // case SUB
         s = '0; cmd = 4'b0010;
-        alu_ctl_expected = 2'b01; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b001; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
         s = '1;
-        alu_ctl_expected = 2'b01; flag_w_expected = 2'b11; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b001; flag_w_expected = 2'b11; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case4: AND
+        // case AND
         s = '0; cmd = 4'b0000;
-        alu_ctl_expected = 2'b10; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b010; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
         s = '1;
-        alu_ctl_expected = 2'b10; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b010; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case5: OR
+        // case OR
         s = '0; cmd = 4'b1100;
-        alu_ctl_expected = 2'b11; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b011; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
         s = '1;
-        alu_ctl_expected = 2'b11; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b011; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case6: CMP
+        // case ADC
+        s = '0; cmd = 4'b0101;
+        alu_ctl_expected = 3'b100; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        assert_;
+        s = '1;
+        alu_ctl_expected = 3'b100; flag_w_expected = 2'b11; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        assert_;
+
+        // case CMP
         s = '1; cmd = 4'b1010;
-        alu_ctl_expected = 2'b01; flag_w_expected = 2'b11; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b001; flag_w_expected = 2'b11; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case7: TST
+        // case CMN
+        s = '1; cmd = 4'b1011;
+        alu_ctl_expected = 3'b000; flag_w_expected = 2'b11; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
+        assert_;
+
+        // case TST
         s = '1; cmd = 4'b1000;
-        alu_ctl_expected = 2'b10; flag_w_expected = 2'b10; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
+        alu_ctl_expected = 3'b010; flag_w_expected = 2'b10; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case8: LSL
+        // case LSL
         s = '0; cmd = 4'b1101;
-        alu_ctl_expected = 2'bxx; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b1; #DELAY;
+        alu_ctl_expected = 3'b0xx; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b1; #DELAY;
         assert_;
         s = '1;
-        alu_ctl_expected = 2'bxx; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b1; #DELAY;
+        alu_ctl_expected = 3'b0xx; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b1; #DELAY;
         assert_;
 
         $display("test completed");

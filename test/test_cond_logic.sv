@@ -6,8 +6,8 @@ module CondLogicTestbench;
     logic pcs, reg_w, mem_w, no_write;
     logic [1:0] flag_w;
     logic [3:0] cond, alu_flags;
-    logic pc_src, reg_write, mem_write;
-    logic pc_src_exp, reg_write_exp, mem_write_exp, cond_ex_exp;
+    logic pc_src, reg_write, mem_write, carry;
+    logic pc_src_exp, reg_write_exp, mem_write_exp, cond_ex_exp, carry_exp;
 
     CondLogic dut(
     .clk,
@@ -21,7 +21,8 @@ module CondLogicTestbench;
     .alu_flags,
     .pc_src,
     .reg_write,
-    .mem_write
+    .mem_write,
+    .carry
     );
 
     task assert_pc_src;
@@ -34,6 +35,10 @@ module CondLogicTestbench;
 
     task assert_mem_write;
         assert (mem_write === mem_write_exp) else $error("mem_write = %b, %b expected", mem_write, mem_write_exp);
+    endtask
+
+    task assert_carry;
+        assert (carry === carry_exp) else $error("carry = %b, %b expected", carry, carry_exp);
     endtask
 
     task assert_dut_cond_ex;
@@ -104,6 +109,16 @@ module CondLogicTestbench;
         cond = 4'b1110; mem_w = 1'b1; mem_write_exp = 1'b1;
         @(posedge clk); #DELAY
         assert_mem_write;
+
+        // case: carry test
+        cond = 4'b1110; alu_flags = 4'b0000; carry_exp = 1'b0;
+        flag_w = 2'b11;
+        @(posedge clk); #DELAY
+        assert_carry;
+        cond = 4'b1110; alu_flags = 4'b0010; carry_exp = 1'b1;
+        flag_w = 2'b11;
+        @(posedge clk); #DELAY
+        assert_carry;
 
         // case: 条件チェック
         // EQ
