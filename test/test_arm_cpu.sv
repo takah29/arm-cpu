@@ -190,13 +190,28 @@ module ArmCpuTestbench;
         assert_data_memory_addr(2);
         assert (dut.data_path.alu.z === 1'b0);
 
-
         // TST R7, R8
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010001_0111_0000_00000000_1000;
         #DELAY;
         assert_data_memory_addr(0);
         assert (dut.data_path.alu.z === 1'b1);
+
+        // LSL R13, R2, #2
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00010_00_0_0010;
+        #DELAY;
+        assert_data_memory_addr(40);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 40);
+
+        // LSL R13, R2, R4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_0100_0_00_1_0010;
+        #DELAY;
+        assert_data_memory_addr(80);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 80);
 
         // case: Branch
         // B Label
