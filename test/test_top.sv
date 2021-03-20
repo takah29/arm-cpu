@@ -17,7 +17,7 @@ module TopTestbench;
         for (int i = 0; i < 15; i++) begin
             $write("R%1d=%h, ", i, dut.arm_cpu.data_path.register_file.reg_file[i]);
         end
-        $display("R15 = %h", dut.arm_cpu.data_path.register_file.r15);
+        $display("R15=%h", dut.arm_cpu.data_path.register_file.r15);
     endtask
 
     // シミュレーション結果出力

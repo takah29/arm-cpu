@@ -7,7 +7,7 @@
 * *Opcode* Rd, Rn, Src2
   * AND, SUB, ADD, ORR
 * *Opcode* Rn, Src2
-  * CMP, TST
+  * CMP, CMN, TST
 * *Opcode* Rd, Rm, Rs/shamt5
   * LSL
 
