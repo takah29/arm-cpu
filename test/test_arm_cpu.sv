@@ -198,6 +198,20 @@ module ArmCpuTestbench;
         assert_data_memory_addr(2);
         assert (dut.data_path.alu.z === 1'b0);
 
+        // CMN R1, R9
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010111_0001_0000_00000000_1001;
+        #DELAY;
+        assert_data_memory_addr(32'h0);
+        assert (dut.data_path.alu.z === 1'b1);
+
+        // CMN R1, R2
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010111_0001_0000_00000000_0010;
+        #DELAY;
+        assert_data_memory_addr(11);
+        assert (dut.data_path.alu.z === 1'b0);
+
         // TST R7, R8
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010001_0111_0000_00000000_1000;

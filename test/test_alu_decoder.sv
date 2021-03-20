@@ -26,7 +26,7 @@ module AluDecoderTestbench;
         //alu_op = 1
         alu_op = 1'b1;
 
-        // case2: ADD
+        // case ADD
         s = '0; cmd = 4'b0100;
         alu_ctl_expected = 2'b00; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
@@ -34,7 +34,7 @@ module AluDecoderTestbench;
         alu_ctl_expected = 2'b00; flag_w_expected = 2'b11; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case3: SUB
+        // case SUB
         s = '0; cmd = 4'b0010;
         alu_ctl_expected = 2'b01; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
@@ -42,7 +42,7 @@ module AluDecoderTestbench;
         alu_ctl_expected = 2'b01; flag_w_expected = 2'b11; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case4: AND
+        // case AND
         s = '0; cmd = 4'b0000;
         alu_ctl_expected = 2'b10; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
@@ -50,7 +50,7 @@ module AluDecoderTestbench;
         alu_ctl_expected = 2'b10; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case5: OR
+        // case OR
         s = '0; cmd = 4'b1100;
         alu_ctl_expected = 2'b11; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
@@ -58,17 +58,22 @@ module AluDecoderTestbench;
         alu_ctl_expected = 2'b11; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case6: CMP
+        // case CMP
         s = '1; cmd = 4'b1010;
         alu_ctl_expected = 2'b01; flag_w_expected = 2'b11; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case7: TST
+        // case CMN
+        s = '1; cmd = 4'b1011;
+        alu_ctl_expected = 2'b00; flag_w_expected = 2'b11; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
+        assert_;
+
+        // case TST
         s = '1; cmd = 4'b1000;
         alu_ctl_expected = 2'b10; flag_w_expected = 2'b10; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case8: LSL
+        // case LSL
         s = '0; cmd = 4'b1101;
         alu_ctl_expected = 2'bxx; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b1; #DELAY;
         assert_;
