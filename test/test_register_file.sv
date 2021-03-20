@@ -7,8 +7,18 @@ module RegisterFileTestbench();
     logic [31:0] write_data3, r15;
     logic [31:0] read_data1, read_data2, rd1_expected, rd2_expected;
 
-    RegisterFile dut(.clk, .reset, .write_enable3, .read_reg_addr1, .read_reg_addr2,
-    .write_reg_addr3, .write_data3, .r15, .read_data1, .read_data2);
+    RegisterFile dut(
+    .clk,
+    .reset,
+    .write_enable3,
+    .read_reg_addr1,
+    .read_reg_addr2,
+    .write_reg_addr3,
+    .write_data3,
+    .r15,
+    .read_data1,
+    .read_data2
+    );
 
     task assert_;
         assert (read_data1 === rd1_expected) else $error("read_data1 = %h, %h expected", read_data1, rd1_expected);

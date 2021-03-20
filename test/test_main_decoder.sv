@@ -4,9 +4,11 @@ module MainDecoderTestbench;
     logic [1:0] op;
     logic funct_5, funct_0;
     logic branch, mem_to_reg, mem_w, alu_src, reg_w, alu_op;
-    logic [1:0] imm_src, reg_src;
+    logic [1:0] imm_src;
+    logic [2:0] reg_src;
     logic branch_exp, mem_to_reg_exp, mem_w_exp, alu_src_exp, reg_w_exp, alu_op_exp;
-    logic [1:0] imm_src_exp, reg_src_exp;
+    logic [1:0] imm_src_exp;
+    logic [2:0] reg_src_exp;
 
     MainDecoder dut(
     .op,
@@ -33,7 +35,7 @@ module MainDecoderTestbench;
         assert (alu_op === alu_op_exp) else $error("alu_op = %b, %b expected", alu_op, alu_op_exp);
     endtask
 
-    task set_exp(input [9:0] controls);
+    task set_exp(input [10:0] controls);
         begin
             {
                 branch_exp,
@@ -50,23 +52,23 @@ module MainDecoderTestbench;
 
     initial begin
         // case1: type DP Reg
-        op = 2'b00; funct_5 = '0; set_exp(10'b0000001001); #DELAY;
+        op = 2'b00; funct_5 = '0; set_exp(11'b0_0_0_0_00_1_100_1); #DELAY;
         assert_;
 
         // case2: type DP Imm
-        op = 2'b00; funct_5 = '1; set_exp(10'b0001001001); #DELAY;
+        op = 2'b00; funct_5 = '1; set_exp(11'b0_0_0_1_00_1_000_1); #DELAY;
         assert_;
 
         // case3: type STR
-        op = 2'b01; funct_0 = '0; set_exp(10'b0011010100); #DELAY;
+        op = 2'b01; funct_0 = '0; set_exp(11'b0_0_1_1_01_0_010_0); #DELAY;
         assert_;
 
         // case4: type LDR
-        op = 2'b01; funct_0 = '1; set_exp(10'b0101011000); #DELAY;
+        op = 2'b01; funct_0 = '1; set_exp(11'b0_1_0_1_01_1_000_0); #DELAY;
         assert_;
 
         // case5: type B
-        op = 2'b10; set_exp(10'b1001100010); #DELAY;
+        op = 2'b10; set_exp(11'b1_0_0_1_10_0_001_0); #DELAY;
         assert_;
 
         $display("test completed");

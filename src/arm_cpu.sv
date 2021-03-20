@@ -7,7 +7,8 @@ module ArmCpu
     );
 
     logic pc_src, reg_write, mem_to_reg, alu_src, shift;
-    logic [1:0] imm_src, reg_src, alu_ctl;
+    logic [1:0] imm_src, alu_ctl;
+    logic [2:0] reg_src;
     logic [3:0] alu_flags;
 
     DataPath data_path(
