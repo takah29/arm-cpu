@@ -29,7 +29,7 @@ module TopTestbench;
     // end
 
     initial begin
-        reset <= 1; # 22; reset <= 0;
+        reset <= 1; # 1; reset <= 0;
     end
 
     always begin
