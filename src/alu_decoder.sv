@@ -14,6 +14,7 @@ module AluDecoder
                 4'b0000: {alu_ctl, no_write, shift} = 4'b1000; // AND
                 4'b1100: {alu_ctl, no_write, shift} = 4'b1100; // OR
                 4'b1010: {alu_ctl, no_write, shift} = 4'b0110; // CMP
+                4'b1011: {alu_ctl, no_write, shift} = 4'b0010; // CMN
                 4'b1000: {alu_ctl, no_write, shift} = 4'b1010; // TST
                 4'b1101: {alu_ctl, no_write, shift} = 4'bxx01; // LSL
                 default: {alu_ctl, no_write, shift} = 4'bx; // not defined
