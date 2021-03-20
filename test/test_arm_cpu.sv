@@ -184,6 +184,21 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'hffffffff);
 
+        // ADC (まずADDを実行してcarryフラグを上げる)
+        // ADD R13, R1, R9
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_001001_0001_1101_00000000_1001;
+        #DELAY;
+        assert_data_memory_addr(0);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 0);
+        // ADC R14, R0, R9
+        instr = 32'b1110_00_001010_0000_1110_00000000_1001;
+        #DELAY;
+        assert_data_memory_addr(0);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 0);
+
         // CMP R5, R5
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0101_0000_00000000_0101;
@@ -244,8 +259,6 @@ module ArmCpuTestbench;
         assert_pc(0);
         @(posedge clk); #DELAY;
         assert_pc(32'h44);
-
-
 
         $display("test completed");
         $finish;
