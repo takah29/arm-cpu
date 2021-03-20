@@ -4,7 +4,7 @@ module CondLogic
     input logic pcs, reg_w, mem_w, no_write,
     input logic [1:0] flag_w,
     input logic [3:0] cond, alu_flags,
-    output logic pc_src, reg_write, mem_write
+    output logic pc_src, reg_write, mem_write, carry
     );
 
     logic cond_ex;
@@ -43,4 +43,5 @@ module CondLogic
     assign pc_src = pcs & cond_ex;
     assign reg_write = reg_w & cond_ex & ~no_write;
     assign mem_write = mem_w & cond_ex;
+    assign carry = c;
 endmodule
