@@ -3,8 +3,9 @@ module Decoder
     input logic [1:0] op,
     input logic [5:0] funct,
     input logic [3:0] rd,
-    output logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write,
-    output logic [1:0] flag_w, imm_src, reg_src, alu_ctl
+    output logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write, shift,
+    output logic [1:0] flag_w, imm_src, alu_ctl,
+    output logic [2:0] reg_src
     );
 
     logic branch, alu_op;
@@ -29,7 +30,8 @@ module Decoder
     .cmd(funct[4:1]),
     .alu_ctl,
     .flag_w,
-    .no_write
+    .no_write,
+    .shift
     );
 
     assign pcs = ((rd == 15) & reg_w) | branch;

@@ -4,10 +4,12 @@ module DecoderTestbench;
     logic [1:0] op;
     logic [5:0] funct;
     logic [3:0] rd;
-    logic pcs, reg_w, mem_w, mem_to_reg, alu_src;
-    logic [1:0] flag_w, imm_src, reg_src, alu_ctl;
-    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp;
-    logic [1:0] flag_w_exp, imm_src_exp, reg_src_exp, alu_ctl_exp;
+    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write, shift;
+    logic [1:0] flag_w, imm_src, alu_ctl;
+    logic [2:0] reg_src;
+    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, no_write_exp, shift_exp;
+    logic [1:0] flag_w_exp, imm_src_exp, alu_ctl_exp;
+    logic [2:0] reg_src_exp;
 
     Decoder dut(
     .op,
@@ -18,6 +20,8 @@ module DecoderTestbench;
     .mem_w,
     .mem_to_reg,
     .alu_src,
+    .no_write,
+    .shift,
     .flag_w,
     .imm_src,
     .reg_src,
@@ -42,6 +46,14 @@ module DecoderTestbench;
 
     task assert_alu_src;
         assert (alu_src === alu_src_exp) else $error("alu_src = %b, %b expected", alu_src, alu_src_exp);
+    endtask
+
+    task assert_no_write;
+        assert (no_write === no_write_exp) else $error("no_write = %b, %b expected", no_write, no_write_exp);
+    endtask
+
+    task assert_shift;
+        assert (shift === shift_exp) else $error("shift = %b, %b expected", shift, shift_exp);
     endtask
 
     task assert_flag_w;
@@ -110,9 +122,9 @@ module DecoderTestbench;
         assert_imm_src;
 
         // case: reg_src test
-        op = 2'b00; funct = 6'b000000; rd = 0; reg_src_exp = 2'b00; #DELAY;
+        op = 2'b00; funct = 6'b000000; rd = 0; reg_src_exp = 3'b100; #DELAY;
         assert_reg_src;
-        op = 2'b01; funct = 6'b000000; rd = 0; reg_src_exp = 2'b10; #DELAY;
+        op = 2'b01; funct = 6'b000000; rd = 0; reg_src_exp = 3'b010; #DELAY;
         assert_reg_src;
 
         // case: alu_ctl test
@@ -124,6 +136,18 @@ module DecoderTestbench;
         assert_alu_ctl;
         op = 2'b00; funct = 6'b011000; rd = 0; alu_ctl_exp = 2'b11; #DELAY;
         assert_alu_ctl;
+
+        // case: no_write test
+        op = 2'b00; funct = 6'b001000; rd = 0; no_write_exp = 1'b0; #DELAY;
+        assert_no_write;
+        op = 2'b00; funct = 6'b010101; rd = 0; no_write_exp = 1'b1; #DELAY;
+        assert_no_write;
+
+        // case: shift test
+        op = 2'b00; funct = 6'b001000; rd = 0; shift_exp = 1'b0; #DELAY;
+        assert_shift;
+        op = 2'b00; funct = 6'b011011; rd = 0; shift_exp = 1'b1; #DELAY;
+        assert_shift;
 
         $display("test completed");
         $finish;

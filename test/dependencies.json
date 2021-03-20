@@ -89,5 +89,26 @@
         "flopenr.sv",
         "mux2.sv",
         "flopr.sv"
+    ],
+    "test_top": [
+        "top.sv",
+        "arm_cpu.sv",
+        "data_path.sv",
+        "pc_module.sv",
+        "adder.sv",
+        "register_file.sv",
+        "extend.sv",
+        "shifter.sv",
+        "alu_with_flag.sv",
+        "controller.sv",
+        "decoder.sv",
+        "main_decoder.sv",
+        "alu_decoder.sv",
+        "cond_logic.sv",
+        "flopenr.sv",
+        "mux2.sv",
+        "flopr.sv",
+        "instruction_memory.sv",
+        "data_memory.sv"
     ]
 }

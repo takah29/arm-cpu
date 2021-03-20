@@ -3,11 +3,12 @@ module ArmCpu
     input logic clk, reset,
     input logic [31:0] instr, read_data,
     output logic mem_write,
-    output logic [31:0] pc, write_data, alu_result
+    output logic [31:0] pc, write_data, data_memory_addr
     );
 
-    logic pc_src, reg_write, mem_to_reg, alu_src;
-    logic [1:0] imm_src, reg_src, alu_ctl;
+    logic pc_src, reg_write, mem_to_reg, alu_src, shift;
+    logic [1:0] imm_src, alu_ctl;
+    logic [2:0] reg_src;
     logic [3:0] alu_flags;
 
     DataPath data_path(
@@ -17,6 +18,7 @@ module ArmCpu
     .reg_write,
     .mem_to_reg,
     .alu_src,
+    .shift,
     .instr,
     .read_data,
     .imm_src,
@@ -25,7 +27,7 @@ module ArmCpu
     .alu_flags,
     .pc,
     .write_data,
-    .alu_result
+    .data_memory_addr
     );
 
     Controller controller(
@@ -41,6 +43,7 @@ module ArmCpu
     .mem_write,
     .mem_to_reg,
     .alu_src,
+    .shift,
     .imm_src,
     .reg_src,
     .alu_ctl

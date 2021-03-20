@@ -5,7 +5,7 @@ module ArmCpuTestbench;
     logic clk, reset;
     logic [31:0] instr, read_data;
     logic mem_write;
-    logic [31:0] pc, write_data, alu_result;
+    logic [31:0] pc, write_data, data_memory_addr;
 
     ArmCpu dut(
     .clk,
@@ -15,7 +15,7 @@ module ArmCpuTestbench;
     .mem_write,
     .pc,
     .write_data,
-    .alu_result
+    .data_memory_addr
     );
 
     task p(input int x);
@@ -85,8 +85,8 @@ module ArmCpuTestbench;
         assert (pc === pc_exp) else $error("pc = %b, %b expected", pc, pc_exp);
     endtask
 
-    task assert_alu_result(input logic [31:0] alu_result_exp);
-        assert (alu_result === alu_result_exp) else $error("alu_result = %b, %b expected", alu_result, alu_result_exp);
+    task assert_data_memory_addr(input logic [31:0] data_memory_addr_exp);
+        assert (data_memory_addr === data_memory_addr_exp) else $error("data_memory_addr = %b, %b expected", data_memory_addr, data_memory_addr_exp);
     endtask
 
     task assert_write_data(input logic [31:0] write_data_exp);
@@ -116,22 +116,30 @@ module ArmCpuTestbench;
         // case: LDR
         // LDR R13, [R0] (データメモリがないのでR0はつかわれない)
         reset_; set_regs; #DELAY
-        instr = 32'b1110_01_000001_0000_1101_000000000000; read_data = 32'hffffffff;
+        instr = 32'b1110_01_011001_0000_1101_000000000000; read_data = 32'hffffffff;
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hffffffff);
 
         // LDR R14, [R0]
         reset_; set_regs; #DELAY
-        instr = 32'b1110_01_000001_0000_1110_000000000000; read_data = 32'hff;
+        instr = 32'b1110_01_011001_0000_1110_000000000000; read_data = 32'hff;
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'hff);
 
         // case: STR
         // STR R6, [R10]
         reset_; set_regs; #DELAY
-        instr = 32'b1110_01_000000_1010_0110_000000000000;
+        instr = 32'b1110_01_011000_1010_0110_000000000000;
         #DELAY;
-        assert_alu_result(32'hff);
+        assert_data_memory_addr(32'hff);
+        assert_write_data(7);
+        assert_mem_write(1);
+
+        // STR R6, [R4, #7]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_011000_0100_0110_000000000111;
+        #DELAY;
+        assert_data_memory_addr(10);
         assert_write_data(7);
         assert_mem_write(1);
 
@@ -140,7 +148,7 @@ module ArmCpuTestbench;
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_001000_0100_1101_00000000_0101;
         #DELAY;
-        assert_alu_result(8);
+        assert_data_memory_addr(8);
         @(posedge clk); #DELAY;
         assert_register_value(13, 8);
 
@@ -148,7 +156,7 @@ module ArmCpuTestbench;
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_001000_0100_1101_00010_00_0_0001;
         #DELAY;
-        assert_alu_result(7);
+        assert_data_memory_addr(7);
         @(posedge clk); #DELAY;
         assert_register_value(13, 7);
 
@@ -156,7 +164,7 @@ module ArmCpuTestbench;
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_000100_0110_1101_00000000_0101;
         #DELAY;
-        assert_alu_result(2);
+        assert_data_memory_addr(2);
         @(posedge clk); #DELAY;
         assert_register_value(13, 2);
 
@@ -164,7 +172,7 @@ module ArmCpuTestbench;
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_000000_0111_1110_00000000_1000;
         #DELAY;
-        assert_alu_result(32'h00000000);
+        assert_data_memory_addr(32'h00000000);
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'h00000000);
 
@@ -172,7 +180,7 @@ module ArmCpuTestbench;
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_011000_0111_1110_00000000_1000;
         #DELAY;
-        assert_alu_result(32'hffffffff);
+        assert_data_memory_addr(32'hffffffff);
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'hffffffff);
 
@@ -180,30 +188,45 @@ module ArmCpuTestbench;
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0101_0000_00000000_0101;
         #DELAY;
-        assert_alu_result(32'h0);
+        assert_data_memory_addr(32'h0);
         assert (dut.data_path.alu.z === 1'b1);
 
         // CMP R6, R5
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0110_0000_00000000_0101;
         #DELAY;
-        assert_alu_result(2);
+        assert_data_memory_addr(2);
         assert (dut.data_path.alu.z === 1'b0);
-
 
         // TST R7, R8
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010001_0111_0000_00000000_1000;
         #DELAY;
-        assert_alu_result(0);
+        assert_data_memory_addr(0);
         assert (dut.data_path.alu.z === 1'b1);
+
+        // LSL R13, R2, #2
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00010_00_0_0010;
+        #DELAY;
+        assert_data_memory_addr(40);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 40);
+
+        // LSL R13, R2, R4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_0100_0_00_1_0010;
+        #DELAY;
+        assert_data_memory_addr(80);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 80);
 
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY
         instr = 32'b1110_10_10_000000000000000000001111;
         #DELAY;
-        assert_alu_result(32'h44);
+        assert_data_memory_addr(32'h44);
         assert_pc(0);
         @(posedge clk); #DELAY;
         assert_pc(32'h44);
