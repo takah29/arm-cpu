@@ -14,6 +14,7 @@ module DataPath(
     PcModule pc_module(.clk, .reset, .pc_src, .jump(result), .pc, .pc_plus8);
 
     // レジスタファイル
+    logic [3:0] reg_addr0_mux_out;
     RegisterFile register_file(
     .clk,
     .reset,
@@ -26,15 +27,17 @@ module DataPath(
     .read_data1(src_a),
     .read_data2(write_data)
     );
-    Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[0]), .y(reg_addr1));
+    Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[0]), .y(reg_addr0_mux_out));
     Mux2 #(4) reg_addr1_mux(.d0(instr[3:0]), .d1(instr[15:12]), .s(reg_src[1]), .y(reg_addr2));
+    Mux2 #(4) reg_addr2_mux(.d0(reg_addr0_mux_out), .d1(instr[11:8]), .s(instr[4]), .y(reg_addr1));
 
     // 直値拡張
     Extend extend(.instr_imm(instr[23:0]), .imm_src, .ext_imm);
 
     // シフタ
-    Shifter shifter(.sh(instr[6:5]), .shamt5(instr[11:7]), .x(write_data), .y(shifted));
-
+    logic [4:0] shamt5;
+    Mux2 #(5) shift_imm_reg_mux(.d0(instr[11:7]), .d1(src_a[4:0]), .s(instr[4]), .y(shamt5));
+    Shifter shifter(.sh(instr[6:5]), .shamt5(shamt5), .x(write_data), .y(shifted));
 
     // ALU
     AluWithFlag #(32) alu(
