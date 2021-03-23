@@ -192,6 +192,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'hffffffff);
 
+        // EOR R14, R10, R12
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_000010_1010_1110_00000000_1100;
+        #DELAY;
+        assert_data_memory_addr(32'h00ffff00);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 32'h00ffff00);
+
         // ADC (まずADDを実行してcarryフラグを上げる)
         // ADD R13, R1, R9
         reset_; set_regs; #DELAY
@@ -206,6 +214,14 @@ module ArmCpuTestbench;
         assert_data_memory_addr(0);
         @(posedge clk); #DELAY;
         assert_register_value(14, 0);
+
+        // RSB R13, R5, R6
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_000110_0101_1101_00000000_0110;
+        #DELAY;
+        assert_data_memory_addr(2);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 2);
 
         // CMP R5, R5
         reset_; set_regs; #DELAY
@@ -264,6 +280,54 @@ module ArmCpuTestbench;
         assert_data_memory_addr(80);
         @(posedge clk); #DELAY;
         assert_register_value(13, 80);
+
+        // LSR R13, R3, #2
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00010_01_0_0011;
+        #DELAY;
+        assert_data_memory_addr(250);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 250);
+
+        // LSR R13, R3, R4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_0100_0_01_1_0011;
+        #DELAY;
+        assert_data_memory_addr(125);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 125);
+
+        // ASR R13, R7, #31
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_11111_10_0_0111;
+        #DELAY;
+        assert_data_memory_addr(32'hffffffff);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hffffffff);
+
+        // ASR R13, R7, R4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_0100_0_10_1_0111;
+        #DELAY;
+        assert_data_memory_addr(32'hf0000000);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hf0000000);
+
+        // ROR R13, R8, #4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00100_11_0_1000;
+        #DELAY;
+        assert_data_memory_addr(32'hf7ffffff);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hf7ffffff);
+
+        // ROR R13, R8, R4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_0100_0_11_1_1000;
+        #DELAY;
+        assert_data_memory_addr(32'hefffffff);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hefffffff);
 
         // case: Branch
         // B Label

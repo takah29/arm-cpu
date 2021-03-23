@@ -2,7 +2,7 @@ module ShifterTestbench;
     parameter DELAY = 10;
 
     logic [1:0] shift_type;
-    logic [4:0] shift_num;
+    logic [7:0] shift_num;
     logic [31:0] x;
     logic [31:0] y, y_expected;
 
@@ -18,9 +18,9 @@ module ShifterTestbench;
 
         shift_num = '0; x = '1; y_expected = '1; #DELAY;
         assert_;
-        shift_num = 5'b1; x = '1; y_expected = 32'hfffffffe; #DELAY;
+        shift_num = 8'b00000001; x = '1; y_expected = 32'hfffffffe; #DELAY;
         assert_;
-        shift_num = 5'b11111; x = '1; y_expected = 32'h80000000; #DELAY;
+        shift_num = 8'b00011111; x = '1; y_expected = 32'h80000000; #DELAY;
         assert_;
 
         // case2: LSR
@@ -28,9 +28,9 @@ module ShifterTestbench;
 
         shift_num = '0; x = '1; y_expected = '1; #DELAY;
         assert_;
-        shift_num = 5'b1; x = '1; y_expected = 32'h7fffffff; #DELAY;
+        shift_num = 8'b00000001; x = '1; y_expected = 32'h7fffffff; #DELAY;
         assert_;
-        shift_num = 5'b11111; x = '1; y_expected = 32'h00000001; #DELAY;
+        shift_num = 8'b00011111; x = '1; y_expected = 32'h00000001; #DELAY;
         assert_;
 
         // case3: ASR
@@ -38,9 +38,9 @@ module ShifterTestbench;
 
         shift_num = '0; x = '1; y_expected = '1; #DELAY;
         assert_;
-        shift_num = 5'b1; x = '1; y_expected = 32'hffffffff; #DELAY;
+        shift_num = 8'b00000001; x = '1; y_expected = 32'hffffffff; #DELAY;
         assert_;
-        shift_num = 5'b11111; x = '1; y_expected = 32'hffffffff; #DELAY;
+        shift_num = 8'b00011111; x = '1; y_expected = 32'hffffffff; #DELAY;
         assert_;
 
         // case4: ROR
@@ -48,9 +48,9 @@ module ShifterTestbench;
 
         shift_num = '0; x = '1; y_expected = '1; #DELAY;
         assert_;
-        shift_num = 5'b1; x = 32'b1; y_expected = 32'h80000000; #DELAY;
+        shift_num = 8'b00000001; x = 32'b1; y_expected = 32'h80000000; #DELAY;
         assert_;
-        shift_num = 5'b11111; x = 32'h7fffffff; y_expected = 32'hfffffffe; #DELAY;
+        shift_num = 8'b00011111; x = 32'h7fffffff; y_expected = 32'hfffffffe; #DELAY;
         assert_;
 
         $display("test completed");
