@@ -9,7 +9,7 @@ module DataPath(
     );
 
     logic [31:0] src_a, src_b, rs_data, pc_plus8, result, ext_imm, shifted, alu_result;
-    logic [3:0] reg_addr1, reg_addr2, reg_addrs;
+    logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
     PcModule pc_module(.clk, .reset, .pc_src, .jump(result), .pc, .pc_plus8);
@@ -21,7 +21,7 @@ module DataPath(
     .write_enable3(reg_write),
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(reg_addr2),
-    .read_reg_addrs(reg_addrs),
+    .read_reg_addrs(instr[11:8]),
     .write_reg_addr3(instr[15:12]),
     .write_data3(result),
     .r15(pc_plus8),
