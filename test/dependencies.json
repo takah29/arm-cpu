@@ -104,6 +104,7 @@
         "register_file.sv",
         "extend.sv",
         "shifter.sv",
+        "swap.sv",
         "alu_with_flag.sv",
         "controller.sv",
         "decoder.sv",
