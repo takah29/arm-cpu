@@ -289,7 +289,7 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 125);
 
-        // ASR R13, R7, #3
+        // ASR R13, R7, #31
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_011010_0000_1101_11111_10_0_0111;
         #DELAY;
@@ -304,6 +304,22 @@ module ArmCpuTestbench;
         assert_data_memory_addr(32'hf0000000);
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hf0000000);
+
+        // ROR R13, R8, #4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00100_11_0_1000;
+        #DELAY;
+        assert_data_memory_addr(32'hf7ffffff);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hf7ffffff);
+
+        // ROR R13, R8, R4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_0100_0_11_1_1000;
+        #DELAY;
+        assert_data_memory_addr(32'hefffffff);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hefffffff);
 
         // case: Branch
         // B Label
