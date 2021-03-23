@@ -50,6 +50,13 @@ module AluWithFlagTestbench;
         a = 32'h000f000f; b = 32'hf000f000; result_expected = 32'hf00ff00f; #DELAY
         assert_;
 
+        // EOR
+        alu_ctl = 3'b110;
+        a = 32'hf0f0f0f0; b = 32'h0f0f0f0f; result_expected = 32'hffffffff; #DELAY
+        assert_;
+        a = 32'hf0f0f0f0; b = 32'hf0f0f0f0; result_expected = 32'h00000000; #DELAY
+        assert_;
+
         // Nフラグのチェック
         a = 0; b = 0; alu_ctl = 3'b000; #DELAY
         assert (n === 0) else $error("n = %d, %d expected", n, 0);
