@@ -5,6 +5,9 @@
     "test_mux2": [
         "mux2.sv"
     ],
+    "test_swap": [
+        "swap.sv"
+    ],
     "test_flopr": [
         "flopr.sv"
     ],
