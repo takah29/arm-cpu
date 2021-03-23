@@ -3,14 +3,32 @@ module DataPathTestbench();
     parameter STB = 100;
 
     logic clk, reset;
-    logic pc_src, reg_write, mem_to_reg, alu_src, shift, carry;
+    logic pc_src, reg_write, mem_to_reg, alu_src, shift, carry, swap;
     logic [31:0] instr, read_data;
     logic [1:0] imm_src, reg_src;
     logic [2:0] alu_ctl;
     logic [31:0] pc, write_data, data_memory_addr;
     logic [31:0] pc_exp, write_data_exp, data_memory_addr_exp;
 
-    DataPath dut(.clk, .reset, .pc_src, .imm_src, .reg_write, .mem_to_reg, .alu_src, .shift, .carry, .instr, .read_data, .alu_ctl, .reg_src, .pc, .write_data, .data_memory_addr);
+    DataPath dut(
+    .clk,
+    .reset,
+    .pc_src,
+    .imm_src,
+    .reg_write,
+    .mem_to_reg,
+    .alu_src,
+    .shift,
+    .carry,
+    .swap,
+    .instr,
+    .read_data,
+    .alu_ctl,
+    .reg_src,
+    .pc,
+    .write_data,
+    .data_memory_addr
+    );
 
     task assert_out;
         assert (write_data === write_data_exp) else $error("write_data = %h, %h expected", write_data, write_data_exp);
@@ -35,6 +53,7 @@ module DataPathTestbench();
         alu_src = '1;
         shift = 1'b0;
         carry = 1'b0;
+        swap = 1'b0;
 
         // case1: r1に15を設定、r11にアドレス32を設定、r1の値をアドレスr11に書き込む
         // ldr r1, [r0] （read_dataで設定するのでinstrのr0のところは何でもいい）
