@@ -37,7 +37,7 @@ module DataPath(
 
     // シフタ
     logic [7:0] shift_num;
-    // シフト量はmod 32なのでrs_dataは下位5ビットだけ使う
+    // rs_dataは下位8ビットだけ使う
     Mux2 #(8) shift_imm_reg_mux(.d0({3'b000, instr[11:7]}), .d1(rs_data[7:0]), .s(instr[4]), .y(shift_num));
     Shifter shifter(.shift_type(instr[6:5]), .shift_num(shift_num), .x(write_data), .y(shifted));
 
