@@ -8,8 +8,8 @@ module DataPath(
     output logic [31:0] pc, write_data, data_memory_addr
     );
 
-    logic [31:0] src_a, src_b, pc_plus8, result, ext_imm, shifted, alu_result;
-    logic [3:0] reg_addr1, reg_addr2;
+    logic [31:0] src_a, src_b, rs_data, pc_plus8, result, ext_imm, shifted, alu_result;
+    logic [3:0] reg_addr1, reg_addr2, reg_addrs;
 
     // プログラムカウンタ
     PcModule pc_module(.clk, .reset, .pc_src, .jump(result), .pc, .pc_plus8);
@@ -21,11 +21,13 @@ module DataPath(
     .write_enable3(reg_write),
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(reg_addr2),
+    .read_reg_addrs(reg_addrs),
     .write_reg_addr3(instr[15:12]),
     .write_data3(result),
     .r15(pc_plus8),
     .read_data1(src_a),
-    .read_data2(write_data)
+    .read_data2(write_data),
+    .read_datas(rs_data)
     );
     Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[0]), .y(reg_addr1));
     Mux2 #(4) reg_addr1_mux(.d0(instr[3:0]), .d1(instr[15:12]), .s(reg_src[1]), .y(reg_addr2));
@@ -34,9 +36,10 @@ module DataPath(
     Extend extend(.instr_imm(instr[23:0]), .imm_src, .ext_imm);
 
     // シフタ
-    logic [4:0] shamt5;
-    Mux2 #(5) shift_imm_reg_mux(.d0(instr[11:7]), .d1(src_a[4:0]), .s(instr[4]), .y(shamt5));
-    Shifter shifter(.sh(instr[6:5]), .shamt5(shamt5), .x(write_data), .y(shifted));
+    logic [4:0] shift_num;
+    // シフト量はmod 32なのでrs_dataは下位5ビットだけ使う
+    Mux2 #(5) shift_imm_reg_mux(.d0(instr[11:7]), .d1(rs_data[4:0]), .s(instr[4]), .y(shift_num));
+    Shifter shifter(.shift_type(instr[6:5]), .shift_num(shift_num), .x(write_data), .y(shifted));
 
     // ALU
     AluWithFlag #(32) alu(
