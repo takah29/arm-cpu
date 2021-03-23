@@ -192,6 +192,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'hffffffff);
 
+        // EOR R14, R10, R12
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_000010_1010_1110_00000000_1100;
+        #DELAY;
+        assert_data_memory_addr(32'h00ffff00);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 32'h00ffff00);
+
         // ADC (まずADDを実行してcarryフラグを上げる)
         // ADD R13, R1, R9
         reset_; set_regs; #DELAY

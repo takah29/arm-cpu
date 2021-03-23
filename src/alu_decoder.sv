@@ -14,6 +14,7 @@ module AluDecoder
                 4'b0010: {alu_ctl, no_write, shift} = 5'b001_0_0; // SUB
                 4'b0000: {alu_ctl, no_write, shift} = 5'b010_0_0; // AND
                 4'b1100: {alu_ctl, no_write, shift} = 5'b011_0_0; // OR
+                4'b0001: {alu_ctl, no_write, shift} = 5'b110_0_0; // EOR
                 4'b0101: {alu_ctl, no_write, shift} = 5'b100_0_0; // ADC
                 4'b1010: {alu_ctl, no_write, shift} = 5'b001_1_0; // CMP
                 4'b1011: {alu_ctl, no_write, shift} = 5'b000_1_0; // CMN
