@@ -7,7 +7,7 @@
 * *Opcode* Rd, Rn, Src2
   * AND, SUB, ADD, ORR, ,EOR, ADC
 * *Opcode* Rn, Src2
-  * CMP, CMN, TST
+  * CMP, CMN, TST, TEQ
 * *Opcode* Rd, Rm, Rs/shamt5
   * LSL, LSR, ASR, ROR
 
@@ -53,5 +53,6 @@
 |    ^    |           1010           |         1          |        CMP         |     |        001         |      11       |     1     |    0    |
 |    ^    |           1011           |         1          |        CMN         |     |        000         |      11       |     1     |    0    |
 |    ^    |           1000           |         1          |        TST         |     |        010         |      10       |     1     |    0    |
+|    ^    |           1001           |         1          |        TEQ         |     |        110         |      10       |     1     |    0    |
 |    ^    |           1101           |         0          | LSL, LSR, ASR, ROR |     |        0XX         |      00       |     0     |    1    |
 |    ^    |            ^             |         1          |         ^          |     |         ^          |      10       |     0     |    1    |
