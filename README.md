@@ -5,7 +5,7 @@
 ### Data Processing
 
 * *Opcode* Rd, Rn, Src2
-  * AND, SUB, ADD, ORR, ADC
+  * AND, SUB, ADD, ORR, ,EOR, ADC
 * *Opcode* Rn, Src2
   * CMP, CMN, TST
 * *Opcode* Rd, Rm, Rs/shamt5
@@ -45,6 +45,8 @@
 |    ^    |           0000           |         0          |     AND     |     |        010         |      00       |     0     |    0    |
 |    ^    |            ^             |         1          |      ^      |     |         ^          |      10       |     0     |    0    |
 |    ^    |           1100           |         0          |     ORR     |     |        011         |      00       |     0     |    0    |
+|    ^    |            ^             |         1          |      ^      |     |         ^          |      10       |     0     |    0    |
+|    ^    |           0001           |         0          |     EOR     |     |        110         |      00       |     0     |    0    |
 |    ^    |            ^             |         1          |      ^      |     |         ^          |      10       |     0     |    0    |
 |    ^    |           0101           |         0          |     ADC     |     |        100         |      00       |     0     |    0    |
 |    ^    |            ^             |         1          |      ^      |     |         ^          |      11       |     0     |    0    |
