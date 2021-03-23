@@ -160,6 +160,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 7);
 
+        // ADD R14, R3, R2, LSL R4
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_001000_0011_1110_0100_0_00_1_0010;
+        #DELAY;
+        assert_data_memory_addr(1080);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 1080);
+
         // SUB R13, R6, R5
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_000100_0110_1101_00000000_0101;
@@ -207,6 +215,13 @@ module ArmCpuTestbench;
         assert (dut.data_path.alu.z === 1'b1);
 
         // CMP R6, R5
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010101_0110_0000_00000000_0101;
+        #DELAY;
+        assert_data_memory_addr(2);
+        assert (dut.data_path.alu.z === 1'b0);
+
+        // CMP R3, R5
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0110_0000_00000000_0101;
         #DELAY;

@@ -3,9 +3,9 @@ module RegisterFileTestbench();
     parameter STB = 100;
 
     logic clk, reset, write_enable3;
-    logic [3:0] read_reg_addr1, read_reg_addr2, write_reg_addr3;
+    logic [3:0] read_reg_addr1, read_reg_addr2, write_reg_addr3, read_reg_addrs;
     logic [31:0] write_data3, r15;
-    logic [31:0] read_data1, read_data2, rd1_expected, rd2_expected;
+    logic [31:0] read_data1, read_data2, read_datas, rd1_expected, rd2_expected, rds_expected;
 
     RegisterFile dut(
     .clk,
@@ -14,15 +14,25 @@ module RegisterFileTestbench();
     .read_reg_addr1,
     .read_reg_addr2,
     .write_reg_addr3,
+    .read_reg_addrs,
     .write_data3,
     .r15,
     .read_data1,
-    .read_data2
+    .read_data2,
+    .read_datas
     );
+
+    task reset_;
+        // initialize
+        for (int i = 0; i < 15; i++) begin
+            @(posedge clk) write_reg_addr3 = i; write_enable3 = 1; write_data3 = 0; #STB;
+        end
+    endtask
 
     task assert_;
         assert (read_data1 === rd1_expected) else $error("read_data1 = %h, %h expected", read_data1, rd1_expected);
         assert (read_data2 === rd2_expected) else $error("read_data2 = %h, %h expected", read_data2, rd2_expected);
+        assert (read_datas === rds_expected) else $error("read_datas = %h, %h expected", read_datas, rds_expected);
     endtask
 
     always begin
@@ -33,10 +43,7 @@ module RegisterFileTestbench();
     end
 
     initial begin
-        // initialize
-        for (int i = 0; i < 15; i++) begin
-            @(posedge clk) write_reg_addr3 = i; write_enable3 = 1; write_data3 = 0; #STB;
-        end
+        reset_;
 
         // case1
         @(posedge clk) write_enable3 = 0; write_data3 = 0;
@@ -67,6 +74,14 @@ module RegisterFileTestbench();
         rd1_expected = 32'hffffffff; rd2_expected = 32'hffffffff;
         #STB
         assert_;
+
+        // case4 As, RDsのテスト
+        @(posedge clk) read_reg_addrs = 14;
+        rds_expected = 32'hffffffff;
+        #STB
+        assert_;
+
+
 
         $display("test completed");
         $finish;

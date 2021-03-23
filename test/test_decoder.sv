@@ -5,11 +5,11 @@ module DecoderTestbench;
     logic [5:0] funct;
     logic [3:0] rd;
     logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write, shift;
-    logic [1:0] flag_w, imm_src;
-    logic [2:0] reg_src, alu_ctl;
+    logic [1:0] flag_w, imm_src, reg_src;
+    logic [2:0] alu_ctl;
     logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, no_write_exp, shift_exp;
-    logic [1:0] flag_w_exp, imm_src_exp;
-    logic [2:0] reg_src_exp, alu_ctl_exp;
+    logic [1:0] flag_w_exp, imm_src_exp, reg_src_exp;
+    logic [2:0] alu_ctl_exp;
 
     Decoder dut(
     .op,
@@ -122,9 +122,9 @@ module DecoderTestbench;
         assert_imm_src;
 
         // case: reg_src test
-        op = 2'b00; funct = 6'b000000; rd = 0; reg_src_exp = 3'b100; #DELAY;
+        op = 2'b00; funct = 6'b000000; rd = 0; reg_src_exp = 3'b00; #DELAY;
         assert_reg_src;
-        op = 2'b01; funct = 6'b000000; rd = 0; reg_src_exp = 3'b010; #DELAY;
+        op = 2'b01; funct = 6'b000000; rd = 0; reg_src_exp = 3'b10; #DELAY;
         assert_reg_src;
 
         // case: alu_ctl test
