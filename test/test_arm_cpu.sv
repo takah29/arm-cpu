@@ -215,6 +215,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(14, 0);
 
+        // RSB R13, R5, R6
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_000110_0101_1101_00000000_0110;
+        #DELAY;
+        assert_data_memory_addr(2);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 2);
+
         // CMP R5, R5
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0101_0000_00000000_0101;
