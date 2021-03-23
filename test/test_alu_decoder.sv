@@ -60,6 +60,14 @@ module AluDecoderTestbench;
         alu_ctl_expected = 3'b011; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
         assert_;
 
+        // case EOR
+        s = '0; cmd = 4'b0001;
+        alu_ctl_expected = 3'b110; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        assert_;
+        s = '1;
+        alu_ctl_expected = 3'b110; flag_w_expected = 2'b10; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
+        assert_;
+
         // case ADC
         s = '0; cmd = 4'b0101;
         alu_ctl_expected = 3'b100; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b0; #DELAY;
