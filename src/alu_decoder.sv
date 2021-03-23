@@ -19,7 +19,7 @@ module AluDecoder
                 4'b1010: {alu_ctl, no_write, shift} = 5'b001_1_0; // CMP
                 4'b1011: {alu_ctl, no_write, shift} = 5'b000_1_0; // CMN
                 4'b1000: {alu_ctl, no_write, shift} = 5'b010_1_0; // TST
-                4'b1101: {alu_ctl, no_write, shift} = 5'b0xx_0_1; // LSL
+                4'b1101: {alu_ctl, no_write, shift} = 5'b0xx_0_1; // LSL, LSR, ASR, ROR
                 default: {alu_ctl, no_write, shift} = 5'bx; // not defined
             endcase
 

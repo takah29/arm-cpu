@@ -91,7 +91,7 @@ module AluDecoderTestbench;
         alu_ctl_expected = 3'b010; flag_w_expected = 2'b10; no_write_expected = 1'b1; shift_expected = 1'b0; #DELAY;
         assert_;
 
-        // case LSL
+        // case LSL, LSR
         s = '0; cmd = 4'b1101;
         alu_ctl_expected = 3'b0xx; flag_w_expected = 2'b00; no_write_expected = 1'b0; shift_expected = 1'b1; #DELAY;
         assert_;
