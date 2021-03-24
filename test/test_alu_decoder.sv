@@ -105,6 +105,14 @@ module AluDecoderTestbench;
         set_exp(3'b001, 2'b11, 1'b0, 1'b0, 1'b1); #DELAY;
         assert_;
 
+        // case RSC
+        s = '0; cmd = 4'b0111;
+        set_exp(3'b101, 2'b00, 1'b0, 1'b0, 1'b1); #DELAY;
+        assert_;
+        s = '1;
+        set_exp(3'b101, 2'b11, 1'b0, 1'b0, 1'b1); #DELAY;
+        assert_;
+
         // case CMP
         s = '1; cmd = 4'b1010;
         set_exp(3'b001, 2'b11, 1'b1, 1'b0, 1'b0); #DELAY;

@@ -18,6 +18,7 @@ module AluDecoder
                 4'b0101: {alu_ctl, no_write, shift, swap} = 6'b100_0_0_0; // ADC
                 4'b0110: {alu_ctl, no_write, shift, swap} = 6'b101_0_0_0; // SBC
                 4'b0011: {alu_ctl, no_write, shift, swap} = 6'b001_0_0_1; // RSB
+                4'b0111: {alu_ctl, no_write, shift, swap} = 6'b101_0_0_1; // RSC
                 4'b1010: {alu_ctl, no_write, shift, swap} = 6'b001_1_0_0; // CMP
                 4'b1011: {alu_ctl, no_write, shift, swap} = 6'b000_1_0_0; // CMN
                 4'b1000: {alu_ctl, no_write, shift, swap} = 6'b010_1_0_0; // TST
