@@ -114,17 +114,26 @@ module ArmCpuTestbench;
 
     initial begin
         // case: LDR
-        // LDR R13, [R0] (データメモリがないのでR0はつかわれない)
+        // LDR R13, [R10]
         reset_; set_regs; #DELAY
-        instr = 32'b1110_01_011001_0000_1101_000000000000; read_data = 32'hffffffff;
+        instr = 32'b1110_01_011001_1010_1101_00000_00_0_0000; read_data = 32'hffffffff;
         @(posedge clk); #DELAY;
+        assert_data_memory_addr(32'h000000ff);
         assert_register_value(13, 32'hffffffff);
 
-        // LDR R14, [R0]
+        // LDR R14, [R6, #3]
         reset_; set_regs; #DELAY
-        instr = 32'b1110_01_011001_0000_1110_000000000000; read_data = 32'hff;
+        instr = 32'b1110_01_011001_0110_1110_000000000011; read_data = 32'hffffffff;
         @(posedge clk); #DELAY;
-        assert_register_value(14, 32'hff);
+        assert_data_memory_addr(10);
+        assert_register_value(14, 32'hffffffff);
+
+        // LDR R14, [R3, R2]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_111001_0011_1110_00000_00_0_0010; read_data = 32'hffffffff;
+        @(posedge clk); #DELAY;
+        assert_data_memory_addr(1010);
+        assert_register_value(14, 32'hffffffff);
 
         // case: STR
         // STR R6, [R10]
