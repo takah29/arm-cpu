@@ -16,6 +16,7 @@ module AluDecoder
                 4'b1100: {alu_ctl, no_write, shift, swap} = 6'b011_0_0_0; // OR
                 4'b0001: {alu_ctl, no_write, shift, swap} = 6'b110_0_0_0; // EOR
                 4'b0101: {alu_ctl, no_write, shift, swap} = 6'b100_0_0_0; // ADC
+                4'b0110: {alu_ctl, no_write, shift, swap} = 6'b101_0_0_0; // SBC
                 4'b0011: {alu_ctl, no_write, shift, swap} = 6'b001_0_0_1; // RSB
                 4'b1010: {alu_ctl, no_write, shift, swap} = 6'b001_1_0_0; // CMP
                 4'b1011: {alu_ctl, no_write, shift, swap} = 6'b000_1_0_0; // CMN
@@ -26,7 +27,7 @@ module AluDecoder
             endcase
 
             flag_w[1] = s;
-            flag_w[0] = s & (alu_ctl === 3'b000 | alu_ctl === 3'b001 | alu_ctl === 3'b100);
+            flag_w[0] = s & (alu_ctl === 3'b000 | alu_ctl === 3'b001 | alu_ctl === 3'b100 | alu_ctl === 3'b101);
         end else begin
             alu_ctl = 3'b000;
             flag_w = 2'b00;
