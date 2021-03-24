@@ -5,7 +5,7 @@
 ### Data Processing
 
 * *Opcode* Rd, Rn, Src2
-  * AND, SUB, ADD, ORR, ,EOR, ADC, RSB
+  * AND, SUB, ADD, ORR, ,EOR, ADC, SBC, RSB, RSC
 * *Opcode* Rn, Src2
   * CMP, CMN, TST, TEQ
 * *Opcode* Rd, Rm, Rs/shamt5
