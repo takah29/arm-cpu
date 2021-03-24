@@ -49,23 +49,27 @@ module MainDecoderTestbench;
     endtask
 
     initial begin
-        // case1: type DP Reg
+        // case: type DP Reg
         op = 2'b00; funct_5 = '0; set_exp(11'b0_0_0_0_00_1_00_1); #DELAY;
         assert_;
 
-        // case2: type DP Imm
+        // case: type DP Imm
         op = 2'b00; funct_5 = '1; set_exp(11'b0_0_0_1_00_1_00_1); #DELAY;
         assert_;
 
-        // case3: type STR
-        op = 2'b01; funct_0 = '0; set_exp(11'b0_0_1_1_01_0_10_0); #DELAY;
+        // case: type STR (Imm)
+        op = 2'b01; funct_5 = '0; funct_0 = '0; set_exp(11'b0_0_1_1_01_0_10_0); #DELAY;
         assert_;
 
-        // case4: type LDR
-        op = 2'b01; funct_0 = '1; set_exp(11'b0_1_0_1_01_1_00_0); #DELAY;
+        // case: type LDR (Imm)
+        op = 2'b01; funct_5 = '0; funct_0 = '1; set_exp(11'b0_1_0_1_01_1_00_0); #DELAY;
         assert_;
 
-        // case5: type B
+        // case: type LDR (Reg)
+        op = 2'b01; funct_5 = '1; funct_0 = '1; set_exp(11'b0_1_0_0_01_1_00_0); #DELAY;
+        assert_;
+
+        // case: type B
         op = 2'b10; set_exp(11'b1_0_0_1_10_0_01_0); #DELAY;
         assert_;
 

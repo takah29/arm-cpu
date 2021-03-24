@@ -7,11 +7,30 @@ module MainDecoder
     );
 
     logic [10:0] controls; // {branch, mem_to_reg, mem_w, alu_src, imm_src, reg_w, reg_src, alu_op}
+    logic [1:0] funct_50;
+    assign funct_50 = {funct_5, funct_0};
+
+    function [10:0] dp_controls(input [5:0] funct);
+        casex (funct_50)
+            2'b0?: dp_controls = 11'b0_0_0_0_00_1_00_1; // DP Reg
+            2'b1?: dp_controls = 11'b0_0_0_1_00_1_00_1; // DP Imm
+            default: dp_controls = 11'bx;
+        endcase
+    endfunction
+
+    function [10:0] mem_controls(input [5:0] funct);
+        casex (funct_50)
+            2'b?0: mem_controls = 11'b0_0_1_1_01_0_10_0; // STR (Imm)
+            2'b01: mem_controls = 11'b0_1_0_1_01_1_00_0; // LDR (Imm)
+            2'b11: mem_controls = 11'b0_1_0_0_01_1_00_0; // LDR (Reg)
+            default: mem_controls = 11'bx;
+        endcase
+    endfunction
 
     always_comb begin
         case (op)
-            2'b00: controls = (funct_5) ? 11'b0_0_0_1_00_1_00_1 : 11'b0_0_0_0_00_1_00_1; // DP Imm : Reg
-            2'b01: controls = (funct_0) ? 11'b0_1_0_1_01_1_00_0 : 11'b0_0_1_1_01_0_10_0; // LDR : STR
+            2'b00: controls = dp_controls(funct_50); // DP
+            2'b01: controls = mem_controls(funct_50); // Memory
             2'b10: controls = 11'b1_0_0_1_10_0_01_0; // B
             default: controls = 11'bx;
         endcase
