@@ -392,6 +392,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hefffffff);
 
+        // MVN R13, R11
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011110_0000_1101_00000_00_0_1011;
+        #DELAY;
+        assert_data_memory_addr(32'hffff0000);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hffff0000);
+
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY
