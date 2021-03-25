@@ -151,6 +151,14 @@ module AluDecoderTestbench;
         set_exp(3'b0xx, 2'b10, 1'b0, 1'b1, 1'b0, 1'b0); #DELAY;
         assert_;
 
+        // case MVN
+        s = '0; cmd = 4'b1111;
+        set_exp(3'b0xx, 2'b00, 1'b0, 1'b1, 1'b0, 1'b1); #DELAY;
+        assert_;
+        s = '1;
+        set_exp(3'b0xx, 2'b10, 1'b0, 1'b1, 1'b0, 1'b1); #DELAY;
+        assert_;
+
         $display("test completed");
         $finish;
     end
