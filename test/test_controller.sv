@@ -6,10 +6,10 @@ module ControllerTestbench;
     logic [1:0] op;
     logic [3:0] cond, alu_flags, rd;
     logic [5:0] funct;
-    logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, shift, carry, swap;
+    logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, shift, carry, swap, inv;
     logic [1:0] imm_src, reg_src;
     logic [2:0] alu_ctl;
-    logic pc_src_exp, reg_write_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, shift_exp, carry_exp, swap_exp;
+    logic pc_src_exp, reg_write_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, shift_exp, carry_exp, swap_exp, inv_exp;
     logic [1:0] imm_src_exp, reg_src_exp;
     logic [2:0] alu_ctl_exp;
 
@@ -29,6 +29,7 @@ module ControllerTestbench;
     .shift,
     .carry,
     .swap,
+    .inv,
     .imm_src,
     .reg_src,
     .alu_ctl
@@ -61,6 +62,10 @@ module ControllerTestbench;
 
     task assert_swap;
         assert (swap === swap_exp) else $error("swap = %b, %b expected", swap, swap_exp);
+    endtask
+
+    task assert_inv;
+        assert (inv === inv_exp) else $error("inv = %b, %b expected", inv, inv_exp);
     endtask
 
     task assert_carry;
@@ -154,6 +159,16 @@ module ControllerTestbench;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_swap;
+
+        // inv test
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; inv_exp = 2'b0;
+        dut.cond_logic.cond_ex = 1;
+        @(posedge clk); #DELAY;
+        assert_inv;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b011101; inv_exp = 2'b1;
+        dut.cond_logic.cond_ex = 1;
+        @(posedge clk); #DELAY;
+        assert_inv;
 
         // imm_src test
         op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b100000; imm_src_exp = 2'b00;
