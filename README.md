@@ -23,7 +23,7 @@
 
 ## Diagram
 
-![arm_cpu_diagram](./asset/arm_cpu_diagram.drawio.png "画像タイトル")
+![arm_cpu_diagram](./asset/arm_cpu_diagram.drawio.png "arm_cpu_diagram")
 
 ## Tables
 
