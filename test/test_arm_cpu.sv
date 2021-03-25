@@ -392,6 +392,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hefffffff);
 
+        // MOV R13, R3 (シフト命令のシフト量が0の場合と等価)
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00000_00_0_0011;
+        #DELAY;
+        assert_data_memory_addr(1000);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 1000);
+
         // MVN R13, R11
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_011110_0000_1101_00000_00_0_1011;
