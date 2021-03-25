@@ -1,6 +1,6 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write, mem_to_reg, alu_src, shift, carry, swap,
+    input logic pc_src, reg_write, mem_to_reg, alu_src, shift, carry, swap, inv,
     input logic [31:0] instr, read_data,
     input logic [1:0] imm_src, reg_src,
     input logic [2:0] alu_ctl,
@@ -8,7 +8,7 @@ module DataPath(
     output logic [31:0] pc, write_data, data_memory_addr
     );
 
-    logic [31:0] src_a, src_b, rs_data, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
+    logic [31:0] src_a, src_b, pre_src_b, rs_data, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
     logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
@@ -43,7 +43,8 @@ module DataPath(
 
     // ALU
     Mux2 #(32) alu_src_b_mux(.d0(shifted), .d1(ext_imm), .s(alu_src), .y(shift_imm_out));
-    Swap src_swap(.x0(read_data1), .x1(shift_imm_out), .en(swap), .y0(src_a), .y1(src_b));
+    Swap src_swap(.x0(read_data1), .x1(shift_imm_out), .en(swap), .y0(src_a), .y1(pre_src_b));
+    assign src_b = inv ? ~pre_src_b : pre_src_b;
     AluWithFlag #(32) alu(
     .a(src_a),
     .b(src_b),
