@@ -19,6 +19,8 @@ module ExtendTestbench;
         // case2: extend 8bit imm
         instr_imm = 24'h0000ff; imm_src = 2'b00; ext_imm_expected = 32'h000000ff; #DELAY;
         assert_;
+        instr_imm = 24'h000eff; imm_src = 2'b00; ext_imm_expected = 32'h00000ff0; #DELAY;
+        assert_;
 
         // case3: extend 12bit imm
         instr_imm = 24'h000fff; imm_src = 2'b01; ext_imm_expected = 32'h00000fff; #DELAY;

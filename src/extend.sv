@@ -8,10 +8,14 @@ module Extend
     function [31:0] ext;
         input [23:0] instr_imm;
         input [1:0] imm_src;
+        logic [31:0] tmp;
         begin
             case (imm_src)
                 // データ処理命令用8ビット直値
-                2'b00: ext = {24'b0, instr_imm[7:0]};
+                2'b00: begin
+                    tmp = {24'b0, instr_imm[7:0]};
+                    ext = (tmp >> (2 * instr_imm[11:8])) | (tmp << (32 - 2 * instr_imm[11:8]));
+                end
                 // メモリ命令用12ビット直値
                 2'b01: ext = {20'b0, instr_imm[11:0]};
                 // B命令用24ビット直値
