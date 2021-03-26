@@ -487,6 +487,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 7);
 
+        // RSB R13, R6, #7
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_100110_0110_1101_0000_00000111;
+        #DELAY;
+        assert_data_memory_addr(0);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 0);
+
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY
