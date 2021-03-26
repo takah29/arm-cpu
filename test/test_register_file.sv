@@ -5,7 +5,7 @@ module RegisterFileTestbench();
     logic clk, reset, write_enable3;
     logic [3:0] read_reg_addr1, read_reg_addr2, write_reg_addr3, read_reg_addrs;
     logic [31:0] write_data3, r15;
-    logic [31:0] read_data1, read_data2, read_datas, rd1_expected, rd2_expected, rds_expected;
+    logic [31:0] read_data1, read_data2, read_data3, read_datas, rd1_expected, rd2_expected, rd3_expected, rds_expected;
 
     RegisterFile dut(
     .clk,
@@ -19,6 +19,7 @@ module RegisterFileTestbench();
     .r15,
     .read_data1,
     .read_data2,
+    .read_data3,
     .read_datas
     );
 
@@ -32,6 +33,7 @@ module RegisterFileTestbench();
     task assert_;
         assert (read_data1 === rd1_expected) else $error("read_data1 = %h, %h expected", read_data1, rd1_expected);
         assert (read_data2 === rd2_expected) else $error("read_data2 = %h, %h expected", read_data2, rd2_expected);
+        assert (read_data3 === rd3_expected) else $error("read_data2 = %h, %h expected", read_data3, rd3_expected);
         assert (read_datas === rds_expected) else $error("read_datas = %h, %h expected", read_datas, rds_expected);
     endtask
 
@@ -49,15 +51,18 @@ module RegisterFileTestbench();
         @(posedge clk) write_enable3 = 0; write_data3 = 0;
         read_reg_addr1 = 0; rd1_expected = 0;
         read_reg_addr2 = 0; rd2_expected = 0;
+        write_reg_addr3 = 0; rd3_expected = 0;
         #STB
         assert_;
 
         // case2
         @(posedge clk) write_enable3 = 1; write_reg_addr3 = 0; write_data3 = 32'hffffffff; #STB;
         @(posedge clk) write_enable3 = 1; write_reg_addr3 = 14;  write_data3 = 32'hffffffff; #STB;
+        @(posedge clk) write_enable3 = 1; write_reg_addr3 = 7;  write_data3 = 32'hffffffff; #STB;
         @(posedge clk) write_enable3 = 0; write_reg_addr3 = 0; write_data3 = 32'h0;
         read_reg_addr1 = 0; rd1_expected = 32'hffffffff;
         read_reg_addr2 = 14; rd2_expected = 32'hffffffff;
+        write_reg_addr3 = 7; rd3_expected = 32'hffffffff;
         #STB;
         assert_;
 
