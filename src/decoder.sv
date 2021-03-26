@@ -3,8 +3,8 @@ module Decoder
     input logic [1:0] op,
     input logic [5:0] funct,
     input logic [3:0] rd,
-    output logic pcs, reg_w, mem_w, mem_to_reg, alu_src, no_write, shift, swap, inv,
-    output logic [1:0] flag_w, imm_src, reg_src,
+    output logic pcs, reg_w, mem_w, mem_to_reg, alu_src, reg_src, no_write, shift, swap, inv,
+    output logic [1:0] flag_w, imm_src,
     output logic [2:0] alu_ctl
     );
 
