@@ -20,7 +20,8 @@ module MainDecoder
 
     function [9:0] mem_controls(input [5:0] funct);
         casex (funct_50)
-            2'b?0: mem_controls = 10'b0_0_1_1_01_0_0_0; // STR (Imm)
+            2'b00: mem_controls = 10'b0_0_1_1_01_0_0_0; // STR (Imm)
+            2'b10: mem_controls = 10'b0_0_1_0_01_0_0_0; // STR (Reg)
             2'b01: mem_controls = 10'b0_1_0_1_01_1_0_0; // LDR (Imm)
             2'b11: mem_controls = 10'b0_1_0_0_01_1_0_0; // LDR (Reg)
             default: mem_controls = 10'bx;
