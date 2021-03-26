@@ -518,6 +518,21 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hffffffff);
 
+        // BIC R13, R9, #0xFF00
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_111100_1001_1101_1100_11111111;
+        #DELAY;
+        assert_data_memory_addr(32'hffff00ff);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hffff00ff);
+
+        // CMP R5, #5
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_110101_0101_0000_0000_00000101;
+        #DELAY;
+        assert_data_memory_addr(32'h0);
+        assert (dut.data_path.alu.z === 1'b1);
+
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY
