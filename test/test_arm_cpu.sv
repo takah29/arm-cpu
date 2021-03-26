@@ -449,6 +449,21 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'h0000ffff);
 
+        // ADC (まずADDを実行してcarryフラグを上げる)
+        // ADD R13, R1, R9
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_001001_0001_1101_00000000_1001;
+        #DELAY;
+        assert_data_memory_addr(0);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 0);
+        // ADC R14, R2, #2
+        instr = 32'b1110_00_101010_0010_1110_0000_00000010;
+        #DELAY;
+        assert_data_memory_addr(13);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 13);
+
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY
