@@ -13,7 +13,7 @@
 
 ### Memory
 
-* *Opcode* Rd, [Rn, Rm]
+* *Opcode* Rd, [Rn, Rm, \<shifter\> Rs]
   * STR, LDR
 
 ### Branch
