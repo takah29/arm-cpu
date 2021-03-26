@@ -433,6 +433,14 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'h0000ff00);
 
+        // ORR R14, R6, #0xf8
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_111000_0110_1110_0000_11111000;
+        #DELAY;
+        assert_data_memory_addr(32'h000000ff);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 32'h000000ff);
+
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY
