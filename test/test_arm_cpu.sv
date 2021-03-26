@@ -113,7 +113,7 @@ module ArmCpuTestbench;
     // end
 
     initial begin
-        // case: LDR
+        // case: Memory
         // LDR R13, [R10]
         reset_; set_regs; #DELAY
         instr = 32'b1110_01_011001_1010_1101_00000_00_0_0000; read_data = 32'hffffffff;
@@ -135,7 +135,13 @@ module ArmCpuTestbench;
         assert_data_memory_addr(1010);
         assert_register_value(14, 32'hffffffff);
 
-        // case: STR
+        // LDR R14, [R3, R2, LSL #2]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_111001_0011_1110_00010_00_0_0010; read_data = 32'hffffffff;
+        @(posedge clk); #DELAY;
+        assert_data_memory_addr(1040);
+        assert_register_value(14, 32'hffffffff);
+
         // STR R6, [R10]
         reset_; set_regs; #DELAY
         instr = 32'b1110_01_011000_1010_0110_000000000000;
@@ -149,6 +155,22 @@ module ArmCpuTestbench;
         instr = 32'b1110_01_011000_0100_0110_000000000111;
         #DELAY;
         assert_data_memory_addr(10);
+        assert_write_data(7);
+        assert_mem_write(1);
+
+        // STR R6, [R3, R2]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_111000_0011_0110_00000_00_0_0010;
+        #DELAY;
+        assert_data_memory_addr(1010);
+        assert_write_data(7);
+        assert_mem_write(1);
+
+        // STR R6, [R3, R2, LSL #3]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_111000_0011_0110_00011_00_0_0010;
+        #DELAY;
+        assert_data_memory_addr(1080);
         assert_write_data(7);
         assert_mem_write(1);
 
