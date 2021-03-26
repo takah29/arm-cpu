@@ -408,6 +408,23 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hffff0000);
 
+        // case: DP Imm
+        // ADD R13, R2, #42
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_101000_0010_1101_0000_00101010;
+        #DELAY;
+        assert_data_memory_addr(52);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 52);
+
+        // SUB R13, R11, #0xFF0
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_100100_1011_1101_1110_11111111;
+        #DELAY;
+        assert_data_memory_addr(32'h0000f00f);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'h0000f00f);
+
         // case: Branch
         // B Label
         reset_; set_regs; #DELAY
