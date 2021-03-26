@@ -300,12 +300,12 @@ module ArmCpuTestbench;
         assert_data_memory_addr(2);
         assert (dut.data_path.alu.z === 1'b0);
 
-        // CMP R3, R5
+        // TEQ R5, R5
         reset_; set_regs; #DELAY
-        instr = 32'b1110_00_010101_0110_0000_00000000_0101;
+        instr = 32'b1110_00_010011_0101_0000_00000000_0101;
         #DELAY;
-        assert_data_memory_addr(2);
-        assert (dut.data_path.alu.z === 1'b0);
+        assert_data_memory_addr(0);
+        assert (dut.data_path.alu.z === 1'b1);
 
         // CMN R1, R9
         reset_; set_regs; #DELAY
