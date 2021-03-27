@@ -97,6 +97,7 @@
         "cond_logic.sv",
         "flopenr.sv",
         "mux2.sv",
+        "mux4.sv",
         "flopr.sv"
     ],
     "test_top": [
@@ -117,6 +118,7 @@
         "cond_logic.sv",
         "flopenr.sv",
         "mux2.sv",
+        "mux4.sv",
         "flopr.sv",
         "instruction_memory.sv",
         "data_memory.sv"
