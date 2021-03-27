@@ -105,12 +105,12 @@ module ArmCpuTestbench;
     end
 
     // シミュレーション結果出力
-    initial begin
-      // 波形データ出力
-      $dumpfile("wave.vcd");
-      // 全てのポートを波形データに出力
-      $dumpvars(0, dut);
-    end
+    // initial begin
+    //   // 波形データ出力
+    //   $dumpfile("wave.vcd");
+    //   // 全てのポートを波形データに出力
+    //   $dumpvars(0, dut);
+    // end
 
     initial begin
         // case: Memory
@@ -144,7 +144,6 @@ module ArmCpuTestbench;
         #DELAY
         assert_data_memory_addr(1000);
         @(posedge clk); #DELAY;
-        show_regs;
         assert_register_value(14, 32'hffff0000);
         assert_register_value(3, 1010);
 
