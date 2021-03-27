@@ -18,9 +18,11 @@ module RegisterFile(
             foreach(reg_file[i]) begin
                 reg_file[i] <= '0;
             end
-        end else if (write_enable1) begin
+        end
+        if (write_enable1) begin
             reg_file[read_reg_addr1] <= write_data1;
-        end else if (write_enable3) begin
+        end
+        if (write_enable3) begin
             reg_file[write_reg_addr3] <= write_data3;
         end
     end
