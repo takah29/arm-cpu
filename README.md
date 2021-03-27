@@ -1,5 +1,9 @@
 # arm cpu
 
+## Requirements
+
+* Icarus Verilog version 11.0
+
 ## Support Instructions
 
 ### Data Processing
@@ -32,17 +36,19 @@
 
 ### Main Decoder
 
-| *Op*  | *Funct* |       Type        |       | *Branch* | *MemtoReg* | *MemW* | *ALUSrc* | *ImmSrc* | *RegW* | *RegSrc* | *ALUOp* | *PostIndex* |
-| :---: | :-----: | :---------------: | :---: | -------- | :--------: | :----: | :------: | :------: | :----: | :------: | :-----: | :---------: |
-|  00   | 0XXXXX  |      DP Reg       |       | 0        |     0      |   0    |    0     |    XX    |   1    |    0     |    1    |      0      |
-|  00   | 1XXXXX  |      DP Imm       |       | 0        |     0      |   0    |    1     |    00    |   1    |    0     |    1    |      0      |
-|  01   | 01XX00  |     STR(Imm)      |       | 0        |     0      |   1    |    1     |    01    |   0    |    0     |    0    |      0      |
-|  01   | 11XX00  |     STR(Reg)      |       | 0        |     0      |   1    |    0     |    01    |   0    |    0     |    0    |      0      |
-|  01   | 01XX01  |     LDR(Imm)      |       | 0        |     1      |   0    |    1     |    01    |   1    |    0     |    0    |      0      |
-|  01   | 11XX01  |     LDR(Reg)      |       | 0        |     1      |   0    |    0     |    01    |   1    |    0     |    0    |      0      |
-|  01   | 00XX01  | LDR(Imm, PostIdx) |       | 0        |     1      |   0    |    1     |    01    |   1    |    0     |    0    |      1      |
-|  01   | 10XX01  | LDR(Reg, PostIdx) |       | 0        |     1      |   0    |    0     |    01    |   1    |    0     |    0    |      1      |
-|  10   | 10XXXX  |         B         |       | 1        |     0      |   0    |    1     |    10    |   0    |    1     |    0    |      0      |
+| *Op*  | *Funct* |       Type       |       | *Branch* | *MemtoReg* | *MemW* | *ALUSrc* | *ImmSrc* | *RegW* | *RegSrc* | *ALUOp* | *PostIndex* |
+| :---: | :-----: | :--------------: | :---: | -------- | :--------: | :----: | :------: | :------: | :----: | :------: | :-----: | :---------: |
+|  00   | 0XXXXX  |      DP Reg      |       | 0        |     0      |   0    |    0     |    XX    |   1    |    0     |    1    |      0      |
+|  00   | 1XXXXX  |      DP Imm      |       | 0        |     0      |   0    |    1     |    00    |   1    |    0     |    1    |      0      |
+|  01   | 01XX00  | STR(Imm,Offset)  |       | 0        |     0      |   1    |    1     |    01    |   0    |    0     |    0    |      0      |
+|  01   | 11XX00  | STR(Reg,Offset)  |       | 0        |     0      |   1    |    0     |    01    |   0    |    0     |    0    |      0      |
+|  01   | 00XX00  | STR(Imm,PostIdx) |       | 0        |     0      |   1    |    1     |    01    |   0    |    0     |    0    |      1      |
+|  01   | 10XX00  | STR(Reg,PostIdx) |       | 0        |     0      |   1    |    0     |    01    |   0    |    0     |    0    |      1      |
+|  01   | 01XX01  | LDR(Imm,Offset)  |       | 0        |     1      |   0    |    1     |    01    |   1    |    0     |    0    |      0      |
+|  01   | 11XX01  | LDR(Reg,Offset)  |       | 0        |     1      |   0    |    0     |    01    |   1    |    0     |    0    |      0      |
+|  01   | 00XX01  | LDR(Imm,PostIdx) |       | 0        |     1      |   0    |    1     |    01    |   1    |    0     |    0    |      1      |
+|  01   | 10XX01  | LDR(Reg,PostIdx) |       | 0        |     1      |   0    |    0     |    01    |   1    |    0     |    0    |      1      |
+|  10   | 10XXXX  |        B         |       | 1        |     0      |   0    |    1     |    10    |   0    |    1     |    0    |      0      |
 
 ### ALU Decoder
 
