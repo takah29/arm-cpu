@@ -20,6 +20,8 @@ module MainDecoder
         casex (funct)
             6'b01XX00: mem_controls = 10'b0_0_1_1_01_0_0_0_0; // STR (Imm)
             6'b11XX00: mem_controls = 10'b0_0_1_0_01_0_0_0_0; // STR (Reg)
+            6'b00XX00: mem_controls = 10'b0_0_1_1_01_0_0_0_1; // STR (Imm, PostIdx)
+            6'b10XX00: mem_controls = 10'b0_0_1_0_01_0_0_0_1; // STR (Reg, PostIdx)
             6'b01XX01: mem_controls = 10'b0_1_0_1_01_1_0_0_0; // LDR (Imm)
             6'b11XX01: mem_controls = 10'b0_1_0_0_01_1_0_0_0; // LDR (Reg)
             6'b00XX01: mem_controls = 10'b0_1_0_1_01_1_0_0_1; // LDR (Imm, PostIdx)

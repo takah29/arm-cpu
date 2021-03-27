@@ -67,6 +67,14 @@ module MainDecoderTestbench;
         op = 2'b01; funct = 6'b11XX00; set_exp(10'b0_0_1_0_01_0_0_0_0); #DELAY;
         assert_;
 
+        // case: type STR (Imm, PostIdx)
+        op = 2'b01; funct = 6'b00XX00; set_exp(10'b0_0_1_1_01_0_0_0_1); #DELAY;
+        assert_;
+
+        // case: type STR (Reg, PostIdx)
+        op = 2'b01; funct = 6'b10XX00; set_exp(10'b0_0_1_0_01_0_0_0_1); #DELAY;
+        assert_;
+
         // case: type LDR (Imm)
         op = 2'b01; funct = 6'b01XX01; set_exp(10'b0_1_0_1_01_1_0_0_0); #DELAY;
         assert_;
