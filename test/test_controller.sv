@@ -6,10 +6,10 @@ module ControllerTestbench;
     logic [1:0] op;
     logic [3:0] cond, alu_flags, rd;
     logic [5:0] funct;
-    logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, reg_src, shift, carry, swap, inv;
-    logic [1:0] imm_src;
+    logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, reg_src, carry, swap, inv;
+    logic [1:0] imm_src, result_src;
     logic [2:0] alu_ctl;
-    logic pc_src_exp, reg_write_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, shift_exp, carry_exp, swap_exp, inv_exp;
+    logic pc_src_exp, reg_write_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, result_src_exp, carry_exp, swap_exp, inv_exp;
     logic [1:0] imm_src_exp;
     logic [2:0] alu_ctl_exp;
 
@@ -26,11 +26,11 @@ module ControllerTestbench;
     .mem_write,
     .mem_to_reg,
     .alu_src,
-    .shift,
     .carry,
     .swap,
     .inv,
     .imm_src,
+    .result_src,
     .reg_src,
     .alu_ctl
     );
@@ -56,10 +56,6 @@ module ControllerTestbench;
         assert (alu_src === alu_src_exp) else $error("alu_src = %b, %b expected", alu_src, alu_src_exp);
     endtask
 
-    task assert_shift;
-        assert (shift === shift_exp) else $error("shift = %b, %b expected", shift, shift_exp);
-    endtask
-
     task assert_swap;
         assert (swap === swap_exp) else $error("swap = %b, %b expected", swap, swap_exp);
     endtask
@@ -74,6 +70,10 @@ module ControllerTestbench;
 
     task assert_imm_src;
         assert (imm_src === imm_src_exp) else $error("imm_src = %b, %b expected", imm_src, imm_src_exp);
+    endtask
+
+    task assert_result_src;
+        assert (result_src === result_src_exp) else $error("result_src = %b, %b expected", result_src, result_src_exp);
     endtask
 
     task assert_reg_src;
@@ -101,10 +101,10 @@ module ControllerTestbench;
         assert_pc_src;
 
         // reg_write test
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; reg_write_exp = 1'b0;
+        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b010000; reg_write_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_reg_write;
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000001; reg_write_exp = 1'b1;
+        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b010001; reg_write_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_reg_write;
 
@@ -112,7 +112,7 @@ module ControllerTestbench;
         op = 2'b00; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; mem_write_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_mem_write;
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; mem_write_exp = 1'b1;
+        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b010000; mem_write_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_mem_write;
 
@@ -132,40 +132,32 @@ module ControllerTestbench;
         @(posedge clk); #DELAY;
         assert_alu_src;
 
-        // shift test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; shift_exp = 2'b0;
-        @(posedge clk); #DELAY;
-        assert_shift;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b011010; shift_exp = 2'b1;
-        @(posedge clk); #DELAY;
-        assert_shift;
-
         // carry test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; carry_exp = 2'b0;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; carry_exp = 1'b0;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_carry;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b001011; carry_exp = 2'b1;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b001011; carry_exp = 1'b1;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_carry;
 
         // swap test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; swap_exp = 2'b0;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; swap_exp = 1'b0;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_swap;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b000111; swap_exp = 2'b1;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b000111; swap_exp = 1'b1;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_swap;
 
         // inv test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; inv_exp = 2'b0;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; inv_exp = 1'b0;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_inv;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b011101; inv_exp = 2'b1;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b011101; inv_exp = 1'b1;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_inv;
@@ -174,12 +166,20 @@ module ControllerTestbench;
         op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b100000; imm_src_exp = 2'b00;
         @(posedge clk); #DELAY;
         assert_imm_src;
-        op = 2'b01; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; imm_src_exp = 2'b01;
+        op = 2'b01; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b110000; imm_src_exp = 2'b01;
         @(posedge clk); #DELAY;
         assert_imm_src;
         op = 2'b10; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; imm_src_exp = 2'b10;
         @(posedge clk); #DELAY;
         assert_imm_src;
+
+        // result_src test
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; result_src_exp = 2'b00;
+        @(posedge clk); #DELAY;
+        assert_result_src;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b011010; result_src_exp = 2'b01;
+        @(posedge clk); #DELAY;
+        assert_result_src;
 
         // reg_src test
         op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; reg_src_exp = 1'b0;
