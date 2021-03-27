@@ -1,8 +1,8 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write, mem_to_reg, alu_src, reg_src, shift, carry, swap, inv,
+    input logic pc_src, reg_write, mem_to_reg, alu_src, reg_src, carry, swap, inv,
     input logic [31:0] instr, read_data,
-    input logic [1:0] imm_src,
+    input logic [1:0] imm_src, result_src,
     input logic [2:0] alu_ctl,
     output logic [3:0] alu_flags,
     output logic [31:0] pc, write_data, data_memory_addr
@@ -18,11 +18,13 @@ module DataPath(
     RegisterFile register_file(
     .clk,
     .reset,
+    .write_enable1(result_src[1]),
     .write_enable3(reg_write),
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(instr[3:0]),
     .read_reg_addrs(instr[11:8]),
     .write_reg_addr3(instr[15:12]),
+    .write_data1(alu_result),
     .write_data3(result),
     .r15(pc_plus8),
     .read_data1(read_data1),
@@ -57,7 +59,7 @@ module DataPath(
     .v(alu_flags[0])
     );
 
-    Mux2 #(32) alu_result_src_b_mux(.d0(alu_result), .d1(src_b), .s(shift), .y(data_memory_addr));
+    Mux4 #(32) alu_result_src_b_mux(.d0(alu_result), .d1(src_b), .d2(read_data1), .d3(read_data1), .s(result_src), .y(data_memory_addr));
     Mux2 #(32) result_mux(.d0(data_memory_addr), .d1(read_data), .s(mem_to_reg), .y(result));
 
 endmodule
