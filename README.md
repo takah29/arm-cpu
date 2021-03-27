@@ -16,19 +16,19 @@
 * *Opcode* Rd, [Rn, &plusmn;Src2]
   * STR, LDR
 * IdxMode
-    * [Rn, &plusmn;Src2] (offset)
-    * [Rn], &plusmn;Src2 (postindex)
+  * [Rn, &plusmn;Src2] (offset)
+  * [Rn], &plusmn;Src2 (postindex)
 
 ### Branch
 
 * *Opcode* label
   * B
 
-## Diagram
+## Architecture
+
+### Logic Diagram
 
 ![arm_cpu_diagram](./asset/arm_cpu_diagram.drawio.png "arm_cpu_diagram")
-
-## Tables
 
 ### Main Decoder
 
@@ -77,3 +77,8 @@
 |    ^    |              ^              |            1            |            ^            |     |             ^              |          10           |     0     |    1    |   0    |   0   |
 |    ^    |            1101             |            0            | LSL, LSR, ASR, ROR, MOV |     |            0XX             |          00           |     0     |    1    |   0    |   0   |
 |    ^    |              ^              |            1            |            ^            |     |             ^              |          10           |     0     |    1    |   0    |   0   |
+
+## References
+
+* Sarah Harris & David Harris, *Digital Design and Computer Architecture: ARM Edition*
+* [ARMv5 Architecture Reference Manual](https://developer.arm.com/documentation/ddi0100/i)
