@@ -4,8 +4,8 @@ module Controller
     input logic [1:0] op,
     input logic [3:0] cond, alu_flags, rd,
     input logic [5:0] funct,
-    output logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, reg_src, shift, carry, swap, inv,
-    output logic [1:0] imm_src,
+    output logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, reg_src, base_reg_write, carry, swap, inv,
+    output logic [1:0] imm_src, result_src,
     output logic [2:0] alu_ctl
     );
 
@@ -22,12 +22,13 @@ module Controller
     .mem_to_reg,
     .alu_src,
     .no_write,
-    .shift,
     .swap,
     .inv,
     .flag_w,
     .imm_src,
+    .result_src,
     .reg_src,
+    .base_reg_write,
     .alu_ctl
     );
 

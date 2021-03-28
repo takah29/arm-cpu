@@ -2,19 +2,22 @@ module RegisterFileTestbench();
     parameter HALF_CYCLE = 500;
     parameter STB = 100;
 
-    logic clk, reset, write_enable3;
+    logic clk, reset;
+    logic write_enable1, write_enable3;
     logic [3:0] read_reg_addr1, read_reg_addr2, write_reg_addr3, read_reg_addrs;
-    logic [31:0] write_data3, r15;
+    logic [31:0] write_data1, write_data3, r15;
     logic [31:0] read_data1, read_data2, read_data3, read_datas, rd1_expected, rd2_expected, rd3_expected, rds_expected;
 
     RegisterFile dut(
     .clk,
     .reset,
+    .write_enable1,
     .write_enable3,
     .read_reg_addr1,
     .read_reg_addr2,
     .write_reg_addr3,
     .read_reg_addrs,
+    .write_data1,
     .write_data3,
     .r15,
     .read_data1,
@@ -28,6 +31,7 @@ module RegisterFileTestbench();
         for (int i = 0; i < 15; i++) begin
             @(posedge clk) write_reg_addr3 = i; write_enable3 = 1; write_data3 = 0; #STB;
         end
+        write_enable1 = 0; write_enable3 = 0; #STB;
     endtask
 
     task assert_;
@@ -84,6 +88,12 @@ module RegisterFileTestbench();
         @(posedge clk) read_reg_addrs = 14;
         rds_expected = 32'hffffffff;
         #STB
+        assert_;
+
+        // case5 write_enable1による書き込みテスト
+        @(posedge clk); write_enable1 = 1; read_reg_addr1 = 8; write_data1 = 32'h000000ff; #STB
+        read_reg_addr1 = 8; rd1_expected = 32'h000000ff;
+        #STB;
         assert_;
 
 

@@ -1,8 +1,8 @@
 module RegisterFile(
     input logic clk, reset,
-    input logic write_enable3,
+    input logic write_enable1, write_enable3,
     input logic [3:0] read_reg_addr1, read_reg_addr2, write_reg_addr3, read_reg_addrs,
-    input logic [31:0] write_data3, r15,
+    input logic [31:0] write_data1, write_data3, r15,
     output logic [31:0] read_data1, read_data2, read_data3, read_datas
     );
 
@@ -18,7 +18,11 @@ module RegisterFile(
             foreach(reg_file[i]) begin
                 reg_file[i] <= '0;
             end
-        end else if (write_enable3) begin
+        end
+        if (write_enable1) begin
+            reg_file[read_reg_addr1] <= write_data1;
+        end
+        if (write_enable3) begin
             reg_file[write_reg_addr3] <= write_data3;
         end
     end

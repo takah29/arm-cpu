@@ -4,11 +4,11 @@ module DecoderTestbench;
     logic [1:0] op;
     logic [5:0] funct;
     logic [3:0] rd;
-    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, reg_src, no_write, shift, swap, inv;
-    logic [1:0] flag_w, imm_src;
+    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, reg_src, base_reg_write, no_write, swap, inv;
+    logic [1:0] flag_w, imm_src, result_src;
     logic [2:0] alu_ctl;
-    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, no_write_exp, shift_exp, swap_exp, inv_exp;
-    logic [1:0] flag_w_exp, imm_src_exp;
+    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, base_reg_write_exp, no_write_exp, shift_exp, swap_exp, inv_exp;
+    logic [1:0] flag_w_exp, imm_src_exp, result_src_exp;
     logic [2:0] alu_ctl_exp;
 
     Decoder dut(
@@ -21,12 +21,13 @@ module DecoderTestbench;
     .mem_to_reg,
     .alu_src,
     .no_write,
-    .shift,
     .swap,
     .inv,
     .flag_w,
     .imm_src,
+    .result_src,
     .reg_src,
+    .base_reg_write,
     .alu_ctl
     );
 
@@ -54,10 +55,6 @@ module DecoderTestbench;
         assert (no_write === no_write_exp) else $error("no_write = %b, %b expected", no_write, no_write_exp);
     endtask
 
-    task assert_shift;
-        assert (shift === shift_exp) else $error("shift = %b, %b expected", shift, shift_exp);
-    endtask
-
     task assert_swap;
         assert (swap === swap_exp) else $error("swap = %b, %b expected", swap, swap_exp);
     endtask
@@ -74,8 +71,16 @@ module DecoderTestbench;
         assert (imm_src === imm_src_exp) else $error("imm_src = %b, %b expected", imm_src, imm_src_exp);
     endtask
 
+    task assert_result_src;
+        assert (result_src === result_src_exp) else $error("result_src = %b, %b expected", result_src, result_src_exp);
+    endtask
+
     task assert_reg_src;
         assert (reg_src === reg_src_exp) else $error("reg_src = %b, %b expected", reg_src, reg_src_exp);
+    endtask
+
+    task assert_base_reg_write;
+        assert (base_reg_write === base_reg_write_exp) else $error("base_reg_write = %b, %b expected", base_reg_write, base_reg_write_exp);
     endtask
 
     task assert_alu_ctl;
@@ -100,7 +105,7 @@ module DecoderTestbench;
         // case: mem_w test
         op = 2'b00; funct = 6'b000000; rd = 0; mem_w_exp = 0; #DELAY;
         assert_mem_w;
-        op = 2'b01; funct = 6'b000000; rd = 0; mem_w_exp = 1; #DELAY;
+        op = 2'b01; funct = 6'b010000; rd = 0; mem_w_exp = 1; #DELAY;
         assert_mem_w;
 
         //case: mem_to_reg test
@@ -126,7 +131,7 @@ module DecoderTestbench;
         // case: imm_src test
         op = 2'b00; funct = 6'b100000; rd = 0; imm_src_exp = 2'b00; #DELAY;
         assert_imm_src;
-        op = 2'b01; funct = 6'b000000; rd = 0; imm_src_exp = 2'b01; #DELAY;
+        op = 2'b01; funct = 6'b010000; rd = 0; imm_src_exp = 2'b01; #DELAY;
         assert_imm_src;
         op = 2'b10; funct = 6'b000000; rd = 0; imm_src_exp = 2'b10; #DELAY;
         assert_imm_src;
@@ -134,8 +139,14 @@ module DecoderTestbench;
         // case: reg_src test
         op = 2'b00; funct = 6'b000000; rd = 0; reg_src_exp = 1'b0; #DELAY;
         assert_reg_src;
-        op = 2'b01; funct = 6'b000000; rd = 0; reg_src_exp = 1'b0; #DELAY;
+        op = 2'b10; funct = 6'b000000; rd = 0; reg_src_exp = 1'b1; #DELAY;
         assert_reg_src;
+
+        // case: base_reg_write test
+        op = 2'b01; funct = 6'b011000; rd = 0; base_reg_write_exp = 1'b0; #DELAY;
+        assert_base_reg_write;
+        op = 2'b01; funct = 6'b011010; rd = 0; base_reg_write_exp = 1'b1; #DELAY;
+        assert_base_reg_write;
 
         // case: alu_ctl test
         op = 2'b00; funct = 6'b001000; rd = 0; alu_ctl_exp = 3'b000; #DELAY;
@@ -156,11 +167,13 @@ module DecoderTestbench;
         op = 2'b00; funct = 6'b010101; rd = 0; no_write_exp = 1'b1; #DELAY;
         assert_no_write;
 
-        // case: shift test
-        op = 2'b00; funct = 6'b001000; rd = 0; shift_exp = 1'b0; #DELAY;
-        assert_shift;
-        op = 2'b00; funct = 6'b011011; rd = 0; shift_exp = 1'b1; #DELAY;
-        assert_shift;
+        // case: result_src test
+        op = 2'b00; funct = 6'b100000; rd = 0; result_src_exp = 2'b00; #DELAY;
+        assert_result_src;
+        op = 2'b00; funct = 6'b011010; rd = 0; result_src_exp = 2'b01; #DELAY;
+        assert_result_src;
+        op = 2'b01; funct = 6'b000001; rd = 0; result_src_exp = 2'b10; #DELAY;
+        assert_result_src;
 
         // case: swap test
         op = 2'b00; funct = 6'b001000; rd = 0; swap_exp = 1'b0; #DELAY;

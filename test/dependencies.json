@@ -5,6 +5,9 @@
     "test_mux2": [
         "mux2.sv"
     ],
+    "test_mux4": [
+        "mux4.sv"
+    ],
     "test_swap": [
         "swap.sv"
     ],
@@ -44,6 +47,7 @@
         "alu_with_flag.sv",
         "pc_module.sv",
         "mux2.sv",
+        "mux4.sv",
         "flopr.sv",
         "adder.sv"
     ],
@@ -93,6 +97,7 @@
         "cond_logic.sv",
         "flopenr.sv",
         "mux2.sv",
+        "mux4.sv",
         "flopr.sv"
     ],
     "test_top": [
@@ -113,6 +118,7 @@
         "cond_logic.sv",
         "flopenr.sv",
         "mux2.sv",
+        "mux4.sv",
         "flopr.sv",
         "instruction_memory.sv",
         "data_memory.sv"

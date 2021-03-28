@@ -1,7 +1,7 @@
 module AluDecoderTestbench;
     parameter DELAY = 10;
 
-    logic alu_op, s;
+    logic alu_op, s, branch;
     logic [3:0] cmd;
     logic no_write, shift, swap, inv;
     logic [1:0] flag_w;
@@ -10,7 +10,7 @@ module AluDecoderTestbench;
     logic [1:0] flag_w_expected;
     logic [2:0] alu_ctl_expected;
 
-    AluDecoder dut(.alu_op, .s, .cmd, .no_write, .shift, .swap, .inv, .alu_ctl, .flag_w);
+    AluDecoder dut(.alu_op, .s, .branch, .cmd, .no_write, .shift, .swap, .inv, .alu_ctl, .flag_w);
 
     task set_exp(
         input logic [2:0] alu_exp_in,
@@ -40,8 +40,9 @@ module AluDecoderTestbench;
         set_exp(3'b000, 2'b00, 1'b0, 1'b0, 1'b0, 1'b0); #DELAY;
         assert_;
 
-        //alu_op = 1
+        // DP
         alu_op = 1'b1;
+        branch = 1'b0;
 
         // case ADD
         s = '0; cmd = 4'b0100;
@@ -158,6 +159,28 @@ module AluDecoderTestbench;
         s = '1;
         set_exp(3'b0xx, 2'b10, 1'b0, 1'b1, 1'b0, 1'b1); #DELAY;
         assert_;
+
+        // case Memory ADD, SUB
+        alu_op = 1'b0;
+        branch = 1'b0;
+        s = '0; cmd = 4'b1100;
+        set_exp(3'b000, 2'b00, 1'b0, 1'b0, 1'b0, 1'b0); #DELAY;
+        assert_;
+        s = '0; cmd = 4'b1000;
+        set_exp(3'b001, 2'b00, 1'b0, 1'b0, 1'b0, 1'b0); #DELAY;
+        assert_;
+
+        // case Branch
+        alu_op = 1'b0;
+        branch = 1'b1;
+        s = '0; cmd = 4'b1100;
+        set_exp(3'b000, 2'b00, 1'b0, 1'b0, 1'b0, 1'b0); #DELAY;
+        assert_;
+        s = '0; cmd = 4'b1000;
+        set_exp(3'b000, 2'b00, 1'b0, 1'b0, 1'b0, 1'b0); #DELAY;
+        assert_;
+
+
 
         $display("test completed");
         $finish;

@@ -3,9 +3,9 @@ module DataPathTestbench();
     parameter STB = 100;
 
     logic clk, reset;
-    logic pc_src, reg_write, mem_to_reg, alu_src, reg_src, shift, carry, swap, inv;
+    logic pc_src, reg_write, base_reg_write, mem_to_reg, alu_src, reg_src, carry, swap, inv;
     logic [31:0] instr, read_data;
-    logic [1:0] imm_src;
+    logic [1:0] imm_src, result_src;
     logic [2:0] alu_ctl;
     logic [31:0] pc, write_data, data_memory_addr;
     logic [31:0] pc_exp, write_data_exp, data_memory_addr_exp;
@@ -15,10 +15,11 @@ module DataPathTestbench();
     .reset,
     .pc_src,
     .imm_src,
+    .result_src,
     .reg_write,
+    .base_reg_write,
     .mem_to_reg,
     .alu_src,
-    .shift,
     .carry,
     .swap,
     .inv,
@@ -52,10 +53,11 @@ module DataPathTestbench();
         mem_to_reg = '1;
         reg_src = 1'b0;
         alu_src = '1;
-        shift = 1'b0;
+        result_src = 2'b00;
         carry = 1'b0;
         swap = 1'b0;
         inv = 1'b0;
+        base_reg_write = 1'b0;
 
         // case1: r1に15を設定、r11にアドレス32を設定、r1の値をアドレスr11に書き込む
         // ldr r1, [r0] （read_dataで設定するのでinstrのr0のところは何でもいい）
