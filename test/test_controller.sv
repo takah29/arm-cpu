@@ -6,10 +6,10 @@ module ControllerTestbench;
     logic [1:0] op;
     logic [3:0] cond, alu_flags, rd;
     logic [5:0] funct;
-    logic pc_src, reg_write, mem_write, mem_to_reg, alu_src, reg_src, carry, swap, inv;
+    logic pc_src, reg_write, base_reg_write, mem_write, mem_to_reg, alu_src, reg_src, carry, swap, inv;
     logic [1:0] imm_src, result_src;
     logic [2:0] alu_ctl;
-    logic pc_src_exp, reg_write_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, result_src_exp, carry_exp, swap_exp, inv_exp;
+    logic pc_src_exp, reg_write_exp, base_reg_write_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, result_src_exp, carry_exp, swap_exp, inv_exp;
     logic [1:0] imm_src_exp;
     logic [2:0] alu_ctl_exp;
 
@@ -23,6 +23,7 @@ module ControllerTestbench;
     .funct,
     .pc_src,
     .reg_write,
+    .base_reg_write,
     .mem_write,
     .mem_to_reg,
     .alu_src,
@@ -42,6 +43,10 @@ module ControllerTestbench;
 
     task assert_reg_write;
         assert (reg_write === reg_write_exp) else $error("reg_write = %b, %b expected", reg_write, reg_write_exp);
+    endtask
+
+    task assert_base_reg_write;
+        assert (base_reg_write === base_reg_write_exp) else $error("base_reg_write = %b, %b expected", base_reg_write, base_reg_write_exp);
     endtask
 
     task assert_mem_write;
@@ -107,6 +112,14 @@ module ControllerTestbench;
         op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b010001; reg_write_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_reg_write;
+
+        // base_reg_write test
+        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b111000; base_reg_write_exp = 1'b0;
+        @(posedge clk); #DELAY;
+        assert_base_reg_write;
+        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b111010; base_reg_write_exp = 1'b1;
+        @(posedge clk); #DELAY;
+        assert_base_reg_write;
 
         // mem_write test
         op = 2'b00; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; mem_write_exp = 1'b0;
