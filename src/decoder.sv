@@ -28,6 +28,7 @@ module Decoder
     AluDecoder alu_decoder(
     .alu_op,
     .s(funct[0]),
+    .branch,
     .cmd(funct[4:1]),
     .alu_ctl,
     .flag_w,

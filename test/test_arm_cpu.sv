@@ -132,11 +132,29 @@ module ArmCpuTestbench;
         assert_register_value(14, 32'hffff0000);
         assert_register_value(6, 7);
 
+        // LDR R14, [R6, #-3]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_010001_0110_1110_000000000011; read_data = 32'hffff0000;
+        #DELAY
+        assert_data_memory_addr(4);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 32'hffff0000);
+        assert_register_value(6, 7);
+
         // LDR R14, [R3, R2]
         reset_; set_regs; #DELAY
         instr = 32'b1110_01_111001_0011_1110_00000_00_0_0010; read_data = 32'hffff0000;
         #DELAY
         assert_data_memory_addr(1010);
+        @(posedge clk); #DELAY;
+        assert_register_value(14, 32'hffff0000);
+        assert_register_value(3, 1000);
+
+        // LDR R14, [R3, -R2]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_110001_0011_1110_00000_00_0_0010; read_data = 32'hffff0000;
+        #DELAY
+        assert_data_memory_addr(990);
         @(posedge clk); #DELAY;
         assert_register_value(14, 32'hffff0000);
         assert_register_value(3, 1000);
@@ -205,11 +223,31 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(4, 3);
 
+        // STR R6, [R4, #-2]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_010000_0100_0110_000000000010;
+        #DELAY;
+        assert_data_memory_addr(1);
+        assert_write_data(7);
+        assert_mem_write(1);
+        @(posedge clk); #DELAY;
+        assert_register_value(4, 3);
+
         // STR R6, [R3, R2]
         reset_; set_regs; #DELAY
         instr = 32'b1110_01_111000_0011_0110_00000_00_0_0010;
         #DELAY;
         assert_data_memory_addr(1010);
+        assert_write_data(7);
+        assert_mem_write(1);
+        @(posedge clk); #DELAY;
+        assert_register_value(3, 1000);
+
+        // STR R6, [R3, -R2]
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_01_110000_0011_0110_00000_00_0_0010;
+        #DELAY;
+        assert_data_memory_addr(990);
         assert_write_data(7);
         assert_mem_write(1);
         @(posedge clk); #DELAY;
