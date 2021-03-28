@@ -1,6 +1,6 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write, mem_to_reg, alu_src, reg_src, carry, swap, inv,
+    input logic pc_src, reg_write, base_reg_write, mem_to_reg, alu_src, reg_src, carry, swap, inv,
     input logic [31:0] instr, read_data,
     input logic [1:0] imm_src, result_src,
     input logic [2:0] alu_ctl,
@@ -18,7 +18,7 @@ module DataPath(
     RegisterFile register_file(
     .clk,
     .reset,
-    .write_enable1(result_src[1]),
+    .write_enable1(base_reg_write),
     .write_enable3(reg_write),
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(instr[3:0]),
