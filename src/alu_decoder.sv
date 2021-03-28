@@ -1,6 +1,6 @@
 module AluDecoder
     (
-    input logic alu_op, s,
+    input logic alu_op, s, branch,
     input logic [3:0] cmd,
     output logic no_write, shift, swap, inv,
     output logic [2:0] alu_ctl,
@@ -32,7 +32,14 @@ module AluDecoder
             flag_w[1] = s;
             flag_w[0] = s & (alu_ctl === 3'b000 | alu_ctl === 3'b001 | alu_ctl === 3'b100 | alu_ctl === 3'b101);
         end else begin
-            alu_ctl = 3'b000;
+            if (branch) begin
+                alu_ctl = 3'b000;
+            end else begin
+                casex (cmd)
+                    4'bX1XX: alu_ctl = 3'b000;
+                    4'bX0XX: alu_ctl = 3'b001;
+                endcase
+            end
             flag_w = 2'b00;
             no_write = 1'b0;
             shift = 1'b0;
