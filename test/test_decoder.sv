@@ -4,10 +4,10 @@ module DecoderTestbench;
     logic [1:0] op;
     logic [5:0] funct;
     logic [3:0] rd;
-    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, reg_src, no_write, swap, inv;
+    logic pcs, reg_w, mem_w, mem_to_reg, alu_src, reg_src, base_reg_write, no_write, swap, inv;
     logic [1:0] flag_w, imm_src, result_src;
     logic [2:0] alu_ctl;
-    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, no_write_exp, shift_exp, swap_exp, inv_exp;
+    logic pcs_exp, reg_w_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, base_reg_write_exp, no_write_exp, shift_exp, swap_exp, inv_exp;
     logic [1:0] flag_w_exp, imm_src_exp, result_src_exp;
     logic [2:0] alu_ctl_exp;
 
@@ -27,6 +27,7 @@ module DecoderTestbench;
     .imm_src,
     .result_src,
     .reg_src,
+    .base_reg_write,
     .alu_ctl
     );
 
@@ -76,6 +77,10 @@ module DecoderTestbench;
 
     task assert_reg_src;
         assert (reg_src === reg_src_exp) else $error("reg_src = %b, %b expected", reg_src, reg_src_exp);
+    endtask
+
+    task assert_base_reg_write;
+        assert (base_reg_write === base_reg_write_exp) else $error("base_reg_write = %b, %b expected", base_reg_write, base_reg_write_exp);
     endtask
 
     task assert_alu_ctl;
@@ -136,6 +141,12 @@ module DecoderTestbench;
         assert_reg_src;
         op = 2'b10; funct = 6'b000000; rd = 0; reg_src_exp = 1'b1; #DELAY;
         assert_reg_src;
+
+        // case: base_reg_write test
+        op = 2'b01; funct = 6'b011000; rd = 0; base_reg_write_exp = 1'b0; #DELAY;
+        assert_base_reg_write;
+        op = 2'b01; funct = 6'b011010; rd = 0; base_reg_write_exp = 1'b1; #DELAY;
+        assert_base_reg_write;
 
         // case: alu_ctl test
         op = 2'b00; funct = 6'b001000; rd = 0; alu_ctl_exp = 3'b000; #DELAY;
