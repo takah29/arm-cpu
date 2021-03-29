@@ -80,6 +80,9 @@
         "cond_logic.sv",
         "flopenr.sv"
     ],
+    "test_multiplier": [
+        "multiplier.sv"
+    ],
     "test_arm_cpu": [
         "arm_cpu.sv",
         "data_path.sv",
