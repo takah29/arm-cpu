@@ -3,24 +3,26 @@ module CondLogicTestbench;
     parameter DELAY = 100;
 
     logic clk, reset;
-    logic pcs, reg_w, mem_w, no_write;
+    logic pcs, reg_w3, reg_w1, mem_w, no_write;
     logic [1:0] flag_w;
     logic [3:0] cond, alu_flags;
-    logic pc_src, reg_write, mem_write, carry;
-    logic pc_src_exp, reg_write_exp, mem_write_exp, cond_ex_exp, carry_exp;
+    logic pc_src, reg_write3, reg_write1, mem_write, carry;
+    logic pc_src_exp, reg_write3_exp, reg_write1_exp, mem_write_exp, cond_ex_exp, carry_exp;
 
     CondLogic dut(
     .clk,
     .reset,
     .pcs,
-    .reg_w,
+    .reg_w3,
+    .reg_w1,
     .mem_w,
     .no_write,
     .flag_w,
     .cond,
     .alu_flags,
     .pc_src,
-    .reg_write,
+    .reg_write3,
+    .reg_write1,
     .mem_write,
     .carry
     );
@@ -29,8 +31,12 @@ module CondLogicTestbench;
         assert (pc_src === pc_src_exp) else $error("pc_src = %b, %b expected", pc_src, pc_src_exp);
     endtask
 
-    task assert_reg_write;
-        assert (reg_write === reg_write_exp) else $error("reg_write = %b, %b expected", reg_write, reg_write_exp);
+    task assert_reg_write3;
+        assert (reg_write3 === reg_write3_exp) else $error("reg_write3 = %b, %b expected", reg_write3, reg_write3_exp);
+    endtask
+
+    task assert_reg_write1;
+        assert (reg_write1 === reg_write1_exp) else $error("reg_write1 = %b, %b expected", reg_write1, reg_write1_exp);
     endtask
 
     task assert_mem_write;
@@ -94,13 +100,21 @@ module CondLogicTestbench;
         @(posedge clk); #DELAY
         assert_pc_src;
 
-        // case: reg_write test
-        cond = 4'b1110; reg_w = 1'b0; no_write = 1'b0; reg_write_exp = 1'b0;
+        // case: reg_write3 test
+        cond = 4'b1110; reg_w3 = 1'b0; no_write = 1'b0; reg_write3_exp = 1'b0;
         @(posedge clk); #DELAY
-        assert_reg_write;
-        cond = 4'b1110; reg_w = 1'b1; no_write = 1'b0; reg_write_exp = 1'b1;
+        assert_reg_write3;
+        cond = 4'b1110; reg_w3 = 1'b1; no_write = 1'b0; reg_write3_exp = 1'b1;
         @(posedge clk); #DELAY
-        assert_reg_write;
+        assert_reg_write3;
+
+        // case: reg_write1 test
+        cond = 4'b1110; reg_w1 = 1'b0; no_write = 1'b0; reg_write1_exp = 1'b0;
+        @(posedge clk); #DELAY
+        assert_reg_write1;
+        cond = 4'b1110; reg_w1 = 1'b1; no_write = 1'b0; reg_write1_exp = 1'b1;
+        @(posedge clk); #DELAY
+        assert_reg_write1;
 
         // case: mem_write test
         cond = 4'b1110; mem_w = 1'b0; mem_write_exp = 1'b0;
