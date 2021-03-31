@@ -126,6 +126,7 @@
         "mux4.sv",
         "flopr.sv",
         "instruction_memory.sv",
-        "data_memory.sv"
+        "data_memory.sv",
+        "multiplier.sv"
     ]
 }
