@@ -6,17 +6,17 @@ module ArmCpu
     output logic [31:0] pc, write_data, data_memory_addr
     );
 
-    logic pc_src, reg_write, base_reg_write, mem_to_reg, alu_src, reg_src, carry, swap, inv;
+    logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, reg_src, carry, swap, inv;
     logic [1:0] imm_src, result_src;
     logic [2:0] alu_ctl;
-    logic [3:0] alu_flags;
+    logic [3:0] alu_flags, mul_ctl;
 
     DataPath data_path(
     .clk,
     .reset,
     .pc_src,
-    .reg_write,
-    .base_reg_write,
+    .reg_write3,
+    .reg_write1,
     .mem_to_reg,
     .alu_src,
     .carry,
@@ -27,6 +27,7 @@ module ArmCpu
     .imm_src,
     .result_src,
     .alu_ctl,
+    .mul_ctl,
     .reg_src,
     .alu_flags,
     .pc,
@@ -42,9 +43,10 @@ module ArmCpu
     .alu_flags,
     .rd(instr[15:12]),
     .funct(instr[25:20]),
+    .instr74(instr[7:4]),
     .pc_src,
-    .reg_write,
-    .base_reg_write,
+    .reg_write3,
+    .reg_write1,
     .mem_write,
     .mem_to_reg,
     .alu_src,
@@ -54,7 +56,8 @@ module ArmCpu
     .imm_src,
     .result_src,
     .reg_src,
-    .alu_ctl
+    .alu_ctl,
+    .mul_ctl
     );
 
 endmodule

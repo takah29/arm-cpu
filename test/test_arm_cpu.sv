@@ -36,8 +36,8 @@ module ArmCpuTestbench;
         $display("alu_ctl = %b", dut.controller.alu_ctl);
         $display("alu_src = %b", dut.controller.alu_src);
         $display("imm_src = %b", dut.controller.imm_src);
-        $display("reg_write = %b", dut.controller.reg_write);
-        $display("base_reg_write = %b", dut.controller.base_reg_write);
+        $display("reg_write3 = %b", dut.controller.reg_write3);
+        $display("reg_write1 = %b", dut.controller.reg_write1);
         $display("reg_src = %b", dut.controller.reg_src);
     endtask
 
