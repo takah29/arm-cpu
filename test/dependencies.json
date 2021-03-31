@@ -49,7 +49,8 @@
         "mux2.sv",
         "mux4.sv",
         "flopr.sv",
-        "adder.sv"
+        "adder.sv",
+        "multiplier.sv"
     ],
     "test_pc_module": [
         "pc_module.sv",
@@ -80,6 +81,9 @@
         "cond_logic.sv",
         "flopenr.sv"
     ],
+    "test_multiplier": [
+        "multiplier.sv"
+    ],
     "test_arm_cpu": [
         "arm_cpu.sv",
         "data_path.sv",
@@ -98,7 +102,8 @@
         "flopenr.sv",
         "mux2.sv",
         "mux4.sv",
-        "flopr.sv"
+        "flopr.sv",
+        "multiplier.sv"
     ],
     "test_top": [
         "top.sv",
@@ -121,6 +126,7 @@
         "mux4.sv",
         "flopr.sv",
         "instruction_memory.sv",
-        "data_memory.sv"
+        "data_memory.sv",
+        "multiplier.sv"
     ]
 }

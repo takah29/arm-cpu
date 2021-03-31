@@ -1,14 +1,16 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write, base_reg_write, mem_to_reg, alu_src, reg_src, carry, swap, inv,
+    input logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, reg_src, carry, swap, inv,
     input logic [31:0] instr, read_data,
     input logic [1:0] imm_src, result_src,
     input logic [2:0] alu_ctl,
+    input logic [3:0] mul_ctl,
     output logic [3:0] alu_flags,
     output logic [31:0] pc, write_data, data_memory_addr
     );
 
     logic [31:0] src_a, src_b, pre_src_b, rd2_data, rs_data, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
+    logic [31:0] mult_out1, mult_out2, wd3_mux_out, wd1_mux_out;
     logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
@@ -18,14 +20,14 @@ module DataPath(
     RegisterFile register_file(
     .clk,
     .reset,
-    .write_enable1(base_reg_write),
-    .write_enable3(reg_write),
+    .write_enable1(reg_write1),
+    .write_enable3(reg_write3),
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(instr[3:0]),
     .read_reg_addrs(instr[11:8]),
     .write_reg_addr3(instr[15:12]),
-    .write_data1(alu_result),
-    .write_data3(result),
+    .write_data1(wd1_mux_out),
+    .write_data3(wd3_mux_out),
     .r15(pc_plus8),
     .read_data1(read_data1),
     .read_data2(rd2_data),
@@ -62,4 +64,8 @@ module DataPath(
     Mux4 #(32) alu_result_src_b_mux(.d0(alu_result), .d1(src_b), .d2(read_data1), .d3(read_data1), .s(result_src), .y(data_memory_addr));
     Mux2 #(32) result_mux(.d0(data_memory_addr), .d1(read_data), .s(mem_to_reg), .y(result));
 
+    // Multiplier
+    Multiplier mult(.a(rd2_data), .b(rs_data), .c(read_data1), .d(write_data), .cmd(mul_ctl[2:0]), .ret1(mult_out1), .ret2(mult_out2));
+    Mux2 #(32) wd1_mux(.d0(alu_result), .d1(mult_out1), .s(mul_ctl[3]), .y(wd1_mux_out));
+    Mux2 #(32) wd3_mux(.d0(result), .d1(mult_out2), .s(mul_ctl[3]), .y(wd3_mux_out));
 endmodule

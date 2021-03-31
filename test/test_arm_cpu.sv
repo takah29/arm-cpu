@@ -36,8 +36,8 @@ module ArmCpuTestbench;
         $display("alu_ctl = %b", dut.controller.alu_ctl);
         $display("alu_src = %b", dut.controller.alu_src);
         $display("imm_src = %b", dut.controller.imm_src);
-        $display("reg_write = %b", dut.controller.reg_write);
-        $display("base_reg_write = %b", dut.controller.base_reg_write);
+        $display("reg_write3 = %b", dut.controller.reg_write3);
+        $display("reg_write1 = %b", dut.controller.reg_write1);
         $display("reg_src = %b", dut.controller.reg_src);
     endtask
 
@@ -691,6 +691,22 @@ module ArmCpuTestbench;
         assert_pc(0);
         @(posedge clk); #DELAY;
         assert_pc(32'h44);
+
+        //case: Multiply (args: a, b, c, d = Rn, Rm, Rd, Ra)
+        // MUL R13, R3, R6
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_00_000_0_1101_0000_0110_1001_0011;
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 7000);
+
+        // UMULL R13, R7, R8, R14
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_00_100_0_1101_1110_1000_1001_0111;
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'h3fffffff);
+        assert_register_value(14, 32'h80000000);
+
+
 
         $display("test completed");
         $finish;
