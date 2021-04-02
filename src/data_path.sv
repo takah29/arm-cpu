@@ -10,11 +10,12 @@ module DataPath(
     );
 
     logic [31:0] src_a, src_b, pre_src_b, rd2_data, rs_data, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
-    logic [31:0] mult_out1, mult_out2, wd3_mux_out, wd1_mux_out;
+    logic [31:0] mult_out1, mult_out2, wd3_mux_out, wd1_mux_out, pc_addr;
     logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
-    PcModule pc_module(.clk, .reset, .pc_src, .jump(result), .pc, .pc_plus8);
+    assign pc_addr = wd3_mux_out & 32'hfffffffe;
+    PcModule pc_module(.clk, .reset, .pc_src, .jump(pc_addr), .pc, .pc_plus8);
 
     // レジスタファイル
     RegisterFile register_file(

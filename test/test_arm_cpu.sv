@@ -692,6 +692,15 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_pc(32'h44);
 
+        // BX R8
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010010_0000_0000_0000_0001_1000;
+        #DELAY;
+        assert_data_memory_addr(32'h7fffffff);
+        assert_pc(0);
+        @(posedge clk); #DELAY;
+        assert_pc(32'h7ffffffe);
+
         //case: Multiply (args: a, b, c, d = Rn, Rm, Rd, Ra)
         // MUL R13, R3, R6
         reset_; set_regs; #DELAY

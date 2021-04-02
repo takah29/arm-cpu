@@ -10,19 +10,14 @@ module MainDecoder
     logic [11:0] controls; // {branch, mem_to_reg, mem_w, alu_src, imm_src, reg_w3, reg_w1, reg_src, alu_op, post_idx, mult}
 
     function [11:0] dp_controls(input [5:0] funct, input [3:0] instr74);
-        if (instr74 == 4'b1001) begin
-            casex (funct)
-                6'b000XXX: dp_controls = 12'b0_0_0_0_00_0_1_0_0_0_1; // DP Multiply (32-bit)
-                6'b001XXX: dp_controls = 12'b0_0_0_0_00_1_1_0_0_0_1; // DP Multiply (64-bit)
-                default: dp_controls = 12'bx;
-            endcase
-        end else begin
-            casex (funct)
-                6'b0XXXXX: dp_controls = 12'b0_0_0_0_00_1_0_0_1_0_0; // DP Reg
-                6'b1XXXXX: dp_controls = 12'b0_0_0_1_00_1_0_0_1_0_0; // DP Imm
-                default: dp_controls = 12'bx;
-            endcase
-        end
+        casex ({funct, instr74})
+            10'b0100100001: dp_controls = 12'b1_0_0_0_00_0_0_0_0_0_0; // BX
+            10'b000XXX1001: dp_controls = 12'b0_0_0_0_00_0_1_0_0_0_1; // DP Multiply (32-bit)
+            10'b001XXX1001: dp_controls = 12'b0_0_0_0_00_1_1_0_0_0_1; // DP Multiply (64-bit)
+            10'b0XXXXXXXXX: dp_controls = 12'b0_0_0_0_00_1_0_0_1_0_0; // DP Reg
+            10'b1XXXXXXXXX: dp_controls = 12'b0_0_0_1_00_1_0_0_1_0_0; // DP Imm
+            // default: dp_controls = 12'bx;
+        endcase
     endfunction
 
     function [11:0] mem_controls(input [5:0] funct);

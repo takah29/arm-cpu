@@ -127,6 +127,10 @@ module MainDecoderTestbench;
         op = 2'b10; funct = 6'b100000; instr74 = 4'b0000; set_exp(12'b1_0_0_1_10_0_0_1_0_0_0); #DELAY;
         assert_;
 
+        // case: type BX
+        op = 2'b00; funct = 6'b010010; instr74 = 4'b0001; set_exp(12'b1_0_0_0_00_0_0_0_0_0_0); #DELAY;
+        assert_;
+
         $display("test completed");
         $finish;
     end

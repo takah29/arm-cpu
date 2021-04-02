@@ -105,6 +105,8 @@ module ControllerTestbench;
     end
 
     initial begin
+        instr74 = 4'b0000;
+
         // case: pc_src test
         op = 2'b00; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; pc_src_exp = 1'b0;
         @(posedge clk); #DELAY;
