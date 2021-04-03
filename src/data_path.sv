@@ -10,8 +10,8 @@ module DataPath(
     );
 
     logic [31:0] src_a, src_b, pre_src_b, rd2_data, rs_data, pc_plus4, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
-    logic [31:0] mult_out1, mult_out2, wd3_mux_out, wd1_mux_out, pc_addr;
-    logic [3:0] reg_addr1, reg_addr2;
+    logic [31:0] mult_out1, mult_out2, wd3_mux_out, wd1_mux_out, pc_addr, wd3_pc4_mux_out;
+    logic [3:0] reg_addr1, reg_addr3;
 
     // プログラムカウンタ
     assign pc_addr = wd3_mux_out & 32'hfffffffe;
@@ -19,6 +19,9 @@ module DataPath(
     assign pc_plus8 = pc_plus4 + 4;
 
     // レジスタファイル
+    Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[0]), .y(reg_addr1)); // Rn or PC
+    Mux2 #(4) reg_addr1_mux(.d0(instr[15:12]), .d1(4'he), .s(reg_src[1]), .y(reg_addr3)); // Rm or LR
+    Mux2 #(32) wd3_pc4_mux(.d0(wd3_mux_out), .d1(pc_plus4), .s(reg_src[1]), .y(wd3_pc4_mux_out)); // WriteData3 or PC + 4
     RegisterFile register_file(
     .clk,
     .reset,
@@ -27,16 +30,16 @@ module DataPath(
     .read_reg_addr1(reg_addr1),
     .read_reg_addr2(instr[3:0]),
     .read_reg_addrs(instr[11:8]),
-    .write_reg_addr3(instr[15:12]),
+    .write_reg_addr3(reg_addr3),
     .write_data1(wd1_mux_out),
-    .write_data3(wd3_mux_out),
+    .write_data3(wd3_pc4_mux_out),
     .r15(pc_plus8),
     .read_data1(read_data1),
     .read_data2(rd2_data),
     .read_data3(write_data),
     .read_datas(rs_data)
     );
-    Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[0]), .y(reg_addr1));
+
 
     // 直値拡張
     Extend extend(.instr_imm(instr[23:0]), .imm_src, .ext_imm);
