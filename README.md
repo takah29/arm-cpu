@@ -38,11 +38,11 @@
 * *Opcode* Rm
   * BX(Thumb state is not supported)
 
-## Architecture
-
-### Logic Diagram
+## Logic Diagram
 
 ![arm_cpu_diagram](./asset/arm_cpu_diagram.drawio.png "arm_cpu_diagram")
+
+## Decoder
 
 ### Main Decoder
 
