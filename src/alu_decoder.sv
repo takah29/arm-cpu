@@ -32,21 +32,13 @@ module AluDecoder
             flag_w[1] = s;
             flag_w[0] = s & (alu_ctl === 3'b000 | alu_ctl === 3'b001 | alu_ctl === 3'b100 | alu_ctl === 3'b101);
         end else begin
-            if (branch) begin // Branch
-                alu_ctl = 3'b000;
-                flag_w = 2'b00;
-            end else if (mult) begin // Multiply
-                alu_ctl = 3'b000;
-                flag_w = s ? 2'b10 : 2'b00;
-            end else begin // Memory
-                casex (cmd)
-                    4'bX1XX: alu_ctl = 3'b000;
-                    4'bX0XX: alu_ctl = 3'b001;
-                endcase
-                flag_w = 2'b00;
-            end
+            casex ({mult, branch, cmd ,s})
+                7'b0_1_1001_0: {alu_ctl, flag_w, shift} = 6'b000_00_1; // Branch (BX)
+                7'b1_0_0XXX_1: {alu_ctl, flag_w, shift} = 6'b000_10_0; // Multiply (S = 1)
+                7'b0_0_X0XX_X: {alu_ctl, flag_w, shift} = 6'b001_00_0; // Memory (SUB)
+                default: {alu_ctl, flag_w, shift} = 6'b000_00_0; // otherwise
+            endcase
             no_write = 1'b0;
-            shift = 1'b0;
             swap = 1'b0;
             inv = 1'b0;
         end

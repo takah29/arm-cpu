@@ -35,11 +35,6 @@ module AluDecoderTestbench;
     endtask
 
     initial begin
-        // case1: not defined
-        alu_op = '0; s = '1; cmd = 4'b0100;
-        set_exp(3'b000, 2'b00, 1'b0, 1'b0, 1'b0, 1'b0); #DELAY;
-        assert_;
-
         // DP
         alu_op = 1'b1;
         branch = 1'b0;
@@ -192,6 +187,10 @@ module AluDecoderTestbench;
         assert_;
         s = '0; cmd = 4'b1000;
         set_exp(3'b000, 2'b00, 1'b0, 1'b0, 1'b0, 1'b0); #DELAY;
+        assert_;
+        // BX
+        s = '0; cmd = 4'b1001;
+        set_exp(3'b000, 2'b00, 1'b0, 1'b1, 1'b0, 1'b0); #DELAY;
         assert_;
 
 

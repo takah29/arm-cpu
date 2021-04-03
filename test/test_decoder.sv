@@ -5,11 +5,11 @@ module DecoderTestbench;
     logic [5:0] funct;
     logic [3:0] instr74;
     logic [3:0] rd;
-    logic pcs, reg_w3, reg_w1, mem_w, mem_to_reg, alu_src, reg_src, mult, no_write, swap, inv;
-    logic [1:0] flag_w, imm_src, result_src;
+    logic pcs, reg_w3, reg_w1, mem_w, mem_to_reg, alu_src, mult, no_write, swap, inv;
+    logic [1:0] flag_w, imm_src, reg_src, result_src;
     logic [2:0] alu_ctl;
-    logic pcs_exp, reg_w3_exp, reg_w1_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, reg_src_exp, mult_exp, no_write_exp, shift_exp, swap_exp, inv_exp;
-    logic [1:0] flag_w_exp, imm_src_exp, result_src_exp;
+    logic pcs_exp, reg_w3_exp, reg_w1_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, mult_exp, no_write_exp, shift_exp, swap_exp, inv_exp;
+    logic [1:0] flag_w_exp, imm_src_exp, reg_src_exp, result_src_exp;
     logic [2:0] alu_ctl_exp;
 
     Decoder dut(
@@ -100,11 +100,11 @@ module DecoderTestbench;
         assert_pcs;
         op = 2'b00; funct = 6'b000000; rd = 15; instr74 = 4'b0000; pcs_exp = 1; #DELAY;
         assert_pcs;
-        op = 2'b10; funct = 6'b000000; rd = 0; instr74 = 4'b0000; pcs_exp = 1; #DELAY;
+        op = 2'b10; funct = 6'b100000; rd = 0; instr74 = 4'b0000; pcs_exp = 1; #DELAY;
         assert_pcs;
 
         // case: reg_w3 test
-        op = 2'b10; funct = 6'b000000; rd = 0; instr74 = 4'b0000; reg_w3_exp = 0; #DELAY;
+        op = 2'b01; funct = 6'b010000; rd = 0; instr74 = 4'b0000; reg_w3_exp = 0; #DELAY;
         assert_reg_w3;
         op = 2'b01; funct = 6'b000001; rd = 0; instr74 = 4'b0000; reg_w3_exp = 1; #DELAY;
         assert_reg_w3;
@@ -146,13 +146,15 @@ module DecoderTestbench;
         assert_imm_src;
         op = 2'b01; funct = 6'b010000; rd = 0; instr74 = 4'b0000; imm_src_exp = 2'b01; #DELAY;
         assert_imm_src;
-        op = 2'b10; funct = 6'b000000; rd = 0; instr74 = 4'b0000; imm_src_exp = 2'b10; #DELAY;
+        op = 2'b10; funct = 6'b100000; rd = 0; instr74 = 4'b0000; imm_src_exp = 2'b10; #DELAY;
         assert_imm_src;
 
         // case: reg_src test
-        op = 2'b00; funct = 6'b000000; rd = 0; instr74 = 4'b0000; reg_src_exp = 1'b0; #DELAY;
+        op = 2'b00; funct = 6'b000000; rd = 0; instr74 = 4'b0000; reg_src_exp = 2'b00; #DELAY;
         assert_reg_src;
-        op = 2'b10; funct = 6'b000000; rd = 0; instr74 = 4'b0000; reg_src_exp = 1'b1; #DELAY;
+        op = 2'b10; funct = 6'b100000; rd = 0; instr74 = 4'b0000; reg_src_exp = 2'b01; #DELAY;
+        assert_reg_src;
+        op = 2'b10; funct = 6'b110000; rd = 0; instr74 = 4'b0000; reg_src_exp = 2'b11; #DELAY;
         assert_reg_src;
 
         // case: mult test
