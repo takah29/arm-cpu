@@ -1,21 +1,22 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, reg_src, carry, swap, inv,
+    input logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv,
     input logic [31:0] instr, read_data,
-    input logic [1:0] imm_src, result_src,
+    input logic [1:0] imm_src, reg_src, result_src,
     input logic [2:0] alu_ctl,
     input logic [3:0] mul_ctl,
     output logic [3:0] alu_flags,
     output logic [31:0] pc, write_data, data_memory_addr
     );
 
-    logic [31:0] src_a, src_b, pre_src_b, rd2_data, rs_data, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
+    logic [31:0] src_a, src_b, pre_src_b, rd2_data, rs_data, pc_plus4, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
     logic [31:0] mult_out1, mult_out2, wd3_mux_out, wd1_mux_out, pc_addr;
     logic [3:0] reg_addr1, reg_addr2;
 
     // プログラムカウンタ
     assign pc_addr = wd3_mux_out & 32'hfffffffe;
-    PcModule pc_module(.clk, .reset, .pc_src, .jump(pc_addr), .pc, .pc_plus8);
+    PcModule pc_module(.clk, .reset, .pc_src, .jump(pc_addr), .pc, .pc_plus4);
+    assign pc_plus8 = pc_plus4 + 4;
 
     // レジスタファイル
     RegisterFile register_file(
@@ -35,7 +36,7 @@ module DataPath(
     .read_data3(write_data),
     .read_datas(rs_data)
     );
-    Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src), .y(reg_addr1));
+    Mux2 #(4) reg_addr0_mux(.d0(instr[19:16]), .d1(4'hf), .s(reg_src[0]), .y(reg_addr1));
 
     // 直値拡張
     Extend extend(.instr_imm(instr[23:0]), .imm_src, .ext_imm);
