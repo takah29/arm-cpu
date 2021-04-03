@@ -692,6 +692,16 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_pc(32'h44);
 
+        // BL Label
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_10_11_000000000000000000001111;
+        #DELAY;
+        assert_data_memory_addr(32'h44);
+        assert_pc(0);
+        @(posedge clk); #DELAY;
+        assert_pc(32'h44);
+        assert_register_value(14, 4);
+
         // BX R8
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010010_0000_0000_0000_0001_1000;
