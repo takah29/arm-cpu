@@ -32,7 +32,7 @@ module TopTestbench;
 
     initial begin
         reset <= 1; # 1; reset <= 0;
-        $readmemb("program.dat", testvectors);
+        $readmemb("programs/program.dat", testvectors);
         vectornum = 0;
         errors = 0;
 

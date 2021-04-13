@@ -15,7 +15,7 @@ module InstructionMemoryTestbench();
     end
 
     initial begin
-        $readmemb("program.dat", testvectors);
+        $readmemb("programs/program.dat", testvectors);
         vectornum = 0;
         errors = 0;
         address = 0;
