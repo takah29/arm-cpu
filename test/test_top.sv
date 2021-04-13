@@ -4,6 +4,8 @@ module TopTestbench;
     logic clk, reset;
     logic [31:0] write_data, data_memory_addr;
     logic mem_write;
+    integer errors, vectornum;
+    logic [31:0] testvectors[0:4095];
 
     Top dut(
     .clk,
@@ -30,6 +32,15 @@ module TopTestbench;
 
     initial begin
         reset <= 1; # 1; reset <= 0;
+        $readmemb("program.dat", testvectors);
+        vectornum = 0;
+        errors = 0;
+
+        // プログラムを命令メモリとデータメモリに設定
+        foreach (testvectors[i]) begin
+            dut.imem.ram[i] = testvectors[i];
+            dut.dmem.ram[i] = testvectors[i];
+        end
     end
 
     always begin

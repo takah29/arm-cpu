@@ -3,7 +3,7 @@ module InstructionMemoryTestbench();
     logic [31:0] address;
     logic [31:0] read_data, rd_expected;
     integer errors, vectornum;
-    logic [31:0] testvectors[0:22];
+    logic [31:0] testvectors[0:4095];
 
     InstructionMemory dut(.address, .read_data);
 
@@ -19,6 +19,9 @@ module InstructionMemoryTestbench();
         vectornum = 0;
         errors = 0;
         address = 0;
+        foreach (testvectors[i]) begin
+            dut.ram[i] = testvectors[i];
+        end
     end
 
     always @(posedge clk) begin
