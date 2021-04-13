@@ -12,7 +12,5 @@ int main() {
             ret[i] = 0;
         }
     }
-    float d;
-    d = 7.0 / 3.0;
     return 0;
 }
