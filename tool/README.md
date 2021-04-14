@@ -2,8 +2,8 @@
 
 ## Requirements
 
-* Python >= 3.8
-* Clang >= 9.0
+* Python 3.8
+* Clang 9.0
 
 ## Usage
 
