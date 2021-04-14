@@ -2,13 +2,14 @@ import os
 from pathlib import Path
 import subprocess
 import argparse
+from struct import unpack
 
 
 def main(args):
     filepath = Path(args.filepath)
 
     # clangでデバッグ情報を埋め込んでオブジェクトファイルを作成する
-    cmd_clang = f"clang -O0 -target armv6 -mfloat-abi=soft -g -c {filepath}"
+    cmd_clang = f"clang -O0 -target armv5 -mfloat-abi=soft -g -c {filepath}"
     subprocess.run(cmd_clang.split(" "))
 
     try:
@@ -20,13 +21,21 @@ def main(args):
             # オブジェクトファイルから命令部だけをテキストとして取り出す
             cmd = f"llvm-objcopy {filepath.stem}.o -O binary program.bin"
             subprocess.run(cmd.split(" "))
-            cmd = "xxd -ps -c 4 program.bin program.dat"
-            ret = subprocess.run(cmd.split(" "))
 
-            if ret.returncode == 0:
-                print("output program.dat")
-            else:
-                print("process failed.")
+            with open("program.bin", "rb") as f:
+                tmp = f.read()
+
+            data = unpack("<" + "I" * (len(tmp) // 4), tmp)
+            with open("program.dat", "w") as f:
+                for i in data:
+                    f.write(f"{hex(i)[2:].zfill(8)}\n")
+
+            #cmd = "xxd -p -c 4 -e -g 4 program.bin"
+            #ret = subprocess.run(cmd.split(" "))
+
+            print("output program.dat")
+    except Exception:
+        print("process failed.")
     finally:
         if os.path.exists("program.bin"):
             os.remove("program.bin")
