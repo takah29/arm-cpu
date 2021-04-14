@@ -58,14 +58,16 @@ module RunProgram;
         show_regs;
         // bx lrの場合は実行を終了する
         if (dut.arm_cpu.data_path.instr === 32'he12fff1e) begin
-            $display("=== Data Memory ===");
+            $display("========== Data Memory ==========");
+            $display("Addr      Hex          Digit");
+            $display("---------------------------------");
             foreach (testvectors[i]) begin
                 if (dut.dmem.ram[i] !== 32'hx) begin
-                    $display("%8h: %8h", i * 4, dut.dmem.ram[i]);
+                    $display("%8h: 0x%8h = %1d", i * 4, dut.dmem.ram[i], dut.dmem.ram[i]);
                 end
                     // disable loop_exit;
             end
-            $display("===================");
+            $display("=================================");
             $display("Simulation finished.");
             $finish;
         end else if (dut.arm_cpu.data_path.instr === 32'hx) begin
