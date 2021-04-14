@@ -30,9 +30,6 @@ def main(args):
                 for i in data:
                     f.write(f"{hex(i)[2:].zfill(8)}\n")
 
-            #cmd = "xxd -p -c 4 -e -g 4 program.bin"
-            #ret = subprocess.run(cmd.split(" "))
-
             print("output program.dat")
     except Exception:
         print("process failed.")

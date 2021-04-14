@@ -48,9 +48,8 @@ def main(from_file):
             copy(str(from_file), str(to_file))
             run_program("run_program.sv", dependency_list, root_dir)
         finally:
-            pass
-            # if to_file.exists():
-            #     to_file.unlink(missing_ok=True)
+            if to_file.exists():
+                to_file.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
