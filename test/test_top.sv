@@ -5,7 +5,7 @@ module TopTestbench;
     logic [31:0] write_data, data_memory_addr;
     logic mem_write;
     integer errors, vectornum;
-    logic [31:0] testvectors[0:4095];
+    logic [31:0] testvectors[0:1048575]; // 4MB
 
     Top dut(
     .clk,

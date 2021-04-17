@@ -4,7 +4,7 @@ module DataMemory(
     output logic [31:0] read_data
     );
 
-    logic [31:0] ram[0:4095];
+    logic [31:0] ram[0:1048575]; // 4MB
 
     assign read_data = ram[address[31:2]];
 

@@ -5,7 +5,7 @@ module RunProgram;
     logic [31:0] write_data, data_memory_addr;
     logic mem_write;
     integer errors, vectornum;
-    logic [31:0] testvectors[0:4095];
+    logic [31:0] testvectors[0:1048575]; // 4MB
 
     Top dut(
     .clk,
@@ -42,7 +42,7 @@ module RunProgram;
             dut.dmem.ram[i] = testvectors[i];
         end
         // 4バイトアライメントの最大値をSPとして設定する
-        dut.arm_cpu.data_path.register_file.reg_file[13] = 4092;
+        dut.arm_cpu.data_path.register_file.reg_file[13] = 1048572;
     end
 
     always begin
