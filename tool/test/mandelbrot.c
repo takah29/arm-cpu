@@ -1,11 +1,10 @@
-float CENTER_X = -0.5;
-float CENTER_Y = 0.0;
-float SCALE_X = 2.0;
-float SCALE_Y = 2.0;
-int X_SIZE = 100;
-int Y_SIZE = 100;
-
 int main() {
+    float CENTER_X = -0.5;
+    float CENTER_Y = 0.0;
+    float SCALE_X = 2.0;
+    float SCALE_Y = 2.0;
+    int X_SIZE = 100;
+    int Y_SIZE = 100;
     int image[Y_SIZE][X_SIZE];
     float y = 0, x = 0;
 
