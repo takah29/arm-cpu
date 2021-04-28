@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -53,10 +54,10 @@ def main(from_file):
 
 
 if __name__ == "__main__":
-    argvs = sys.argv
-    argc = len(argvs)
-    if argc != 2:
-        sys.exit(f"Usage: python {argvs[0]} <program_file (hex format text)>")
+    parser = argparse.ArgumentParser(description="Compile C-source with clang")
+    parser.add_argument("program_file", help="program_file (hex format text)")
 
-    from_file = Path(argvs[1])
+    args = parser.parse_args()
+
+    from_file = Path(args.program_file)
     main(from_file)
