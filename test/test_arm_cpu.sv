@@ -704,7 +704,7 @@ module ArmCpuTestbench;
 
         // BX R8
         reset_; set_regs; #DELAY
-        instr = 32'b1110_00_010010_0000_0000_0000_0001_1000;
+        instr = 32'b1110_00_010010_1111_1111_1111_0001_1000;
         #DELAY;
         assert_data_memory_addr(32'h7fffffff);
         assert_pc(0);
