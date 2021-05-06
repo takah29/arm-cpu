@@ -1,6 +1,6 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv,
+    input logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv, not_shift,
     input logic [31:0] instr, read_data,
     input logic [1:0] imm_src, reg_src, result_src,
     input logic [2:0] alu_ctl,
@@ -48,7 +48,7 @@ module DataPath(
     logic [7:0] shift_num;
     // rs_dataは下位8ビットだけ使う
     Mux2 #(8) shift_imm_reg_mux(.d0({3'b000, instr[11:7]}), .d1(rs_data[7:0]), .s(instr[4]), .y(shift_num));
-    Shifter shifter(.shift_type(instr[6:5]), .shift_num(shift_num), .x(rd2_data), .y(shifted));
+    Shifter shifter(.shift_type(instr[6:5]), .shift_num(shift_num), .not_shift, .x(rd2_data), .y(shifted));
 
     // ALU
     Mux2 #(32) alu_src_b_mux(.d0(shifted), .d1(ext_imm), .s(alu_src), .y(shift_imm_out));
