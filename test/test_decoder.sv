@@ -5,10 +5,10 @@ module DecoderTestbench;
     logic [5:0] funct;
     logic [3:0] instr74;
     logic [3:0] rd;
-    logic pcs, reg_w3, reg_w1, mem_w, mem_to_reg, alu_src, mult, no_write, swap, inv;
+    logic pcs, reg_w3, reg_w1, mem_w, mem_to_reg, alu_src, mult, no_write, not_shift, swap, inv;
     logic [1:0] flag_w, imm_src, reg_src, result_src;
     logic [2:0] alu_ctl;
-    logic pcs_exp, reg_w3_exp, reg_w1_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, mult_exp, no_write_exp, swap_exp, inv_exp;
+    logic pcs_exp, reg_w3_exp, reg_w1_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, mult_exp, no_write_exp, not_shift_exp, swap_exp, inv_exp;
     logic [1:0] flag_w_exp, imm_src_exp, reg_src_exp, result_src_exp;
     logic [2:0] alu_ctl_exp;
 
@@ -24,6 +24,7 @@ module DecoderTestbench;
     .mem_to_reg,
     .alu_src,
     .no_write,
+    .not_shift,
     .swap,
     .inv,
     .flag_w,
@@ -60,6 +61,10 @@ module DecoderTestbench;
 
     task assert_no_write;
         assert (no_write === no_write_exp) else $error("no_write = %b, %b expected", no_write, no_write_exp);
+    endtask
+
+    task assert_not_shift;
+        assert (not_shift === not_shift_exp) else $error("not_shift = %b, %b expected", not_shift, not_shift_exp);
     endtask
 
     task assert_swap;
@@ -181,6 +186,12 @@ module DecoderTestbench;
         assert_no_write;
         op = 2'b00; funct = 6'b010101; rd = 0; instr74 = 4'b0000; no_write_exp = 1'b1; #DELAY;
         assert_no_write;
+
+        // case: not_shift test
+        op = 2'b00; funct = 6'b001000; rd = 0; instr74 = 4'b0000; not_shift_exp = 1'b0; #DELAY;
+        assert_not_shift;
+        op = 2'b00; funct = 6'b010010; rd = 0; instr74 = 4'b0001; not_shift_exp = 1'b1; #DELAY;
+        assert_not_shift;
 
         // case: result_src test
         op = 2'b00; funct = 6'b100000; rd = 0; instr74 = 4'b0000; result_src_exp = 2'b00; #DELAY;

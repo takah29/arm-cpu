@@ -4,7 +4,7 @@ module Decoder
     input logic [5:0] funct,
     input logic [3:0] instr74,
     input logic [3:0] rd,
-    output logic pcs, reg_w3, reg_w1, mem_w, mem_to_reg, alu_src, mult, no_write, swap, inv,
+    output logic pcs, reg_w3, reg_w1, mem_w, mem_to_reg, alu_src, mult, no_write, not_shift, swap, inv,
     output logic [1:0] flag_w, imm_src, reg_src, result_src,
     output logic [2:0] alu_ctl
     );
@@ -36,6 +36,7 @@ module Decoder
     .cmd(funct[4:1]),
     .no_write,
     .not_alu,
+    .not_shift,
     .swap,
     .inv,
     .alu_ctl,
