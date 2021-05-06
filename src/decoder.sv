@@ -9,7 +9,7 @@ module Decoder
     output logic [2:0] alu_ctl
     );
 
-    logic branch, alu_op, shift, post_idx;
+    logic branch, alu_op, not_alu, post_idx;
 
     MainDecoder main_decoder(
     .op,
@@ -35,7 +35,7 @@ module Decoder
     .mult,
     .cmd(funct[4:1]),
     .no_write,
-    .shift,
+    .not_alu,
     .swap,
     .inv,
     .alu_ctl,
@@ -43,5 +43,5 @@ module Decoder
     );
 
     assign pcs = ((rd == 15) & reg_w3) | branch;
-    assign result_src = {post_idx, shift};
+    assign result_src = {post_idx, not_alu};
 endmodule

@@ -8,7 +8,7 @@ module DecoderTestbench;
     logic pcs, reg_w3, reg_w1, mem_w, mem_to_reg, alu_src, mult, no_write, swap, inv;
     logic [1:0] flag_w, imm_src, reg_src, result_src;
     logic [2:0] alu_ctl;
-    logic pcs_exp, reg_w3_exp, reg_w1_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, mult_exp, no_write_exp, shift_exp, swap_exp, inv_exp;
+    logic pcs_exp, reg_w3_exp, reg_w1_exp, mem_w_exp, mem_to_reg_exp, alu_src_exp, mult_exp, no_write_exp, swap_exp, inv_exp;
     logic [1:0] flag_w_exp, imm_src_exp, reg_src_exp, result_src_exp;
     logic [2:0] alu_ctl_exp;
 
