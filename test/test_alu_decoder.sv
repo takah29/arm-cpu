@@ -3,24 +3,24 @@ module AluDecoderTestbench;
 
     logic alu_op, s, branch, mult;
     logic [3:0] cmd;
-    logic no_write, shift, swap, inv;
+    logic no_write, not_alu, swap, inv;
     logic [1:0] flag_w;
     logic [2:0] alu_ctl;
-    logic no_write_expected, shift_expected, swap_expected, inv_expected;
+    logic no_write_expected, not_alu_expected, swap_expected, inv_expected;
     logic [1:0] flag_w_expected;
     logic [2:0] alu_ctl_expected;
 
-    AluDecoder dut(.alu_op, .s, .branch, .mult, .cmd, .no_write, .shift, .swap, .inv, .alu_ctl, .flag_w);
+    AluDecoder dut(.alu_op, .s, .branch, .mult, .cmd, .no_write, .not_alu, .swap, .inv, .alu_ctl, .flag_w);
 
     task set_exp(
         input logic [2:0] alu_exp_in,
         input logic [1:0] flag_w_exp_in,
-        input logic no_write_exp_in, shift_exp_in, swap_exp_in, inv_exp_in
+        input logic no_write_exp_in, not_alu_exp_in, swap_exp_in, inv_exp_in
         );
         alu_ctl_expected <= alu_exp_in;
         flag_w_expected <= flag_w_exp_in;
         no_write_expected <= no_write_exp_in;
-        shift_expected <= shift_exp_in;
+        not_alu_expected <= not_alu_exp_in;
         swap_expected <= swap_exp_in;
         inv_expected <= inv_exp_in;
     endtask
@@ -29,7 +29,7 @@ module AluDecoderTestbench;
         assert (alu_ctl === alu_ctl_expected) else $error("alu_ctl = %b, %b expected", alu_ctl, alu_ctl_expected);
         assert (flag_w === flag_w_expected) else $error("flag_w = %b, %b expected", flag_w, flag_w_expected);
         assert (no_write === no_write_expected) else $error("no_write = %b, %b expected", no_write, no_write_expected);
-        assert (shift === shift_expected) else $error("shift = %b, %b expected", shift, shift_expected);
+        assert (not_alu === not_alu_expected) else $error("not_alu = %b, %b expected", not_alu, not_alu_expected);
         assert (swap === swap_expected) else $error("swap = %b, %b expected", swap, swap_expected);
         assert (inv === inv_expected) else $error("inv = %b, %b expected", inv, inv_expected);
     endtask
