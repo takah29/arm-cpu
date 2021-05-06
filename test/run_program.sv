@@ -42,7 +42,9 @@ module RunProgram;
             dut.dmem.ram[i] = testvectors[i];
         end
         // 4バイトアライメントの最大値をSPとして設定する
-        dut.arm_cpu.data_path.register_file.reg_file[13] = 1048572;
+        dut.arm_cpu.data_path.register_file.reg_file[13] = 4194300;
+        // プログラムの実行が終了したら命令メモリ外を参照するようにLRを設定する
+        dut.arm_cpu.data_path.register_file.reg_file[14] = 4194300 + 4;
     end
 
     always begin
