@@ -2,6 +2,7 @@ module Shifter
     (
     input logic [1:0] shift_type,
     input logic [7:0] shift_num,
+    input logic not_shift,
     input logic [31:0] x,
     output logic [31:0] y
     );
@@ -25,5 +26,5 @@ module Shifter
         end
     endfunction
 
-    assign y = shift(x, shift_type, shift_num);
+    assign y = not_shift ? x : shift(x, shift_type, shift_num);
 endmodule

@@ -3,16 +3,19 @@ module ShifterTestbench;
 
     logic [1:0] shift_type;
     logic [7:0] shift_num;
+    logic not_shift;
     logic [31:0] x;
     logic [31:0] y, y_expected;
 
-    Shifter dut(.shift_type, .shift_num, .x, .y);
+    Shifter dut(.shift_type, .shift_num, .not_shift, .x, .y);
 
     task assert_;
         assert (y === y_expected) else $error("y = %b, %b expected", y, y_expected);
     endtask
 
     initial begin
+        not_shift = 1'b0;
+
         // case1: LSL
         shift_type = 2'b00;
 
@@ -51,6 +54,12 @@ module ShifterTestbench;
         shift_num = 8'b00000001; x = 32'b1; y_expected = 32'h80000000; #DELAY;
         assert_;
         shift_num = 8'b00011111; x = 32'h7fffffff; y_expected = 32'hfffffffe; #DELAY;
+        assert_;
+
+        // case4: not shift
+        not_shift = 1'b1;
+        shift_type = 2'b11;
+        shift_num = 8'b00011111; x = 32'h7fffffff; y_expected = 32'h7fffffff; #DELAY;
         assert_;
 
         $display("test completed");
