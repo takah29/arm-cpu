@@ -60,6 +60,7 @@ module RunProgram;
         show_regs;
         // 最後の命令に到達したら終了する
         if (dut.arm_cpu.data_path.instr === 32'hxxxxxxxx) begin
+            $display("Simulation finished.");
             $display("========== Data Memory ==========");
             $display("Addr      Hex          Digit");
             $display("---------------------------------");
@@ -67,13 +68,8 @@ module RunProgram;
                 if (dut.dmem.ram[i] !== 32'hx) begin
                     $display("%8h: 0x%8h = %1d", i * 4, dut.dmem.ram[i], dut.dmem.ram[i]);
                 end
-                    // disable loop_exit;
             end
             $display("=================================");
-            $display("Simulation finished.");
-            $finish;
-        end else if (dut.arm_cpu.data_path.instr === 32'hx) begin
-            $display("Simulation failed.");
             $finish;
         end
     end
