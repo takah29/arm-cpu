@@ -525,6 +525,42 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_register_value(13, 32'hf0000000);
 
+        // RXX (ADDを実行してキャリーフラグを上げる)
+        // ADD R13, R1, R9
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_001001_0001_1101_00000000_1001;
+        #DELAY;
+        assert_data_memory_addr(0);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 0);
+        // RXX R13, R8
+        instr = 32'b1110_00_011010_0000_1101_00000_11_0_1000;
+        #DELAY;
+        assert_data_memory_addr(32'hbfffffff);
+        assert (dut.data_path.alu_flags[1] === 1'b1);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hbfffffff);
+
+        // RXX (キャリーフラグを上げない)
+        // RXX R13, R8
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00000_11_0_1000;
+        #DELAY;
+        assert_data_memory_addr(32'h3fffffff);
+        assert (dut.data_path.alu_flags[1] === 1'b1);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'h3fffffff);
+
+        // RXX (キャリーフラグを上げない、bit[0]=1'b0のケース)
+        // RXX R13, R7
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_011010_0000_1101_00000_11_0_0111;
+        #DELAY;
+        assert_data_memory_addr(32'h40000000);
+        assert (dut.data_path.alu_flags[1] === 1'b0);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'h40000000);
+
         // ROR R13, R8, #4
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_011010_0000_1101_00100_11_0_1000;
