@@ -25,7 +25,7 @@ module AluDecoder
                 4'b1000: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b010_1_0_0_0_0; // TST
                 4'b1001: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b110_1_0_0_0_0; // TEQ
                 4'b1111: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b0xx_0_1_0_0_1; // MVN
-                4'b1101: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b0xx_0_1_0_0_0; // LSL, LSR, ASR, ROR
+                4'b1101: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b0xx_0_1_0_0_0; // LSL, LSR, ASR, ROR, RRX
                 default: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'bx; // not defined
             endcase
 
