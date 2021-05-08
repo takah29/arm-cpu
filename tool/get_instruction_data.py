@@ -85,6 +85,11 @@ def get_register_list(instr):
     # use only push(stm) or pop(ldm) instructions.
     return [i for i in range(16) if (instr >> i) & 0b1 == 1]
 
+def rewrite_ldr(no, instr, target_no, target_len):
+    pass
+
+def rewrite_b(no, instr, target_no, target_len):
+    pass
 
 def binary_to_text(from_file, to_file):
     with open(from_file, "rb") as f:
@@ -92,24 +97,8 @@ def binary_to_text(from_file, to_file):
 
     data = unpack("<" + "I" * (len(tmp) // 4), tmp)
     with open(to_file, "w") as f:
-        for instr in data:
-            # push, pop命令は非対応なので、それぞれsub, addでspだけ移動する命令に置き換える
-            # 複数回のstr, ldrに置き換えできるが命令回数が変わるのでコンパイラが出力したアドレスと対応が取れなくなる
-            # レジスタの退避と復帰ができなくなるのでサブルーチンが使えなくなる
-            if is_stm(instr):  # push命令を複数のstrに置き換えてアドレスのオフセット値を追加する
-                print("Replaced push(stm) with sub and strs.")
-                instr_list = push_to_strs(instr)
-
-                for instr in instr_list:
-                    f.write(f"{to_hex_string(instr)}\n")
-            elif is_ldm(instr):  # pop命令を複数のldrに置き換えてアドレスのオフセット値を追加する
-                print("Replaced pop(ldm) with add.")
-                instr_list = pop_to_ldrs(instr)
-
-                for instr in instr_list:
-                    f.write(f"{to_hex_string(instr)}\n")
-            else:
-                f.write(f"{to_hex_string(instr)}\n")
+        for i, instr in enumerate(data):
+            f.write(f"{to_hex_string(instr)}\n")
 
 
 def compile_source(filepath):
