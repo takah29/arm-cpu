@@ -21,6 +21,7 @@ module AluWithFlag #(parameter N = 32)
             3'b010: result = a & b;
             3'b011: result = a | b;
             3'b110: result = a ^ b;
+            default: {cout, result} = 'x;
         endcase
     end
 

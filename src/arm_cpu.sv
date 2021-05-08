@@ -6,7 +6,7 @@ module ArmCpu
     output logic [31:0] pc, write_data, data_memory_addr
     );
 
-    logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv;
+    logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv, not_shift;
     logic [1:0] imm_src, reg_src, result_src;
     logic [2:0] alu_ctl;
     logic [3:0] alu_flags, mul_ctl;
@@ -22,6 +22,7 @@ module ArmCpu
     .carry,
     .swap,
     .inv,
+    .not_shift,
     .instr,
     .read_data,
     .imm_src,
@@ -53,6 +54,7 @@ module ArmCpu
     .carry,
     .swap,
     .inv,
+    .not_shift,
     .imm_src,
     .result_src,
     .reg_src,

@@ -1,4 +1,4 @@
-module TopTestbench;
+module RunProgram;
     parameter HALF_CYCLE = 5;
 
     logic clk, reset;
@@ -32,7 +32,7 @@ module TopTestbench;
 
     initial begin
         reset <= 1; # 1; reset <= 0;
-        $readmemb("programs/test_program.dat", testvectors);
+        $readmemh("programs/program.dat", testvectors);
         vectornum = 0;
         errors = 0;
 
@@ -41,6 +41,10 @@ module TopTestbench;
             dut.imem.ram[i] = testvectors[i];
             dut.dmem.ram[i] = testvectors[i];
         end
+        // 4バイトアライメントの最大値をSPとして設定する
+        dut.arm_cpu.data_path.register_file.reg_file[13] = 4194300;
+        // プログラムの実行が終了したら命令メモリ外を参照するようにLRを設定する
+        dut.arm_cpu.data_path.register_file.reg_file[14] = 4194300 + 4;
     end
 
     always begin
@@ -50,18 +54,23 @@ module TopTestbench;
         #HALF_CYCLE;
     end
 
-    always @(negedge clk) begin
+    always @(posedge clk) begin
+        #1;
         $write("ADDR (%2h) Instr=%h: ", dut.arm_cpu.data_path.pc, dut.arm_cpu.data_path.instr);
         show_regs;
-        if (mem_write) begin
-            if (data_memory_addr == 100 & write_data == 7) begin
-                $display("Simulation succeeded.");
-                $finish;
-            end else if (data_memory_addr !== 96) begin
-                $display("Simulation failed.");
-                $display(dut.arm_cpu.data_path.reg_addr1, dut.arm_cpu.data_path.src_b);
-                $finish;
+        // 最後の命令に到達したら終了する
+        if (dut.arm_cpu.data_path.instr === 32'hxxxxxxxx) begin
+            $display("Simulation finished.");
+            $display("========== Data Memory ==========");
+            $display("Addr      Hex          Digit");
+            $display("---------------------------------");
+            foreach (testvectors[i]) begin
+                if (dut.dmem.ram[i] !== 32'hx) begin
+                    $display("%8h: 0x%8h = %1d", i * 4, dut.dmem.ram[i], dut.dmem.ram[i]);
+                end
             end
+            $display("=================================");
+            $finish;
         end
     end
 

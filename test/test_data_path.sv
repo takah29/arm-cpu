@@ -3,7 +3,7 @@ module DataPathTestbench();
     parameter STB = 100;
 
     logic clk, reset;
-    logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv;
+    logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv, not_shift;
     logic [31:0] instr, read_data;
     logic [1:0] imm_src, reg_src, result_src;
     logic [2:0] alu_ctl;
@@ -24,6 +24,7 @@ module DataPathTestbench();
     .carry,
     .swap,
     .inv,
+    .not_shift,
     .instr,
     .read_data,
     .alu_ctl,
@@ -59,6 +60,7 @@ module DataPathTestbench();
         carry = 1'b0;
         swap = 1'b0;
         inv = 1'b0;
+        not_shift = 1'b0;
         reg_write1 = 1'b0;
         mul_ctl = '0;
 

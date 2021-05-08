@@ -1,6 +1,6 @@
 module DataPath(
     input logic clk, reset,
-    input logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv,
+    input logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv, not_shift,
     input logic [31:0] instr, read_data,
     input logic [1:0] imm_src, reg_src, result_src,
     input logic [2:0] alu_ctl,
@@ -11,7 +11,8 @@ module DataPath(
 
     logic [31:0] src_a, src_b, pre_src_b, rd2_data, rs_data, pc_plus4, pc_plus8, result, ext_imm, shifted, alu_result, read_data1, shift_imm_out;
     logic [31:0] mult_out1, mult_out2, wd3_mux_out, wd1_mux_out, pc_addr, wd3_pc4_mux_out;
-    logic [3:0] reg_addr1, reg_addr3;
+    logic [3:0] reg_addr1, reg_addr3, pre_alu_flags;
+    logic sifter_c, rrx_en;
 
     // プログラムカウンタ
     assign pc_addr = wd3_mux_out & 32'hfffffffe;
@@ -48,7 +49,7 @@ module DataPath(
     logic [7:0] shift_num;
     // rs_dataは下位8ビットだけ使う
     Mux2 #(8) shift_imm_reg_mux(.d0({3'b000, instr[11:7]}), .d1(rs_data[7:0]), .s(instr[4]), .y(shift_num));
-    Shifter shifter(.shift_type(instr[6:5]), .shift_num(shift_num), .x(rd2_data), .y(shifted));
+    Shifter shifter(.shift_type(instr[6:5]), .shift_num(shift_num), .not_shift, .instr4(instr[4]), .x(rd2_data), .carry, .y(shifted), .c(sifter_c));
 
     // ALU
     Mux2 #(32) alu_src_b_mux(.d0(shifted), .d1(ext_imm), .s(alu_src), .y(shift_imm_out));
@@ -60,14 +61,18 @@ module DataPath(
     .alu_ctl,
     .carry,
     .result(alu_result),
-    .n(alu_flags[3]),
-    .z(alu_flags[2]),
-    .c(alu_flags[1]),
-    .v(alu_flags[0])
+    .n(pre_alu_flags[3]),
+    .z(pre_alu_flags[2]),
+    .c(pre_alu_flags[1]),
+    .v(pre_alu_flags[0])
     );
 
     Mux4 #(32) alu_result_src_b_mux(.d0(alu_result), .d1(src_b), .d2(read_data1), .d3(read_data1), .s(result_src), .y(data_memory_addr));
     Mux2 #(32) result_mux(.d0(data_memory_addr), .d1(read_data), .s(mem_to_reg), .y(result));
+
+    // RRX Carry Replacement
+    assign rrx_en = {instr[11:4], result_src[0]} == 9'b00000_11_0_1; // result_src[0] = not_alu
+    assign alu_flags = {pre_alu_flags[3:2], rrx_en ? sifter_c : pre_alu_flags[1], pre_alu_flags[0]};
 
     // Multiplier
     Multiplier mult(.a(rd2_data), .b(rs_data), .c(read_data1), .d(write_data), .cmd(mul_ctl[2:0]), .ret1(mult_out1), .ret2(mult_out2));

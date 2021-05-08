@@ -6,11 +6,11 @@ module ControllerTestbench;
     logic [1:0] op;
     logic [3:0] cond, alu_flags, rd, instr74;
     logic [5:0] funct;
-    logic pc_src, reg_write3, reg_write1, mem_write, mem_to_reg, alu_src, carry, swap, inv;
+    logic pc_src, reg_write3, reg_write1, mem_write, mem_to_reg, alu_src, carry, swap, inv, not_shift;
     logic [1:0] imm_src, reg_src, result_src;
     logic [2:0] alu_ctl;
     logic [3:0] mul_ctl;
-    logic pc_src_exp, reg_write1_exp, reg_write3_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, result_src_exp, carry_exp, swap_exp, inv_exp;
+    logic pc_src_exp, reg_write1_exp, reg_write3_exp, mem_write_exp, mem_to_reg_exp, alu_src_exp, result_src_exp, carry_exp, swap_exp, inv_exp, not_shift_exp;
     logic [1:0] imm_src_exp, reg_src_exp;
     logic [2:0] alu_ctl_exp;
     logic [3:0] mul_ctl_exp;
@@ -33,6 +33,7 @@ module ControllerTestbench;
     .carry,
     .swap,
     .inv,
+    .not_shift,
     .imm_src,
     .result_src,
     .reg_src,
@@ -71,6 +72,10 @@ module ControllerTestbench;
 
     task assert_inv;
         assert (inv === inv_exp) else $error("inv = %b, %b expected", inv, inv_exp);
+    endtask
+
+    task assert_not_shift;
+        assert (not_shift === not_shift_exp) else $error("not_shift = %b, %b expected", not_shift, inv_exp);
     endtask
 
     task assert_carry;
@@ -240,6 +245,17 @@ module ControllerTestbench;
         op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001000; instr74 = 4'b1001; mul_ctl_exp = 4'b1100;
         @(posedge clk); #DELAY;
         assert_mul_ctl;
+
+        // not_shift test
+        instr74 = 4'b0001;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; not_shift_exp = 1'b0;
+        dut.cond_logic.cond_ex = 1;
+        @(posedge clk); #DELAY;
+        assert_not_shift;
+        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b010010; not_shift_exp = 1'b1;
+        dut.cond_logic.cond_ex = 1;
+        @(posedge clk); #DELAY;
+        assert_not_shift;
 
         $display("test completed");
         $finish;
