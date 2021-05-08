@@ -728,6 +728,24 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_pc(32'h44);
 
+        // BEQ label (z=1を設定)
+        // CMP R8, R8
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010101_1000_0000_000000001000;
+        #DELAY;
+        assert_data_memory_addr(32'h0);
+        assert_pc(0);
+        assert (dut.data_path.alu.z === 1'b1);
+        @(posedge clk); #DELAY;
+        // BEQ Label
+        instr = 32'b0000_10_10_0000000000000000_01000111;
+        #DELAY;
+        assert_data_memory_addr(32'h128); // pcに12が加算されたものが入る
+        assert_pc(4);
+        @(posedge clk); #DELAY;
+        assert_pc(32'h128);
+
+
         // BL Label
         reset_; set_regs; #DELAY
         instr = 32'b1110_10_11_000000000000000000001111;
