@@ -134,11 +134,11 @@ def main(args):
 
     try:
         if args.debug:
-            # オブジェクトファイルを逆アセンブルする
-            cmd = f"llvm-objdump -S {str(filepath)}"
+            # オブジェクトファイルを逆アセンブルしてtextセクションだけ表示する
+            cmd = f"llvm-objdump -S -j .text {str(filepath)}"
             subprocess.run(cmd.split(" "))
         else:
-            # オブジェクトファイルから命令部だけをテキストとして取り出す
+            # オブジェクトファイルからtextセクションだけ取り出す
             cmd = f"llvm-objcopy -O binary --only-section=.text {str(filepath)} program.bin"
             subprocess.run(cmd.split(" "))
 
