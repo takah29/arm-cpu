@@ -1,10 +1,11 @@
 int main() {
-    float CENTER_X = -0.5;
-    float CENTER_Y = 0.0;
-    float SCALE_X = 2.0;
-    float SCALE_Y = 2.0;
-    int X_SIZE = 100;
-    int Y_SIZE = 100;
+    const float CENTER_X = -0.5;
+    const float CENTER_Y = 0.0;
+    const float SCALE_X = 2.0;
+    const float SCALE_Y = 2.0;
+    const int X_SIZE = 2;
+    const int Y_SIZE = 2;
+
     int image[Y_SIZE][X_SIZE];
     float y = 0, x = 0;
 
