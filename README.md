@@ -4,6 +4,13 @@
 
 * Icarus Verilog version 11.0
 
+## Usage
+
+```bash
+$ cd test
+$ python run_program.py programs/fizzbuzz_hex.dat
+```
+
 ## Support Instructions
 
 ### Data Processing
@@ -108,6 +115,7 @@
 |    ^    |   0    |    X     |              ^              |            1            |              ^               |     |             ^              |          10           |     0     |    1     |     0      |   0    |   0   |
 |    ^    |   0    |    X     |            1101             |            0            | LSL, LSR, ASR, ROR, RRX, MOV |     |            0XX             |          00           |     0     |    1     |     0      |   0    |   0   |
 |    ^    |   0    |    X     |              ^              |            1            |              ^               |     |             ^              |          10           |     0     |    1     |     0      |   0    |   0   |
+
 
 ## References
 
