@@ -5,91 +5,9 @@ import argparse
 from struct import unpack
 
 
-def is_stm(instr):
-    return (
-        (instr >> 25) & 0b111 == 0b100 and (instr >> 22) & 0b1 == 0b0 and (instr >> 20) & 0b1 == 0b0
-    )
-
-
-def is_ldm(instr):
-    return (
-        (instr >> 25) & 0b111 == 0b100 and (instr >> 22) & 0b1 == 0b0 and (instr >> 20) & 0b1 == 0b1
-    )
-
-
-def is_branch(instr):
-    if (instr >> 24) & 0b1111 == 0b1010:  # B
-        return True
-    elif (instr >> 24) & 0b1111 == 0b1011:  # BL
-        return True
-    elif (instr >> 25) & 0b1111111 == 0b1111101:  # BLX(1)
-        return True
-
-    return False
-
-
-def push_to_strs(instr):
-    # use only push(stm) instructions.
-    result = []
-    reg_list = get_register_list(instr)
-    n_regs = len(reg_list)
-
-    # sub instruction
-    bin_rep = f"1110_00_100100_1101_1101_0000_{bin(4 * n_regs)[2:].zfill(8)}"
-    instr = int(bin_rep.replace("_", ""), 2)
-    result.append(instr)
-
-    # str instructions
-    for i, rd in enumerate(reg_list[::-1], start=1):
-        bin_rep = (
-            f"1110_01_011000_1101_{bin(rd)[2:].zfill(4)}_{bin(4 * (n_regs - i))[2:].zfill(12)}"
-        )
-        instr = int(bin_rep.replace("_", ""), 2)
-        result.append(instr)
-
-    return result
-
-
-def pop_to_ldrs(instr):
-    # use only pop(ldm) instructions.
-    result = []
-    reg_list = get_register_list(instr)
-    n_regs = len(reg_list)
-
-    # ldr instructions
-    for i, rd in enumerate(reg_list, start=0):
-        bin_rep = f"1110_01_011001_1101_{bin(rd)[2:].zfill(4)}_{bin(4 * i)[2:].zfill(12)}"
-        instr = int(bin_rep.replace("_", ""), 2)
-        result.append(instr)
-
-    # add instruction
-    bin_rep = f"1110_00_101000_1101_1101_0000_{bin(4 * n_regs)[2:].zfill(8)}"
-    instr = int(bin_rep.replace("_", ""), 2)
-    result.append(instr)
-
-    return result
-
-
 def to_hex_string(instr):
     return hex(instr)[2:].zfill(8)
 
-
-def offset_branch_label(branch_instr, offset):
-    # オーバーフローする可能性がある
-    offset_imm24 = branch_instr & 0xFFFFFF + offset
-    bin_rep = f"{bin(branch_instr)[:8].zfill(8)}_{bin(offset_imm24)[2:].zfill(24)}"
-    return int(bin_rep.replace("_", ""), 2)
-
-
-def get_register_list(instr):
-    # use only push(stm) or pop(ldm) instructions.
-    return [i for i in range(16) if (instr >> i) & 0b1 == 1]
-
-def rewrite_ldr(no, instr, target_no, target_len):
-    pass
-
-def rewrite_b(no, instr, target_no, target_len):
-    pass
 
 def binary_to_text(from_file, to_file):
     with open(from_file, "rb") as f:
@@ -155,7 +73,9 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Compile C-source with clang")
+    parser = argparse.ArgumentParser(
+        description="Extract and save the text section of an object file"
+    )
     parser.add_argument("filepath", help="C-source filepath")
     parser.add_argument("-d", "--debug", action="store_true")
     parser.add_argument("-e", "--exe_file", action="store_true")
