@@ -49,7 +49,13 @@ $ python run_program.py programs/fizzbuzz_hex.dat
 
 ## Logic Diagram
 
+### Top Module
+
 ![arm_cpu_diagram](./asset/arm_cpu_diagram.drawio.png "arm_cpu_diagram")
+
+### ALU Block
+
+![alu_block](./asset/alu_block.drawio.png "alu_block")
 
 ## Decoder
 
