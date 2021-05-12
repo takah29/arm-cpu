@@ -440,42 +440,42 @@ module ArmCpuTestbench;
         instr = 32'b1110_00_010101_0101_0000_00000000_0101;
         #DELAY;
         assert_data_memory_addr(32'h0);
-        assert (dut.data_path.alu.z === 1'b1);
+        assert (dut.data_path.alu_block.alu.z === 1'b1);
 
         // CMP R6, R5
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010101_0110_0000_00000000_0101;
         #DELAY;
         assert_data_memory_addr(2);
-        assert (dut.data_path.alu.z === 1'b0);
+        assert (dut.data_path.alu_block.alu.z === 1'b0);
 
         // TEQ R5, R5
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010011_0101_0000_00000000_0101;
         #DELAY;
         assert_data_memory_addr(0);
-        assert (dut.data_path.alu.z === 1'b1);
+        assert (dut.data_path.alu_block.alu.z === 1'b1);
 
         // CMN R1, R9
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010111_0001_0000_00000000_1001;
         #DELAY;
         assert_data_memory_addr(32'h0);
-        assert (dut.data_path.alu.z === 1'b1);
+        assert (dut.data_path.alu_block.alu.z === 1'b1);
 
         // CMN R1, R2
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010111_0001_0000_00000000_0010;
         #DELAY;
         assert_data_memory_addr(11);
-        assert (dut.data_path.alu.z === 1'b0);
+        assert (dut.data_path.alu_block.alu.z === 1'b0);
 
         // TST R7, R8
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_010001_0111_0000_00000000_1000;
         #DELAY;
         assert_data_memory_addr(0);
-        assert (dut.data_path.alu.z === 1'b1);
+        assert (dut.data_path.alu_block.alu.z === 1'b1);
 
         // LSL R13, R2, #2
         reset_; set_regs; #DELAY
@@ -716,7 +716,7 @@ module ArmCpuTestbench;
         instr = 32'b1110_00_110101_0101_0000_0000_00000101;
         #DELAY;
         assert_data_memory_addr(32'h0);
-        assert (dut.data_path.alu.z === 1'b1);
+        assert (dut.data_path.alu_block.alu.z === 1'b1);
 
         // case: Branch
         // B Label
@@ -735,7 +735,7 @@ module ArmCpuTestbench;
         #DELAY;
         assert_data_memory_addr(32'h0);
         assert_pc(0);
-        assert (dut.data_path.alu.z === 1'b1);
+        assert (dut.data_path.alu_block.alu.z === 1'b1);
         @(posedge clk); #DELAY;
         // BEQ Label
         instr = 32'b0000_10_10_0000000000000000_01000111;

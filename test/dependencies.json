@@ -50,7 +50,8 @@
         "mux4.sv",
         "flopr.sv",
         "adder.sv",
-        "multiplier.sv"
+        "multiplier.sv",
+        "alu_block.sv"
     ],
     "test_pc_module": [
         "pc_module.sv",
@@ -103,7 +104,8 @@
         "mux2.sv",
         "mux4.sv",
         "flopr.sv",
-        "multiplier.sv"
+        "multiplier.sv",
+        "alu_block.sv"
     ],
     "test_top": [
         "top.sv",
@@ -127,6 +129,7 @@
         "flopr.sv",
         "instruction_memory.sv",
         "data_memory.sv",
-        "multiplier.sv"
+        "multiplier.sv",
+        "alu_block.sv"
     ]
 }

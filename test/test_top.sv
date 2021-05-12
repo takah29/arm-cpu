@@ -59,7 +59,6 @@ module TopTestbench;
                 $finish;
             end else if (data_memory_addr !== 96) begin
                 $display("Simulation failed.");
-                $display(dut.arm_cpu.data_path.reg_addr1, dut.arm_cpu.data_path.src_b);
                 $finish;
             end
         end
