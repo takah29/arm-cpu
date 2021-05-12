@@ -8,14 +8,14 @@ module AluBlock(
     input logic [2:0] alu_ctl,
     input logic [3:0] mul_ctl,
     output logic [3:0] alu_flags,
-    output logic [31:0] data_memory_addr,
-    output logic [31:0] write_data1
+    output logic [31:0] out1, out2
     );
 
     logic [31:0] src_a, src_b, pre_src_b, shifted, alu_result, shift_imm_out;
     logic [31:0] mult_out1, mult_out2, alu_result_mux_out;
     logic [3:0] pre_alu_flags;
-    logic sifter_c, rrx_en;
+    logic sifter_c, rrx_en, shifter_carry_out;
+    logic [1:0] cv_flags;
 
     // シフタ
     logic [7:0] shift_num;
@@ -29,23 +29,20 @@ module AluBlock(
     .x(in2),
     .carry,
     .y(shifted),
-    .c(sifter_c)
+    .c(shifter_carry_out)
     );
 
     // ALU
     Mux2 #(32) alu_src_b_mux(.d0(shifted), .d1(ext_imm), .s(alu_src), .y(shift_imm_out));
     Swap src_swap(.x0(in1), .x1(shift_imm_out), .en(swap), .y0(src_a), .y1(pre_src_b));
     assign src_b = inv ? ~pre_src_b : pre_src_b;
-    AluWithFlag #(32) alu(
+    Alu #(32) alu(
     .a(src_a),
     .b(src_b),
     .alu_ctl,
     .carry,
     .result(alu_result),
-    .n(pre_alu_flags[3]),
-    .z(pre_alu_flags[2]),
-    .c(pre_alu_flags[1]),
-    .v(pre_alu_flags[0])
+    .cv_flags
     );
 
     Mux4 #(32) alu_result_src_b_mux(
@@ -61,12 +58,17 @@ module AluBlock(
     .d0(alu_result_mux_out),
     .d1(mult_out2),
     .s(mul_ctl[3]),
-    .y(data_memory_addr)
+    .y(out1)
     );
 
-    // RRX Carry Replacement
-    assign rrx_en = {instr_11_4, result_src[0]} == 9'b00000_11_0_1; // result_src[0] = not_alu
-    assign alu_flags = {pre_alu_flags[3:2], rrx_en ? sifter_c : pre_alu_flags[1], pre_alu_flags[0]};
+    AluFlagsGenerator #(32) alu_flags_generator(
+    .result(out1),
+    .cv_flags,
+    .shifter_carry_out(shifter_carry_out),
+    .instr_11_4,
+    .not_alu(result_src[0]),
+    .alu_flags
+    );
 
     // Multiplier
     Multiplier mult(
@@ -79,5 +81,5 @@ module AluBlock(
     .ret2(mult_out2)
     );
 
-    Mux2 #(32) wd1_mux(.d0(alu_result), .d1(mult_out1), .s(mul_ctl[3]), .y(write_data1));
+    Mux2 #(32) wd1_mux(.d0(alu_result), .d1(mult_out1), .s(mul_ctl[3]), .y(out2));
 endmodule
