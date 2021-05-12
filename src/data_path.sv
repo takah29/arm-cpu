@@ -10,7 +10,7 @@ module DataPath(
     );
 
     logic [31:0] rd2_data, rs_data, pc_plus4, pc_plus8, result, ext_imm, read_data1, read_data3;
-    logic [31:0] wd1_mux_out, pc_addr, wd3_pc4_mux_out;
+    logic [31:0] wd1_mux_out, pc_addr, wd3_pc4_mux_out, alu_block_out1;
     logic [3:0] reg_addr1, reg_addr3;
 
     // プログラムカウンタ
@@ -60,11 +60,13 @@ module DataPath(
     .alu_ctl,
     .mul_ctl,
     .alu_flags,
-    .data_memory_addr,
-    .write_data1(wd1_mux_out)
+    .out1(alu_block_out1),
+    .out2(wd1_mux_out)
     );
 
     assign write_data = read_data3;
-    Mux2 #(32) result_mux(.d0(data_memory_addr), .d1(read_data), .s(mem_to_reg), .y(result));
+    assign data_memory_addr = alu_block_out1;
+
+    Mux2 #(32) result_mux(.d0(alu_block_out1), .d1(read_data), .s(mem_to_reg), .y(result));
 
 endmodule
