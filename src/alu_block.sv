@@ -8,12 +8,12 @@ module AluBlock(
     input logic [2:0] alu_ctl,
     input logic [3:0] mul_ctl,
     output logic [3:0] alu_flags,
-    output logic [31:0] write_data, data_memory_addr,
+    output logic [31:0] data_memory_addr,
     output logic [31:0] write_data1
     );
 
-    logic [31:0] src_a, src_b, pre_src_b, rd2_data, rs_data, result, shifted, alu_result, read_data1, shift_imm_out;
-    logic [31:0] mult_out1, mult_out2, wd1_mux_out, alu_result_mux_out;
+    logic [31:0] src_a, src_b, pre_src_b, shifted, alu_result, shift_imm_out;
+    logic [31:0] mult_out1, mult_out2, alu_result_mux_out;
     logic [3:0] pre_alu_flags;
     logic sifter_c, rrx_en;
 
@@ -31,8 +31,6 @@ module AluBlock(
     .y(shifted),
     .c(sifter_c)
     );
-
-    assign write_data = in3;
 
     // ALU
     Mux2 #(32) alu_src_b_mux(.d0(shifted), .d1(ext_imm), .s(alu_src), .y(shift_imm_out));
