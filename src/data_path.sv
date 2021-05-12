@@ -5,7 +5,7 @@ module DataPath(
     input logic [1:0] imm_src, reg_src, result_src,
     input logic [2:0] alu_ctl,
     input logic [3:0] mul_ctl,
-    output logic [3:0] alu_flags,
+    output logic [3:0] cond_flags,
     output logic [31:0] pc, write_data, data_memory_addr
     );
 
@@ -59,7 +59,7 @@ module DataPath(
     .result_src,
     .alu_ctl,
     .mul_ctl,
-    .alu_flags,
+    .cond_flags,
     .out1(alu_block_out1),
     .out2(wd1_mux_out)
     );

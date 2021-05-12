@@ -7,7 +7,7 @@ module AluBlock(
     input logic [1:0] result_src,
     input logic [2:0] alu_ctl,
     input logic [3:0] mul_ctl,
-    output logic [3:0] alu_flags,
+    output logic [3:0] cond_flags,
     output logic [31:0] out1, out2
     );
 
@@ -61,13 +61,13 @@ module AluBlock(
     .y(out1)
     );
 
-    AluFlagsGenerator #(32) alu_flags_generator(
+    ConditionFlagsGenerator #(32) cond_flags_generator(
     .result(out1),
     .cv_flags,
     .shifter_carry_out(shifter_carry_out),
     .instr_11_4,
     .not_alu(result_src[0]),
-    .alu_flags
+    .cond_flags
     );
 
     // Multiplier
