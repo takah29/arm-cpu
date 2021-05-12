@@ -20,9 +20,6 @@
     "test_alu": [
         "alu.sv"
     ],
-    "test_alu_with_flag": [
-        "alu_with_flag.sv"
-    ],
     "test_instruction_memory": [
         "instruction_memory.sv"
     ],
