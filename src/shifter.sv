@@ -9,6 +9,7 @@ module Shifter
     output logic c
     );
 
+    // TODO: fix shifter_carry_out
     function [31:0] shift;
         input signed [31:0] x;
         input carry;

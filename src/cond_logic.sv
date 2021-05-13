@@ -13,6 +13,7 @@ module CondLogic
 
     assign flag_write = flag_w & {2{cond_ex}};
 
+    // TODO: support {n, z, c} case
     Flopenr #(2) cond_flags_flopenr1(.clk, .reset, .en(flag_write[1]), .d(cond_flags[3:2]), .q(flags[3:2]));
     Flopenr #(2) cond_flags_flopenr0(.clk, .reset, .en(flag_write[0]), .d(cond_flags[1:0]), .q(flags[1:0]));
 
