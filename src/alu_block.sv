@@ -61,7 +61,7 @@ module AluBlock(
     .y(out1)
     );
 
-    ConditionFlagsGenerator #(32) cond_flags_generator(
+    ConditionFlagsGenerator cond_flags_generator(
     .result1(out1),
     .result2(out2),
     .cv_flags,
