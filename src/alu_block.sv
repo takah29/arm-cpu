@@ -61,12 +61,14 @@ module AluBlock(
     .y(out1)
     );
 
-    ConditionFlagsGenerator #(32) cond_flags_generator(
-    .result(out1),
+    ConditionFlagsGenerator cond_flags_generator(
+    .result1(out1),
+    .result2(out2),
     .cv_flags,
     .shifter_carry_out(shifter_carry_out),
     .instr_11_4,
     .not_alu(result_src[0]),
+    .mult(mul_ctl[3]),
     .cond_flags
     );
 
