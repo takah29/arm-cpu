@@ -9,7 +9,7 @@ module ArmCpu
     logic pc_src, reg_write3, reg_write1, mem_to_reg, alu_src, carry, swap, inv, not_shift;
     logic [1:0] imm_src, reg_src, result_src;
     logic [2:0] alu_ctl;
-    logic [3:0] alu_flags, mul_ctl;
+    logic [3:0] cond_flags, mul_ctl;
 
     DataPath data_path(
     .clk,
@@ -30,7 +30,7 @@ module ArmCpu
     .alu_ctl,
     .mul_ctl,
     .reg_src,
-    .alu_flags,
+    .cond_flags,
     .pc,
     .write_data,
     .data_memory_addr
@@ -41,7 +41,7 @@ module ArmCpu
     .reset,
     .op(instr[27:26]),
     .cond(instr[31:28]),
-    .alu_flags,
+    .cond_flags,
     .rd(instr[15:12]),
     .funct(instr[25:20]),
     .instr74(instr[7:4]),

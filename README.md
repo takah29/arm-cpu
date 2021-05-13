@@ -4,6 +4,13 @@
 
 * Icarus Verilog version 11.0
 
+## Usage
+
+```bash
+$ cd test
+$ python run_program.py programs/fizzbuzz_hex.dat
+```
+
 ## Support Instructions
 
 ### Data Processing
@@ -42,7 +49,13 @@
 
 ## Logic Diagram
 
+### Top Module
+
 ![arm_cpu_diagram](./asset/arm_cpu_diagram.drawio.png "arm_cpu_diagram")
+
+### ALU Block
+
+![alu_block](./asset/alu_block.drawio.png "alu_block")
 
 ## Decoder
 
@@ -104,10 +117,11 @@
 |    ^    |   0    |    X     |            1011             |            1            |             CMN              |     |            000             |          11           |     1     |    0     |     0      |   0    |   0   |
 |    ^    |   0    |    X     |            1000             |            1            |             TST              |     |            010             |          10           |     1     |    0     |     0      |   0    |   0   |
 |    ^    |   0    |    X     |            1001             |            1            |             TEQ              |     |            110             |          10           |     1     |    0     |     0      |   0    |   0   |
-|    ^    |   0    |    X     |            1111             |            0            |             MVN              |     |            0XX             |          00           |     0     |    1     |     0      |   0    |   1   |
+|    ^    |   0    |    X     |            1111             |            0            |             MVN              |     |            000             |          00           |     0     |    1     |     0      |   0    |   1   |
 |    ^    |   0    |    X     |              ^              |            1            |              ^               |     |             ^              |          10           |     0     |    1     |     0      |   0    |   0   |
-|    ^    |   0    |    X     |            1101             |            0            | LSL, LSR, ASR, ROR, RRX, MOV |     |            0XX             |          00           |     0     |    1     |     0      |   0    |   0   |
+|    ^    |   0    |    X     |            1101             |            0            | LSL, LSR, ASR, ROR, RRX, MOV |     |            000             |          00           |     0     |    1     |     0      |   0    |   0   |
 |    ^    |   0    |    X     |              ^              |            1            |              ^               |     |             ^              |          10           |     0     |    1     |     0      |   0    |   0   |
+
 
 ## References
 

@@ -5,7 +5,7 @@ module CondLogicTestbench;
     logic clk, reset;
     logic pcs, reg_w3, reg_w1, mem_w, no_write;
     logic [1:0] flag_w;
-    logic [3:0] cond, alu_flags;
+    logic [3:0] cond, cond_flags;
     logic pc_src, reg_write3, reg_write1, mem_write, carry;
     logic pc_src_exp, reg_write3_exp, reg_write1_exp, mem_write_exp, cond_ex_exp, carry_exp;
 
@@ -19,7 +19,7 @@ module CondLogicTestbench;
     .no_write,
     .flag_w,
     .cond,
-    .alu_flags,
+    .cond_flags,
     .pc_src,
     .reg_write3,
     .reg_write1,
@@ -52,10 +52,10 @@ module CondLogicTestbench;
     endtask
 
     task show_dut_vars(input string s);
-        $display("%s: dut -> cond_ex = %b, flag_write = %b, flags = %b, flag_w = %b, alu_flags = %b, n = %b, z = %b, c = %b , v = %b", s, dut.cond_ex, dut.flag_write, dut.flags, dut.flag_w, dut.alu_flags, dut.n, dut.z, dut.c, dut.v);
+        $display("%s: dut -> cond_ex = %b, flag_write = %b, flags = %b, flag_w = %b, cond_flags = %b, n = %b, z = %b, c = %b , v = %b", s, dut.cond_ex, dut.flag_write, dut.flags, dut.flag_w, dut.cond_flags, dut.n, dut.z, dut.c, dut.v);
     endtask
 
-    task test_cond_check(input logic [3:0] cond_in, alu_flags_in, input logic cond_ex_exp_in, input string testname);
+    task test_cond_check(input logic [3:0] cond_in, cond_flags_in, input logic cond_ex_exp_in, input string testname);
         begin
             // 状態初期化
             reset = 1;
@@ -71,7 +71,7 @@ module CondLogicTestbench;
             cond_ex_exp = cond_ex_exp_in;
 
             // alu_flagsを条件チェックに反映、alu_flagsは1クロック遅れてdut.flagsに反映される
-            alu_flags = alu_flags_in;
+            cond_flags = cond_flags_in;
             @(posedge clk); #DELAY;
 
             // 条件チェック、dut.flagsを元にcond_exが決まる
@@ -125,11 +125,11 @@ module CondLogicTestbench;
         assert_mem_write;
 
         // case: carry test
-        cond = 4'b1110; alu_flags = 4'b0000; carry_exp = 1'b0;
+        cond = 4'b1110; cond_flags = 4'b0000; carry_exp = 1'b0;
         flag_w = 2'b11;
         @(posedge clk); #DELAY
         assert_carry;
-        cond = 4'b1110; alu_flags = 4'b0010; carry_exp = 1'b1;
+        cond = 4'b1110; cond_flags = 4'b0010; carry_exp = 1'b1;
         flag_w = 2'b11;
         @(posedge clk); #DELAY
         assert_carry;

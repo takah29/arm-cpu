@@ -9,6 +9,7 @@ module Shifter
     output logic c
     );
 
+    // TODO: fix shifter_carry_out
     function [31:0] shift;
         input signed [31:0] x;
         input carry;
@@ -21,7 +22,6 @@ module Shifter
                 2'b01: shift = x >> shift_num;  // LSR: 論理右シフト
                 2'b10: shift = x >>> shift_num;  // ASR: 算術右シフト
                 2'b11: if ({shift_num[4:0], instr4} === 6'b00000_0) begin  // RRX: 拡張右回転
-                    // RRX命令はinstr[4]=0(シフト数レジスタではない)のチェックをする必要があるが
                     shift = {carry, x[31:1]};
                 end else begin  // ROR: 右回転
                     shift = (x >> shift_num) | (x << (32 - shift_num[4:0]));

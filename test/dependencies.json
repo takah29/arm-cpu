@@ -20,9 +20,6 @@
     "test_alu": [
         "alu.sv"
     ],
-    "test_alu_with_flag": [
-        "alu_with_flag.sv"
-    ],
     "test_instruction_memory": [
         "instruction_memory.sv"
     ],
@@ -38,19 +35,24 @@
     "test_shifter": [
         "shifter.sv"
     ],
+    "test_condition_flags_generator": [
+        "condition_flags_generator.sv"
+    ],
     "test_data_path": [
         "data_path.sv",
         "register_file.sv",
         "extend.sv",
         "shifter.sv",
         "swap.sv",
-        "alu_with_flag.sv",
+        "alu.sv",
+        "condition_flags_generator.sv",
         "pc_module.sv",
         "mux2.sv",
         "mux4.sv",
         "flopr.sv",
         "adder.sv",
-        "multiplier.sv"
+        "multiplier.sv",
+        "alu_block.sv"
     ],
     "test_pc_module": [
         "pc_module.sv",
@@ -93,7 +95,8 @@
         "extend.sv",
         "shifter.sv",
         "swap.sv",
-        "alu_with_flag.sv",
+        "alu.sv",
+        "condition_flags_generator.sv",
         "controller.sv",
         "decoder.sv",
         "main_decoder.sv",
@@ -103,7 +106,8 @@
         "mux2.sv",
         "mux4.sv",
         "flopr.sv",
-        "multiplier.sv"
+        "multiplier.sv",
+        "alu_block.sv"
     ],
     "test_top": [
         "top.sv",
@@ -115,7 +119,8 @@
         "extend.sv",
         "shifter.sv",
         "swap.sv",
-        "alu_with_flag.sv",
+        "alu.sv",
+        "condition_flags_generator.sv",
         "controller.sv",
         "decoder.sv",
         "main_decoder.sv",
@@ -127,6 +132,7 @@
         "flopr.sv",
         "instruction_memory.sv",
         "data_memory.sv",
-        "multiplier.sv"
+        "multiplier.sv",
+        "alu_block.sv"
     ]
 }

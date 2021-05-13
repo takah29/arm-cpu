@@ -4,7 +4,7 @@ module ControllerTestbench;
 
     logic clk, reset;
     logic [1:0] op;
-    logic [3:0] cond, alu_flags, rd, instr74;
+    logic [3:0] cond, cond_flags, rd, instr74;
     logic [5:0] funct;
     logic pc_src, reg_write3, reg_write1, mem_write, mem_to_reg, alu_src, carry, swap, inv, not_shift;
     logic [1:0] imm_src, reg_src, result_src;
@@ -20,7 +20,7 @@ module ControllerTestbench;
     .reset,
     .op,
     .cond,
-    .alu_flags,
+    .cond_flags,
     .rd,
     .instr74,
     .funct,
@@ -113,146 +113,146 @@ module ControllerTestbench;
         instr74 = 4'b0000;
 
         // case: pc_src test
-        op = 2'b00; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; pc_src_exp = 1'b0;
+        op = 2'b00; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; pc_src_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_pc_src;
-        op = 2'b10; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b100000; pc_src_exp = 1'b1;
+        op = 2'b10; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b100000; pc_src_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_pc_src;
 
         // reg_write3 test
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b010000; reg_write3_exp = 1'b0;
+        op = 2'b01; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b010000; reg_write3_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_reg_write3;
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b010001; reg_write3_exp = 1'b1;
+        op = 2'b01; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b010001; reg_write3_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_reg_write3;
 
         // reg_write1 test
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b111000; reg_write1_exp = 1'b0;
+        op = 2'b01; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b111000; reg_write1_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_reg_write1;
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b111010; reg_write1_exp = 1'b1;
+        op = 2'b01; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b111010; reg_write1_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_reg_write1;
 
         // mem_write test
-        op = 2'b00; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; mem_write_exp = 1'b0;
+        op = 2'b00; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; mem_write_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_mem_write;
-        op = 2'b01; cond = 4'b1110; alu_flags = 4'b0000; rd = 0; funct = 6'b010000; mem_write_exp = 1'b1;
+        op = 2'b01; cond = 4'b1110; cond_flags = 4'b0000; rd = 0; funct = 6'b010000; mem_write_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_mem_write;
 
         // mem_to_reg test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; mem_to_reg_exp = 1'b0;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; mem_to_reg_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_mem_to_reg;
-        op = 2'b01; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000001; mem_to_reg_exp = 1'b1;
+        op = 2'b01; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000001; mem_to_reg_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_mem_to_reg;
 
         // alu_src test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; alu_src_exp = 1'b0;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; alu_src_exp = 1'b0;
         @(posedge clk); #DELAY;
         assert_alu_src;
-        op = 2'b01; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000001; alu_src_exp = 1'b1;
+        op = 2'b01; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000001; alu_src_exp = 1'b1;
         @(posedge clk); #DELAY;
         assert_alu_src;
 
         // carry test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; carry_exp = 1'b0;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b001001; carry_exp = 1'b0;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_carry;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b001011; carry_exp = 1'b1;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0010; rd = 0; funct = 6'b001011; carry_exp = 1'b1;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_carry;
 
         // swap test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; swap_exp = 1'b0;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b001001; swap_exp = 1'b0;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_swap;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b000111; swap_exp = 1'b1;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0010; rd = 0; funct = 6'b000111; swap_exp = 1'b1;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_swap;
 
         // inv test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; inv_exp = 1'b0;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b001001; inv_exp = 1'b0;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_inv;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0010; rd = 0; funct = 6'b011101; inv_exp = 1'b1;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0010; rd = 0; funct = 6'b011101; inv_exp = 1'b1;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_inv;
 
         // imm_src test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b100000; imm_src_exp = 2'b00;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b100000; imm_src_exp = 2'b00;
         @(posedge clk); #DELAY;
         assert_imm_src;
-        op = 2'b01; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b110000; imm_src_exp = 2'b01;
+        op = 2'b01; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b110000; imm_src_exp = 2'b01;
         @(posedge clk); #DELAY;
         assert_imm_src;
-        op = 2'b10; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b100000; imm_src_exp = 2'b10;
+        op = 2'b10; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b100000; imm_src_exp = 2'b10;
         @(posedge clk); #DELAY;
         assert_imm_src;
 
         // result_src test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; result_src_exp = 2'b00;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; result_src_exp = 2'b00;
         @(posedge clk); #DELAY;
         assert_result_src;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b011010; result_src_exp = 2'b01;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b011010; result_src_exp = 2'b01;
         @(posedge clk); #DELAY;
         assert_result_src;
 
         // reg_src test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; reg_src_exp = 2'b00;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; reg_src_exp = 2'b00;
         @(posedge clk); #DELAY;
         assert_reg_src;
-        op = 2'b10; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b100000; reg_src_exp = 2'b01;
+        op = 2'b10; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b100000; reg_src_exp = 2'b01;
         @(posedge clk); #DELAY;
         assert_reg_src;
-        op = 2'b10; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b110000; reg_src_exp = 2'b11;
+        op = 2'b10; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b110000; reg_src_exp = 2'b11;
         @(posedge clk); #DELAY;
         assert_reg_src;
 
         // alu_ctl test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001000; alu_ctl_exp = 3'b000;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b001000; alu_ctl_exp = 3'b000;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000100; alu_ctl_exp = 3'b001;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000100; alu_ctl_exp = 3'b001;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; alu_ctl_exp = 3'b010;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; alu_ctl_exp = 3'b010;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b011000; alu_ctl_exp = 3'b011;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b011000; alu_ctl_exp = 3'b011;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
         // ADC
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001010; alu_ctl_exp = 3'b100;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b001010; alu_ctl_exp = 3'b100;
         @(posedge clk); #DELAY;
         assert_alu_ctl;
 
         // mul_ctl test
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b000000; instr74 = 4'b0000; mul_ctl_exp = 4'b0000;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b000000; instr74 = 4'b0000; mul_ctl_exp = 4'b0000;
         @(posedge clk); #DELAY;
         assert_mul_ctl;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001000; instr74 = 4'b1001; mul_ctl_exp = 4'b1100;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b001000; instr74 = 4'b1001; mul_ctl_exp = 4'b1100;
         @(posedge clk); #DELAY;
         assert_mul_ctl;
 
         // not_shift test
         instr74 = 4'b0001;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b001001; not_shift_exp = 1'b0;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b001001; not_shift_exp = 1'b0;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_not_shift;
-        op = 2'b00; cond = 4'b0000; alu_flags = 4'b0000; rd = 0; funct = 6'b010010; not_shift_exp = 1'b1;
+        op = 2'b00; cond = 4'b0000; cond_flags = 4'b0000; rd = 0; funct = 6'b010010; not_shift_exp = 1'b1;
         dut.cond_logic.cond_ex = 1;
         @(posedge clk); #DELAY;
         assert_not_shift;
