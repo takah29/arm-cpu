@@ -28,8 +28,8 @@ module AluBlock(
     .instr4(instr_11_4[0]),
     .x(in2),
     .carry,
-    .y(shifted),
-    .c(shifter_carry_out)
+    .shifter_operand(shifted),
+    .shifter_carry_out(shifter_carry_out)
     );
 
     // ALU
