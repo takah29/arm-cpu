@@ -745,7 +745,6 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_pc(32'h128);
 
-
         // BL Label
         reset_; set_regs; #DELAY
         instr = 32'b1110_10_11_000000000000000000001111;
@@ -765,7 +764,8 @@ module ArmCpuTestbench;
         @(posedge clk); #DELAY;
         assert_pc(32'h7ffffffe);
 
-        //case: Multiply (args: a, b, c, d = Rn, Rm, Rd, Ra)
+
+        // case: Multiply (args: a, b, c, d = Rn, Rm, Rd, Ra)
         // MUL R13, R3, R6
         reset_; set_regs; #DELAY
         instr = 32'b1110_00_00_000_0_1101_0000_0110_1001_0011;
@@ -780,6 +780,42 @@ module ArmCpuTestbench;
         assert_register_value(14, 32'h80000000);
 
 
+        // case: 条件フラグ更新
+        // MVNSNE (NE条件が成立するように設定)
+        // CMP R1, R0
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010101_0001_0000_00000000_0000;
+        #DELAY;
+        assert_data_memory_addr(1);
+        @(posedge clk); #DELAY;
+        assert (dut.controller.cond_logic.n === 1'b0);
+        assert (dut.controller.cond_logic.z === 1'b0);
+        // MVNSNE R13, R7, LSR #24
+        instr = 32'b0001_00_011111_0000_1101_11000_01_0_0111;
+        #DELAY;
+        assert_data_memory_addr(32'hffffff7f);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'hffffff7f);
+        assert (dut.controller.cond_logic.n === 1'b1);
+        assert (dut.controller.cond_logic.z === 1'b0);
+
+        // MVNSNE (NE条件が成立しないように設定)
+        // CMP R1, R1
+        reset_; set_regs; #DELAY
+        instr = 32'b1110_00_010101_0001_0000_00000000_0001;
+        #DELAY;
+        assert_data_memory_addr(0);
+        @(posedge clk); #DELAY;
+        assert (dut.controller.cond_logic.n === 1'b0);
+        assert (dut.controller.cond_logic.z === 1'b1);
+        // MVNSNE R13, R7, LSR #24
+        instr = 32'b0001_00_011111_0000_1101_11000_01_0_0111;
+        #DELAY;
+        assert_data_memory_addr(32'hffffff7f);
+        @(posedge clk); #DELAY;
+        assert_register_value(13, 32'h0f0f0f0f);
+        assert (dut.controller.cond_logic.n === 1'b0);
+        assert (dut.controller.cond_logic.z === 1'b1);
 
         $display("test completed");
         $finish;
