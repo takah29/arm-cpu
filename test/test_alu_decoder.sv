@@ -147,7 +147,7 @@ module AluDecoderTestbench;
         set_exp(3'b000, 2'b00, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0); #DELAY;
         assert_;
         s = '1;
-        set_exp(3'b000, 2'b11, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0); #DELAY;
+        set_exp(3'b000, 2'b10, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0); #DELAY;
         assert_;
 
         // case MVN
@@ -155,7 +155,7 @@ module AluDecoderTestbench;
         set_exp(3'b000, 2'b00, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1); #DELAY;
         assert_;
         s = '1;
-        set_exp(3'b000, 2'b11, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1); #DELAY;
+        set_exp(3'b000, 2'b10, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1); #DELAY;
         assert_;
 
         // case Multiply

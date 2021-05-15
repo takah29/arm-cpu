@@ -25,12 +25,15 @@ module AluDecoder
                 4'b1000: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b010_1_0_0_0_0; // TST
                 4'b1001: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b110_1_0_0_0_0; // TEQ
                 4'b1111: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b000_0_1_0_0_1; // MVN
-                4'b1101: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b000_0_1_0_0_0; // LSL, LSR, ASR, ROR, RRX
+                4'b1101: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'b000_0_1_0_0_0; // MOV, LSL, LSR, ASR, ROR, RRX
                 default: {alu_ctl, no_write, not_alu, not_shift, swap, inv} = 8'bx; // not defined
             endcase
 
-            flag_w[1] = s;
-            flag_w[0] = s & (alu_ctl === 3'b000 | alu_ctl === 3'b001 | alu_ctl === 3'b100 | alu_ctl === 3'b101);
+            if (not_alu | (alu_ctl === 3'b010 | alu_ctl === 3'b011 | alu_ctl === 3'b110)) begin
+                flag_w = 2'b10 & {2{s}};
+            end else begin
+                flag_w = 2'b11 & {2{s}};
+            end
         end else begin
             casex ({mult, branch, cmd ,s})
                 7'b0_1_1001_0: {alu_ctl, flag_w, not_alu, not_shift} = 7'b000_00_1_1; // Branch (BX)
