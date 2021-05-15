@@ -1,6 +1,12 @@
 import sys
 
 
+class Color:
+    RED = "\033[31m"  # (文字)赤
+    GREEN = "\033[32m"  # (文字)緑
+    END = "\033[0m"  # 終了
+
+
 def get_register_list(instr):
     # use only push(stm) or pop(ldm) instructions.
     return [i for i in range(16) if (instr >> i) & 0b1 == 1]
@@ -84,13 +90,24 @@ def rewrite_ldr_pc(no, instr, target_no, target_len):
     if is_ldr_pc(instr):
         # 参照アドレス
         ref_no = (no + 2) + (-1) ** (1 - ((instr >> 23) & 0b1)) * ((instr & 0xFFF) // 4)
-        print(f"(line {no}) ldr imm12: {ref_no - (no + 2)} ", end="")
+
+        # 変更前参照先
+        before_no = ref_no - (no + 2)
+
         if no < target_no and ref_no > target_no:
             ref_no += target_len - 1
         elif no > target_no and ref_no < target_no:
             no += target_len - 1
         rel_no = ref_no - (no + 2)
-        print(f" -> {ref_no - (no + 2)}")
+
+        # 変更後参照先
+        after_no = ref_no - (no + 2)
+
+        if before_no - after_no != 0:
+            print(f"{Color.GREEN}(line {no}) ldr imm12: {before_no} -> {after_no}{Color.END}")
+        else:
+            print(f"(line {no}) ldr imm12: {before_no} -> {after_no}")
+
         instr = (instr & 0xFF7FF000) | ((rel_no >= 0) << 23) | ((abs(rel_no) * 4) & 0xFFF)
 
     return instr
@@ -101,7 +118,10 @@ def rewrite_b(no, instr, target_no, target_len):
         sig = (-1) ** ((instr >> 23) & 0b1 == 0b1)
         num = (0x7FFFFF - (instr & 0x7FFFFF)) + 1 if sig == -1 else (instr & 0x7FFFFF)
         ref_no = (no + 2) + sig * num
-        print(f"(line {no}) branch imm24: {ref_no - (no + 2)} ", end="")
+
+        # 変更前参照先
+        before_no = ref_no - (no + 2)
+
         if no < target_no and ref_no > target_no:
             ref_no += target_len - 1
         elif no > target_no and ref_no < target_no:
@@ -109,7 +129,15 @@ def rewrite_b(no, instr, target_no, target_len):
 
         rel_no = ref_no - (no + 2)
         sig = (-1) ** (rel_no < 0)
-        print(f" -> {ref_no - (no + 2)}")
+
+        # 変更後参照先
+        after_no = ref_no - (no + 2)
+
+        if before_no - after_no != 0:
+            print(f"{Color.GREEN}(line {no}) branch imm24: {before_no} -> {after_no}{Color.END}")
+        else:
+            print(f"(line {no}) branch imm24: {before_no} -> {after_no}")
+
         instr = (
             (instr & 0xFF000000)
             | ((sig == -1) << 23)
@@ -143,8 +171,8 @@ def main(filepath):
 
         for i, instr in enumerate(programs):
             if is_stm(instr):
-                print(f"===== replace push instr (line {i}) =====")
                 instr_list = push_to_strs(instr)
+                print(f"===== replace push({len(instr_list) - 1}) instr (line {i}) =====")
                 for j, instr2 in enumerate(programs):
                     instr2 = rewrite_ldr_pc(j, instr2, i, len(instr_list))
                     instr2 = rewrite_b(j, instr2, i, len(instr_list))
@@ -152,8 +180,8 @@ def main(filepath):
                 programs[i : i + 1] = instr_list
                 break
             elif is_ldm(instr):
-                print(f"===== replace pop instr (line {i}) =====")
                 instr_list = pop_to_ldrs(instr)
+                print(f"===== replace pop({len(instr_list) - 1}) instr (line {i}) =====")
                 for j, instr2 in enumerate(programs):
                     instr2 = rewrite_ldr_pc(j, instr2, i, len(instr_list))
                     instr2 = rewrite_b(j, instr2, i, len(instr_list))
