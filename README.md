@@ -1,4 +1,4 @@
-# arm cpu
+# Armv5 Single-Cycle Processor
 
 ## Requirements
 
