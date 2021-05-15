@@ -34,7 +34,7 @@ module AluDecoder
         end else begin
             casex ({mult, branch, cmd ,s})
                 7'b0_1_1001_0: {alu_ctl, flag_w, not_alu, not_shift} = 7'b000_00_1_1; // Branch (BX)
-                7'b1_0_0XXX_1: {alu_ctl, flag_w, not_alu, not_shift} = 7'b000_10_0_0; // Multiply (S = 1)
+                7'b1_0_0XXX_1: {alu_ctl, flag_w, not_alu, not_shift} = 7'b000_01_0_0; // Multiply (S = 1)
                 7'b0_0_X0XX_X: {alu_ctl, flag_w, not_alu, not_shift} = 7'b001_00_0_0; // Memory (SUB)
                 default: {alu_ctl, flag_w, not_alu, not_shift} = 7'b000_00_0_0; // otherwise
             endcase
