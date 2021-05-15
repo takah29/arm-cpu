@@ -8,14 +8,23 @@ module CondLogic
     );
 
     logic cond_ex;
-    logic [1:0] flag_write;
+    logic [2:0] flag_write, flag_w_dec;
     logic [3:0] flags;
 
-    assign flag_write = flag_w & {2{cond_ex}};
+    always_comb begin
+        case (flag_w)
+            2'b00: flag_w_dec = 3'b000;
+            2'b01: flag_w_dec = 3'b100;
+            2'b10: flag_w_dec = 3'b110;
+            2'b11: flag_w_dec = 3'b111;
+        endcase
+    end
 
-    // TODO: support {n, z, c} case
-    Flopenr #(2) cond_flags_flopenr1(.clk, .reset, .en(flag_write[1]), .d(cond_flags[3:2]), .q(flags[3:2]));
-    Flopenr #(2) cond_flags_flopenr0(.clk, .reset, .en(flag_write[0]), .d(cond_flags[1:0]), .q(flags[1:0]));
+    assign flag_write = flag_w_dec & {3{cond_ex}};
+
+    Flopenr #(2) nv_flags_flopenr(.clk, .reset, .en(flag_write[2]), .d(cond_flags[3:2]), .q(flags[3:2]));
+    Flopenr #(1) c_flags_flopenr(.clk, .reset, .en(flag_write[1]), .d(cond_flags[1]), .q(flags[1]));
+    Flopenr #(1) v_flags_flopenr(.clk, .reset, .en(flag_write[0]), .d(cond_flags[0]), .q(flags[0]));
 
     logic n, z, c, v;
     assign {n, z, c, v} = flags;
