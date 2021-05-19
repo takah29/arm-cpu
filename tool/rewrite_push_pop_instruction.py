@@ -18,15 +18,18 @@ def push_to_strs(instr):
     reg_list = get_register_list(instr)
     n_regs = len(reg_list)
 
+    # get cond
+    cond = instr >> 28
+
     # sub instruction
-    bin_rep = f"1110_00_100100_1101_1101_0000_{bin(4 * n_regs)[2:].zfill(8)}"
+    bin_rep = f"{bin(cond)[2:].zfill(4)}_00_100100_1101_1101_0000_{bin(4 * n_regs)[2:].zfill(8)}"
     instr = int(bin_rep.replace("_", ""), 2)
     result.append(instr)
 
     # str instructions
     for i, rd in enumerate(reg_list[::-1], start=1):
         bin_rep = (
-            f"1110_01_011000_1101_{bin(rd)[2:].zfill(4)}_{bin(4 * (n_regs - i))[2:].zfill(12)}"
+            f"{bin(cond)[2:].zfill(4)}_01_011000_1101_{bin(rd)[2:].zfill(4)}_{bin(4 * (n_regs - i))[2:].zfill(12)}"
         )
         instr = int(bin_rep.replace("_", ""), 2)
         result.append(instr)
@@ -40,14 +43,17 @@ def pop_to_ldrs(instr):
     reg_list = get_register_list(instr)
     n_regs = len(reg_list)
 
+    # get cond
+    cond = instr >> 28
+
     # ldr instructions
     for i, rd in enumerate(reg_list, start=0):
-        bin_rep = f"1110_01_011001_1101_{bin(rd)[2:].zfill(4)}_{bin(4 * i)[2:].zfill(12)}"
+        bin_rep = f"{bin(cond)[2:].zfill(4)}_01_011001_1101_{bin(rd)[2:].zfill(4)}_{bin(4 * i)[2:].zfill(12)}"
         instr = int(bin_rep.replace("_", ""), 2)
         result.append(instr)
 
     # add instruction
-    bin_rep = f"1110_00_101000_1101_1101_0000_{bin(4 * n_regs)[2:].zfill(8)}"
+    bin_rep = f"{bin(cond)[2:].zfill(4)}_00_101000_1101_1101_0000_{bin(4 * n_regs)[2:].zfill(8)}"
     instr = int(bin_rep.replace("_", ""), 2)
     result.append(instr)
 
