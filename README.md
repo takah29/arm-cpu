@@ -1,5 +1,9 @@
 # Armv5 Single-Cycle Processor
 
+<img src="./asset/mandel_200.png" width="400">
+
+Computing the Mandelbrot set
+
 ## Requirements
 
 * Icarus Verilog version 11.0
@@ -127,3 +131,4 @@ $ python run_program.py programs/fizzbuzz_hex.dat
 
 * Sarah Harris & David Harris, *Digital Design and Computer Architecture: ARM Edition*
 * [ARMv5 Architecture Reference Manual](https://developer.arm.com/documentation/ddi0100/i)
+* [Online ARM to HEX Converter](https://armconverter.com/)

@@ -22,6 +22,22 @@ module RunProgram;
         $display("R15=%h", dut.arm_cpu.data_path.register_file.r15);
     endtask
 
+    task show_flags;
+        $display("pc_src = %b", dut.arm_cpu.controller.pc_src);
+        $display("mem_to_reg = %b", dut.arm_cpu.controller.mem_to_reg);
+        $display("mem_write = %b", dut.arm_cpu.controller.mem_write);
+        $display("alu_ctl = %b", dut.arm_cpu.controller.alu_ctl);
+        $display("alu_src = %b", dut.arm_cpu.controller.alu_src);
+        $display("imm_src = %b", dut.arm_cpu.controller.imm_src);
+        $display("reg_write3 = %b", dut.arm_cpu.controller.reg_write3);
+        $display("reg_write1 = %b", dut.arm_cpu.controller.reg_write1);
+        $display("reg_src = %b", dut.arm_cpu.controller.reg_src);
+    endtask
+
+    task show_cond_flags;
+        $display("cond_flags = %b", dut.arm_cpu.controller.cond_logic.flags);
+    endtask
+
     // シミュレーション結果出力
     // initial begin
     //   // 波形データ出力
@@ -42,9 +58,9 @@ module RunProgram;
             dut.dmem.ram[i] = testvectors[i];
         end
         // 4バイトアライメントの最大値をSPとして設定する
-        dut.arm_cpu.data_path.register_file.reg_file[13] = 4194300;
+        dut.arm_cpu.data_path.register_file.reg_file[13] = 4194303;
         // プログラムの実行が終了したら命令メモリ外を参照するようにLRを設定する
-        dut.arm_cpu.data_path.register_file.reg_file[14] = 4194300 + 4;
+        dut.arm_cpu.data_path.register_file.reg_file[14] = 4194304;
     end
 
     always begin

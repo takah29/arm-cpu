@@ -15,9 +15,9 @@ module ConditionFlagsGenerator
 
     always_comb begin
         if (mult) begin // Mult
-            {c, v} = {1'bx, 1'bx};
+            {c, v} = {1'b0, 1'b0};
         end else if ({instr_11_4, not_alu} == 9'b00000_11_0_1) begin // Shifter
-            {c, v} = {shifter_carry_out, 1'bx};
+            {c, v} = {shifter_carry_out, 1'b0};
         end else begin // Alu
             {c, v} = cv_flags;
         end
