@@ -1,5 +1,9 @@
 # Armv5 Single-Cycle Processor
 
+<img src="./asset/mandel_200.png" width="400">
+
+Computing the Mandelbrot set
+
 ## Requirements
 
 * Icarus Verilog version 11.0
