@@ -69,7 +69,7 @@ module ConditionFlagsGeneratorTestbench;
         result1 = '0; result2 = '0;
         cv_flags = 2'b01; shifter_carry_out = 1'b0;
         #DELAY;
-        assert_cond_flags(0, 1'bx);
+        assert_cond_flags(0, 0);
 
 
         // mult case
@@ -91,13 +91,13 @@ module ConditionFlagsGeneratorTestbench;
         result1 = '0; result2 = '0;
         cv_flags = 2'b00; shifter_carry_out = 1'b0;
         #DELAY;
-        assert_cond_flags(1, 1'bx);
+        assert_cond_flags(1, 0);
 
         // v flag check
         result1 = '0; result2 = '0;
         cv_flags = 2'b01; shifter_carry_out = 1'b0;
         #DELAY;
-        assert_cond_flags(0, 1'bx);
+        assert_cond_flags(0, 0);
 
         $display("test completed");
         $finish;
