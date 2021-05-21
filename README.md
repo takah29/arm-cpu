@@ -2,7 +2,7 @@
 
 <img src="./asset/mandel_200.png" width="400">
 
-Computing the Mandelbrot set
+Computed the Mandelbrot set with the implemented armv5-core.
 
 ## Requirements
 
@@ -65,6 +65,8 @@ $ python run_program.py programs/fizzbuzz_hex.dat
 
 ### Main Decoder
 
+<sub>
+
 | *Op*  | *Funct* | *Instr*<sub>7:4</sub> |         Type         |     | *Branch* | *MemtoReg* | *MemW* | *ALUSrc* | *ImmSrc* | *RegW3* | *RegW1(BaseReg)* | *RegSrc* | *ALUOp* | *PostIndex* | *Mult* |
 | :---: | :-----: | :-------------------: | :------------------: | --- | :------: | :--------: | :----: | :------: | :------: | :-----: | :--------------: | :------: | :-----: | :---------: | :----: |
 |  00   | 0XXXXX  |         0XX1          |        DP Reg        |     |    0     |     0      |   0    |    0     |    XX    |    1    |        0         |    00    |    1    |      0      |   0    |
@@ -87,7 +89,11 @@ $ python run_program.py programs/fizzbuzz_hex.dat
 |  10   | 10XXXX  |         XXXX          |          B           |     |    1     |     0      |   0    |    1     |    10    |    0    |        0         |    01    |    0    |      0      |   0    |
 |  10   | 11XXXX  |         XXXX          |          BL          |     |    1     |     0      |   0    |    1     |    10    |    1    |        0         |    11    |    0    |      0      |   0    |
 
+</sub>
+
 ### ALU Decoder
+
+<sub>
 
 | *ALUOp* | *Mult* | *Branch* | *Funct*<sub>4:1</sub> (cmd) | *Funct*<sub>0</sub> (S) |             Type             |     | *ALUControl*<sub>2:0</sub> | *FlagW*<sub>1:0</sub> | *NoWrite* | *NotAlu* | *NotShift* | *Swap* | *Inv* |
 | :-----: | :----: | :------: | :-------------------------: | :---------------------: | :--------------------------: | --- | :------------------------: | :-------------------: | :-------: | :------: | :--------: | :----: | :---: |
@@ -126,6 +132,7 @@ $ python run_program.py programs/fizzbuzz_hex.dat
 |    ^    |   0    |    X     |            1101             |            0            | LSL, LSR, ASR, ROR, RRX, MOV |     |            000             |          00           |     0     |    1     |     0      |   0    |   0   |
 |    ^    |   0    |    X     |              ^              |            1            |              ^               |     |             ^              |          10           |     0     |    1     |     0      |   0    |   0   |
 
+</sub>
 
 ## References
 
